@@ -71,7 +71,7 @@ public class Main extends Canvas implements Runnable, KeyListener {
     }
 
     public void update(){
-        
+
     }
 
     //loop do jogo
@@ -81,14 +81,14 @@ public class Main extends Canvas implements Runnable, KeyListener {
         double amountOfTicks = 60.0;
         double ns = 1000000000/amountOfTicks;
         double delta = 0;
-        int frames = 0;
-        long timer = System.currentTimeMillis();
 
         while(rodando){
+            //diz quanto tempo se passou entre os quadros
             long now = System.nanoTime();
             delta += (now - lastTime)/ns;
             lastTime = now;
 
+            //diz quando que a lógica deve ser atualizada
             while(delta >= 1){
                 update();
                 delta --;
