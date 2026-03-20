@@ -4,8 +4,9 @@ import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
 import javax.swing.*;
 
-public class Main extends Canvas implements Runnable, KeyListener {
+import Player.Player;
 
+public class Main extends Canvas implements Runnable, KeyListener{
 
     //Variáveis para renderização da janela
     private boolean rodando = false;
@@ -14,8 +15,7 @@ public class Main extends Canvas implements Runnable, KeyListener {
     private static int Largura = 640;
     private static int Altura = 360 ;
 
-    public int x = 0;
-    public int y = 0;
+    Player player;
 
     public static void main(String[] args) throws Exception {
         System.out.println("Hello, World!");
@@ -34,9 +34,19 @@ public class Main extends Canvas implements Runnable, KeyListener {
         main.start();
     }
 
-    //Dimensionando o tamanho da janela utilizando escala para manter o aspecto pixelado
+    
     public Main(){
+        
+        //Dimensionando o tamanho da janela utilizando escala para manter o aspecto pixelado
         this.setPreferredSize(new Dimension(Largura*Escala, Altura*Escala));
+
+        //Inicia o jogador
+        player = new Player(Largura-50, Altura-50, 50, 50);
+
+        //Comandos para o teclado
+        addKeyListener(this);
+        setFocusable(true);
+        requestFocusInWindow();
     }
 
     //Função para iniciar a renderização de forma a não ocorrer o "thread racing"
@@ -45,14 +55,18 @@ public class Main extends Canvas implements Runnable, KeyListener {
         new Thread(this).start();
     }
 
+    //Função para renderizar imagens na tela
     private void renderizar(){
+
         //forma de manter quadros nos bastidores prontos antes da troca 
         BufferStrategy bs = this.getBufferStrategy();
+
         //verificar se BufferStrategy está vazio, se sim ele cria a estratégia
         if (bs == null){
             this.createBufferStrategy(3);
             return;
         }
+
         //variável que vai ser usada para desenhar os objetos na tela
         Graphics g = bs.getDrawGraphics();
 
@@ -60,22 +74,24 @@ public class Main extends Canvas implements Runnable, KeyListener {
         g.setColor(Color.black);
         g.fillRect(0, 0, Largura*Escala, Altura*Escala);
 
-        g.setColor(Color.red);
-        g.fillRect(x, y, 100, 100);
+        player.render(g);
 
         //sumir com o pincel após o uso para evitar vazamento de memória
         g.dispose();
+
         //mostrar o que foi desenhado
         bs.show();
-
     }
 
+    //Função para a lógica das classes
     public void update(){
-
+        player.update();
+        System.out.println(player.jumped);
     }
 
-    //loop do jogo
+    //Loop do jogo
     @Override public void run(){
+
         //Váriaveis para manter a lógica do jogo com velocidade constante
         long lastTime = System.nanoTime();
         double amountOfTicks = 60.0;
@@ -83,6 +99,7 @@ public class Main extends Canvas implements Runnable, KeyListener {
         double delta = 0;
 
         while(rodando){
+
             //diz quanto tempo se passou entre os quadros
             long now = System.nanoTime();
             delta += (now - lastTime)/ns;
@@ -100,32 +117,20 @@ public class Main extends Canvas implements Runnable, KeyListener {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
+    //Funções obrigatórias para os eventos do teclado
     @Override
     public void keyTyped(KeyEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'keyTyped'");
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'keyPressed'");
+        if(e.getKeyCode() == KeyEvent.VK_W && player.inGround){
+            player.jumped = true;
+        }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'keyReleased'");
     }
+
 }
