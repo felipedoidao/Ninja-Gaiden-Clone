@@ -15,12 +15,16 @@ public class Player{
     private double aceleration = 0.5;
     public boolean jumped = false;
     public boolean inGround = false;
+
+    //variáveis para saber se está atacando e não permitir que segure o botão
     public boolean isAttacking = false;
+    public boolean attacked = false;
 
     public int hori_dir = 1;
     public int last_hori_dir = 1;
 
     private int frames, index; 
+    private int cd = 0;
 
     public BufferedImage sprite_standing, sprite_attacking, sprite_jummping;
 
@@ -91,6 +95,7 @@ public class Player{
        }
     }
 
+    //Método que diz quando chamar a próxima imagem da animação
     public void animFrames(){
         frames++;
         if (frames >= 5){
@@ -120,6 +125,14 @@ public class Player{
             hori_dir = 0;
         }
 
+        //Controla quanto tempo dura o ataque
+        if(isAttacking){
+            cd++;
+            if (cd >= 5){
+                cd = 0;
+                isAttacking = false;
+            }
+        }
 
         this.y += this.speed;
 

@@ -50,6 +50,7 @@ public class Main extends Canvas implements Runnable, KeyListener{
         setFocusable(true);
         requestFocusInWindow();
 
+        //prepara uma imagem vazia para desenhar
         image = new BufferedImage(Largura, Altura, BufferedImage.TYPE_INT_RGB);
 
         //Inicializa as imagens para serem usadas
@@ -96,7 +97,7 @@ public class Main extends Canvas implements Runnable, KeyListener{
         //sumir com o pincel após o uso para evitar vazamento de memória
         g.dispose();
 
-        //Trazer os desenhos prontos para a tela
+        //Trazer os desenhos prontos para a imagem vazia
         Graphics g2 = bs.getDrawGraphics();
         g2.drawImage(image, 0, 0, Largura*Escala, Altura*Escala, null);
 
@@ -172,8 +173,9 @@ public class Main extends Canvas implements Runnable, KeyListener{
             break;
         
         case KeyEvent.VK_F:
-            if (player.inGround){
+            if (player.inGround && !player.attacked){
                 player.isAttacking = true;
+                player.attacked = true;
             }
             break;
        }
@@ -202,6 +204,7 @@ public class Main extends Canvas implements Runnable, KeyListener{
         
         case KeyEvent.VK_F:
             if (player.inGround){
+                player.attacked = false;
                 player.isAttacking = false;
             }
             break;
