@@ -1,10 +1,14 @@
+package Main;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+
 import javax.swing.*;
 
 import Player.Player;
+import Graficos.Graficos;
 
 public class Main extends Canvas implements Runnable, KeyListener{
 
@@ -15,10 +19,14 @@ public class Main extends Canvas implements Runnable, KeyListener{
     private static int Largura = 640;
     private static int Altura = 360 ;
 
+    private BufferedImage image;
+
     Player player;
 
+    //Controla as imagens usadas para o jogador
+    public static Graficos idle, attack, jump;
+
     public static void main(String[] args) throws Exception {
-        System.out.println("Hello, World!");
         frame = new JFrame("Nijna Gaiden");
         Main main = new Main();
 
@@ -37,16 +45,24 @@ public class Main extends Canvas implements Runnable, KeyListener{
     
     public Main(){
         
-        //Dimensionando o tamanho da janela utilizando escala para manter o aspecto pixelado
-        this.setPreferredSize(new Dimension(Largura*Escala, Altura*Escala));
-
-        //Inicia o jogador
-        player = new Player(Largura-50, Altura-50, 50, 50);
-
         //Comandos para o teclado
         addKeyListener(this);
         setFocusable(true);
         requestFocusInWindow();
+
+        image = new BufferedImage(Largura, Altura, BufferedImage.TYPE_INT_RGB);
+
+        //Inicializa as imagens para serem usadas
+        idle = new Graficos("/rsc/Ninja medonho-Sheet.png");
+        attack = new Graficos("/rsc/ninja medonho atacando-Sheet.png");
+        jump = new Graficos("/rsc/Ninja cambalhota medonha-Sheet.png");
+        
+        //Dimensionando o tamanho da janela utilizando escala para manter o aspecto pixelado
+        this.setPreferredSize(new Dimension(Largura*Escala, Altura*Escala));
+
+        //Inicia o jogador
+        player = new Player((Largura/2)-32, 0, 32, 32);
+
     }
 
     //Função para iniciar a renderização de forma a não ocorrer o "thread racing"
@@ -68,16 +84,25 @@ public class Main extends Canvas implements Runnable, KeyListener{
         }
 
         //variável que vai ser usada para desenhar os objetos na tela
-        Graphics g = bs.getDrawGraphics();
+        Graphics g = image.getGraphics();
 
         //desenhos na tela
-        g.setColor(Color.black);
-        g.fillRect(0, 0, Largura*Escala, Altura*Escala);
+        g.setColor(new Color(0, 0, 0));
+        g.fillRect(0, 0, Largura, Altura);
 
         player.render(g);
 
         //sumir com o pincel após o uso para evitar vazamento de memória
         g.dispose();
+
+
+        Graphics g2 = bs.getDrawGraphics();
+        g2.drawImage(image, 0, 0, Largura*Escala, Altura*Escala, null);
+
+        g2.dispose();
+
+        //sincroniza o driver de vídeo com a tela
+        Toolkit.getDefaultToolkit().sync();
 
         //mostrar o que foi desenhado
         bs.show();
@@ -86,7 +111,6 @@ public class Main extends Canvas implements Runnable, KeyListener{
     //Função para a lógica das classes
     public void update(){
         player.update();
-        System.out.println(player.jumped);
     }
 
     //Loop do jogo
@@ -124,13 +148,63 @@ public class Main extends Canvas implements Runnable, KeyListener{
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if(e.getKeyCode() == KeyEvent.VK_W && player.inGround){
+       /*  if(e.getKeyCode() == KeyEvent.VK_W && player.inGround){
             player.jumped = true;
-        }
+        }*/
+       switch (e.getKeyCode()) {
+        case KeyEvent.VK_W:
+            player.jumped = true;
+            break;
+       
+        case KeyEvent.VK_D:
+            if (player.inGround){
+                player.hori_dir = 1;
+                player.last_hori_dir = 1;
+            }
+            break;
+
+        case KeyEvent.VK_A:
+            if (player.inGround){
+                player.hori_dir = -1;
+                player.last_hori_dir = -1;
+            }
+            break;
+        
+        case KeyEvent.VK_F:
+            if (player.inGround){
+                player.isAttacking = true;
+            }
+            break;
+       }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
+        switch (e.getKeyCode()) {
+        case KeyEvent.VK_W:
+            player.jumped = true;
+            break;
+       
+        case KeyEvent.VK_D:
+            if (player.inGround){
+                player.hori_dir = 1;
+                player.last_hori_dir = 1;
+            }
+            break;
+
+        case KeyEvent.VK_A:
+            if (player.inGround){
+                player.hori_dir = -1;
+                player.last_hori_dir = -1;
+            }
+            break;
+        
+        case KeyEvent.VK_F:
+            if (player.inGround){
+                player.isAttacking = false;
+            }
+            break;
+       }
     }
 
 }
