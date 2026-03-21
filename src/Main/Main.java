@@ -83,19 +83,20 @@ public class Main extends Canvas implements Runnable, KeyListener{
             return;
         }
 
-        //variável que vai ser usada para desenhar os objetos na tela
+        //variável que vai preparar os desenhos dos objetos
         Graphics g = image.getGraphics();
 
         //desenhos na tela
         g.setColor(new Color(0, 0, 0));
         g.fillRect(0, 0, Largura, Altura);
 
+        //Método de renderização do jogador
         player.render(g);
 
         //sumir com o pincel após o uso para evitar vazamento de memória
         g.dispose();
 
-
+        //Trazer os desenhos prontos para a tela
         Graphics g2 = bs.getDrawGraphics();
         g2.drawImage(image, 0, 0, Largura*Escala, Altura*Escala, null);
 

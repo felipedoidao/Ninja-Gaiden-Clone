@@ -61,8 +61,7 @@ public class Player{
     }
 
     public void render(Graphics g){
-       System.out.println(this.y);
-       
+
        //decide qual animação vai ser usada
        switch (hori_dir){
         case 1:

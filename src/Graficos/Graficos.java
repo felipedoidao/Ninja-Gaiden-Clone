@@ -9,7 +9,7 @@ public class Graficos {
 
     private BufferedImage spritesheet;
 
-    //Construtor da classe que pega uma imagem spritesheet colocando o caminho dela na pasta
+    //Construtor da classe que pega uma imagem spritesheet pedindo o caminho dela na pasta
     public Graficos(String path) {
     try {
         // Tenta carregar o arquivo como um fluxo de dados
