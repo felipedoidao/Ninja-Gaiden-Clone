@@ -20,6 +20,7 @@ public class Player{
     public boolean isAttacking = false;
     public boolean attacked = false;
 
+    //Definir direção atual e salvar direção anterior 
     public int hori_dir = 1;
     public int last_hori_dir = 1;
 
@@ -110,7 +111,7 @@ public class Player{
     public void update(){
         animFrames();
 
-        if(this.y >= 300){
+        if(this.y >= 244){
             inGround = true;
             this.speed = 0;
             hori_dir = last_hori_dir;

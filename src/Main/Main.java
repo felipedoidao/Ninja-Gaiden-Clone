@@ -16,15 +16,15 @@ public class Main extends Canvas implements Runnable, KeyListener{
     private boolean rodando = false;
     private static JFrame frame;
     private static int Escala = 2;
-    private static int Largura = 640;
-    private static int Altura = 360 ;
+    private static int Largura = 512;
+    private static int Altura = 288;
 
     private BufferedImage image;
 
     Player player;
 
     //Controla as imagens usadas para o jogador
-    public static Graficos idle, attack, jump;
+    public static Graficos idle, attack, jump, world;
 
     public static void main(String[] args) throws Exception {
         frame = new JFrame("Nijna Gaiden");
@@ -57,6 +57,7 @@ public class Main extends Canvas implements Runnable, KeyListener{
         idle = new Graficos("/rsc/Ninja medonho-Sheet.png");
         attack = new Graficos("/rsc/ninja medonho atacando-Sheet.png");
         jump = new Graficos("/rsc/Ninja cambalhota medonha-Sheet.png");
+        world = new Graficos("/rsc/Ninja Mundo Bizzaro.png\"");
         
         //Dimensionando o tamanho da janela utilizando escala para manter o aspecto pixelado
         this.setPreferredSize(new Dimension(Largura*Escala, Altura*Escala));
@@ -190,15 +191,13 @@ public class Main extends Canvas implements Runnable, KeyListener{
        
         case KeyEvent.VK_D:
             if (player.inGround){
-                player.hori_dir = 1;
-                player.last_hori_dir = 1;
+
             }
             break;
 
         case KeyEvent.VK_A:
             if (player.inGround){
-                player.hori_dir = -1;
-                player.last_hori_dir = -1;
+
             }
             break;
         
