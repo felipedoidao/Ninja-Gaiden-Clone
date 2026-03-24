@@ -5,8 +5,10 @@ import java.awt.image.BufferedImage;
 
 import Main.Main;
 
+//Classe mãe de todas as outras classes Tiles 
 public class Tile {
     
+    //Variáveis para pegar as coordenadas dos tiles na imagem que se encontra na classe Main
     public static BufferedImage TILE_FLOOR = Main.level.getSprite(0, 0, 32, 32);
     public static BufferedImage GRIP_WALL_RIGHT = Main.level.getSprite(32, 0, 32, 32);
     public static BufferedImage GRIP_WALL_LEFT = Main.level.getSprite(64, 0, 32, 32);
@@ -21,23 +23,19 @@ public class Tile {
 
     }
 
+    //Método de renderização dos tiles
     public void render(Graphics g){
+        //Desenha a imagem de acordo com a posição da câmera
         g.drawImage(sprite, x - Camera.x, y - Camera.y, 32, 32, null);
     }
 
+
+    //Métodos para outras classes acessarem as coordenadas
     public int getX(){
         return this.x;
     }
 
     public int getY(){
         return this.y;
-    }
-
-    public void setX(int x){
-        this.x = x;
-    }
-
-    public void setY(int y){
-        this.y = y;
     }
 }
