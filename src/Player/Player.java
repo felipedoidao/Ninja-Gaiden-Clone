@@ -217,7 +217,10 @@ public class Player{
         if (inGrip){
             fallSpeed = 0;
             speed = 0;
+
+            //Verifica se o que está se segurando é uma Escada sendo uma escada podemos subir e descer livremente
             Tile ladder = World.isFree((int)x + last_hori_dir, (int)(y), 28, 32);
+            //Verificar colisão enquanto se move para cima ou para baixo copiando as outras colisões
             if (!(ladder instanceof Ladder)){
                 for (int i = 0; i < climbSpeed; i++){
 
@@ -228,9 +231,11 @@ public class Player{
 
                             y += vert_dir;
 
+                            //Verificações para os blocos na base e o topo do personagem
                             Tile Topo = World.isFree((int)x + last_hori_dir, (int)(y + 8), 28, 1);
                             Tile Base = World.isFree((int)x + last_hori_dir, (int)(y + 30), 28, 1);
 
+                            //Se abaixo ou acima do personagem não for uma escada ele para de se mover
                             if (vert_dir < 0){
                                 if (!(Topo instanceof Ladder)){
                                     y -= vert_dir;
