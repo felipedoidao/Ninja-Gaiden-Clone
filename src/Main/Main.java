@@ -169,6 +169,14 @@ public class Main extends Canvas implements Runnable, KeyListener{
             }
             break;
 
+        case KeyEvent.VK_W:
+            player.up = 1;
+            break;
+
+        case KeyEvent.VK_S:
+            player.down = 1;
+            break;
+
         case KeyEvent.VK_D:
             player.rig = 1;
             if(!player.inGrip){
@@ -200,6 +208,14 @@ public class Main extends Canvas implements Runnable, KeyListener{
             player.isJumping = false;
             break;
         
+        case KeyEvent.VK_W:
+            player.up = 0;
+            break;
+
+        case KeyEvent.VK_S:
+            player.down = 0;
+            break;
+
         case KeyEvent.VK_D:
             player.rig = 0;
             player.isGrabbing = false;

@@ -6,6 +6,7 @@ import Main.Main;
 import World.Camera;
 import World.Floor_tile;
 import World.Grip_Wall;
+import World.Ladder;
 import World.Tile;
 import World.World;
 
@@ -16,7 +17,8 @@ public class Player{
     private double y;
     
     //Controladors dos movimentos do personagem
-    public double speed = 3.3;
+    private double speed = 3.3;
+    private double climbSpeed = 2;
     private double fallSpeed = 0;
     private double aceleration = 0.4;
 
@@ -154,6 +156,7 @@ public class Player{
             if (hori_dir != 0) last_hori_dir = hori_dir;
         }
         
+        //Muda o formato da hitbox para quando o personagem estiver no ar
         if(!inGround) {
             maskX = getX() + 6;
             maskY = getY() + 5;
@@ -175,6 +178,7 @@ public class Player{
             }
         }
 
+        //Para cada valor da velocidade do jogar roda um codigo para detectar colisão pixel por pixel
         for (int i = 0; i < speed; i++){
 
             Tile hit = World.isFree((int)(x + hori_dir), (int)y, 28, 32);
@@ -184,7 +188,16 @@ public class Player{
                     x += hori_dir;
                 }
                 case Grip_Wall g -> {
-                    if(getY() >= g.getY() || (getY()+32) < (g.getY()+32)){
+                    if(getY()+8 >= g.getY() && (getY()+24) < (g.getY()+32)){
+                        if (!inGround && !isGrabbing){
+                            isGrabbing = true;
+                            inGrip = true;
+                        }
+                    }
+                    break;
+                }
+                case Ladder l -> {
+                    if(getY()+8 >= l.getY() && (getY()+24) < (l.getY()+32)){
                         if (!inGround && !isGrabbing){
                             isGrabbing = true;
                             inGrip = true;
@@ -200,28 +213,88 @@ public class Player{
                 }
             }
         }
-        System.out.println(hori_dir);
-        
+
         if (inGrip){
             fallSpeed = 0;
             speed = 0;
+            Tile ladder = World.isFree((int)x + last_hori_dir, (int)(y), 28, 32);
+            if (!(ladder instanceof Ladder)){
+                for (int i = 0; i < climbSpeed; i++){
+
+                    Tile hit = World.isFree((int)x, (int)(y+vert_dir), 28, 32);
+
+                    switch (hit){
+                        case null -> {
+
+                            y += vert_dir;
+
+                            Tile Topo = World.isFree((int)x + last_hori_dir, (int)(y + 8), 28, 1);
+                            Tile Base = World.isFree((int)x + last_hori_dir, (int)(y + 30), 28, 1);
+
+                            if (vert_dir < 0){
+                                if (!(Topo instanceof Ladder)){
+                                    y -= vert_dir;
+                                }
+
+                            }else if (vert_dir > 0){
+                                if (!(Base instanceof Ladder)){
+                                    y -= vert_dir;
+                                }
+                            }
+                        }
+                        case Floor_tile f -> {
+                            break;
+                        }
+                        default -> { 
+                            break;
+                        }
+                    }
+                }
+            }
+            for (int i = 0; i < climbSpeed; i++){
+
+                Tile hit = World.isFree((int)x, (int)(y+vert_dir), 28, 32);
+
+                switch (hit){
+                    case null -> {
+
+                        y += vert_dir;
+
+                        Tile Topo = World.isFree((int)x + last_hori_dir, (int)(y + 8), 28, 1);
+                        Tile Base = World.isFree((int)x + last_hori_dir, (int)(y + 30), 28, 1);
+
+                        if (vert_dir < 0){
+                            if (!(Topo instanceof Ladder)){
+                                y -= vert_dir;
+                            }
+
+                        }else if (vert_dir > 0){
+                            if (!(Base instanceof Ladder)){
+                                y -= vert_dir;
+                            }
+                        }
+                    }
+                    case Floor_tile f -> {
+                        break;
+                    }
+                    default -> { 
+                        break;
+                    }
+                }
+            }
         }else {
             speed = 3.3;
         }
+        System.out.println(vert_dir);
+         
+
+        //Se o personagem estiver se segurando na parede, velocidade é zero, previne que o personagem se movimente na horizontal
+
+        //Mesmo sistema de colisão, mas para o eixo y
         for (int i = 0; i < Math.abs(fallSpeed); i++){
             double moveStep = Math.signum(fallSpeed);
 
             Tile hit = World.isFree((int) x, (int)(y + moveStep), 28, 32);
-
-            /*if (hit == null){
-                y += moveStep;
-                inGround = false;
-                jumped = false;
-                
-            }else {
-                inGround = true;
-                fallSpeed = 0;
-            }*/
 
             switch (hit){
                 case null -> {
@@ -249,7 +322,6 @@ public class Player{
     public void setX(double X){
         this.x = X;
     }
-
     public void setY(double Y){
         this.y = Y;
     }

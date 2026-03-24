@@ -55,6 +55,12 @@ public class World {
                         case 0xFFffffca:
                             tiles[xx + (yy * WIDTH)] = new Grip_Wall(xx*32, yy*32, Tile.GRIP_WALL_LEFT);
                             break;
+                        case 0xFFffff5b:
+                            tiles[xx + (yy * WIDTH)] = new Ladder(xx*32, yy*32, Tile.LADDER_RIGHT);
+                            break;
+                        case 0xFFffff2e:
+                            tiles[xx + (yy * WIDTH)] = new Ladder(xx*32, yy*32, Tile.LADDER_LEFT);
+                            break;
                    }
                 }
             }
@@ -128,7 +134,7 @@ public class World {
 
         //Determina e retorna a instância a qual o bloco encontrado pertence
         for (Tile t : check){
-            if (t instanceof Floor_tile || t instanceof Grip_Wall) return t;
+            if (t instanceof Floor_tile || t instanceof Grip_Wall || t instanceof Ladder) return t;
         }
 
         //Caso não encontre bloco, retorna vazio
