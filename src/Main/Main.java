@@ -9,6 +9,8 @@ import javax.swing.*;
 
 import Player.Player;
 import Graficos.Graficos;
+import World.World;
+import World.Camera;
 
 public class Main extends Canvas implements Runnable, KeyListener{
 
@@ -16,15 +18,16 @@ public class Main extends Canvas implements Runnable, KeyListener{
     private boolean rodando = false;
     private static JFrame frame;
     private static int Escala = 2;
-    private static int Largura = 512;
-    private static int Altura = 288;
+    public static int Largura = 512;
+    public static int Altura = 288;
 
     private BufferedImage image;
 
-    Player player;
+    public static Player player;
+    public static World world;
 
     //Controla as imagens usadas para o jogador
-    public static Graficos idle, attack, jump, world;
+    public static Graficos ninja, level;
 
     public static void main(String[] args) throws Exception {
         frame = new JFrame("Nijna Gaiden");
@@ -54,16 +57,16 @@ public class Main extends Canvas implements Runnable, KeyListener{
         image = new BufferedImage(Largura, Altura, BufferedImage.TYPE_INT_RGB);
 
         //Inicializa as imagens para serem usadas
-        idle = new Graficos("/rsc/Ninja medonho-Sheet.png");
-        attack = new Graficos("/rsc/ninja medonho atacando-Sheet.png");
-        jump = new Graficos("/rsc/Ninja cambalhota medonha-Sheet.png");
-        world = new Graficos("/rsc/Ninja Mundo Bizzaro.png\"");
+        ninja = new Graficos("/rsc/Ninja Spritesheet.png");
+        level = new Graficos("/rsc/Mundo Bizarro.png");
         
         //Dimensionando o tamanho da janela utilizando escala para manter o aspecto pixelado
         this.setPreferredSize(new Dimension(Largura*Escala, Altura*Escala));
 
         //Inicia o jogador
         player = new Player((Largura/2)-32, 0, 32, 32);
+        
+        world = new World("/rsc/Mapa medonho.png");
 
     }
 
@@ -92,6 +95,8 @@ public class Main extends Canvas implements Runnable, KeyListener{
         g.setColor(new Color(0, 0, 0));
         g.fillRect(0, 0, Largura, Altura);
 
+        world.render(g);
+        
         //Método de renderização do jogador
         player.render(g);
 
@@ -100,7 +105,7 @@ public class Main extends Canvas implements Runnable, KeyListener{
 
         //Trazer os desenhos prontos para a imagem vazia
         Graphics g2 = bs.getDrawGraphics();
-        g2.drawImage(image, 0, 0, Largura*Escala, Altura*Escala, null);
+        g2.drawImage(image, 0, 0, Largura * Escala, Altura * Escala, null);
 
         g2.dispose();
 
@@ -114,6 +119,10 @@ public class Main extends Canvas implements Runnable, KeyListener{
     //Função para a lógica das classes
     public void update(){
         player.update();
+
+        Camera.x = (int)player.getX() - (Largura/2);
+
+        Camera.x = Camera.clamp(Camera.x, 0, (World.WIDTH*32) - Largura);
     }
 
     //Loop do jogo
@@ -151,30 +160,31 @@ public class Main extends Canvas implements Runnable, KeyListener{
 
     @Override
     public void keyPressed(KeyEvent e) {
-       /*  if(e.getKeyCode() == KeyEvent.VK_W && player.inGround){
-            player.jumped = true;
-        }*/
        switch (e.getKeyCode()) {
-        case KeyEvent.VK_W:
-            player.jumped = true;
+        case KeyEvent.VK_SPACE:
+            if (player.inGround && player.isJumping == false || player.inGrip && player.isJumping == false){
+                player.jumped = true;
+                player.isJumping = true;
+                player.inGrip = false;
+            }
             break;
-       
+
         case KeyEvent.VK_D:
-            if (player.inGround){
-                player.hori_dir = 1;
+            player.rig = 1;
+            if(!player.inGrip){
                 player.last_hori_dir = 1;
             }
             break;
 
         case KeyEvent.VK_A:
-            if (player.inGround){
-                player.hori_dir = -1;
+            player.lef = 1;
+            if(!player.inGrip){
                 player.last_hori_dir = -1;
             }
             break;
         
         case KeyEvent.VK_F:
-            if (player.inGround && !player.attacked){
+            if (!player.attacked){
                 player.isAttacking = true;
                 player.attacked = true;
             }
@@ -185,27 +195,23 @@ public class Main extends Canvas implements Runnable, KeyListener{
     @Override
     public void keyReleased(KeyEvent e) {
         switch (e.getKeyCode()) {
-        case KeyEvent.VK_W:
-            player.jumped = true;
+        case KeyEvent.VK_SPACE:
+            player.jumped = false;
+            player.isJumping = false;
             break;
-       
+        
         case KeyEvent.VK_D:
-            if (player.inGround){
-
-            }
+            player.rig = 0;
+            player.isGrabbing = false;
             break;
 
         case KeyEvent.VK_A:
-            if (player.inGround){
-
-            }
+            player.lef = 0;
+            player.isGrabbing = false;
             break;
         
         case KeyEvent.VK_F:
-            if (player.inGround){
                 player.attacked = false;
-                player.isAttacking = false;
-            }
             break;
        }
     }

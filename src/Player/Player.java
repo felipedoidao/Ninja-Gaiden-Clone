@@ -3,27 +3,50 @@ package Player;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import Main.Main;
+import World.Camera;
+import World.Floor_tile;
+import World.Grip_Wall;
+import World.Tile;
+import World.World;
 
 public class Player{
 
+    //Coordenadas do personagem
     private double x;
     private double y;
-    private int width;
-    private int height;
+    
+    //Controladors dos movimentos do personagem
+    public double speed = 3.3;
+    private double fallSpeed = 0;
+    private double aceleration = 0.4;
 
-    private double speed = 0;
-    private double aceleration = 0.5;
     public boolean jumped = false;
+    public boolean jumped_from_wall = false;
+    public boolean isJumping = false;
     public boolean inGround = false;
+    public boolean inGrip = false;
+    public boolean isGrabbing = false;
+
+    //Hitbox
+    private int maskX;
+    private int maskY;
+    private int maskWidth;
+    private int maskHeight;
 
     //variáveis para saber se está atacando e não permitir que segure o botão
     public boolean isAttacking = false;
     public boolean attacked = false;
 
-    //Definir direção atual e salvar direção anterior 
+    //Definir movimento,direção atual e salvar direção anterior 
     public int hori_dir = 1;
+    public int vert_dir = 0;
+    public int up = 0;
+    public int down = 0;
+    public int rig = 0;
+    public int lef = 0;
     public int last_hori_dir = 1;
 
+    //variavéis para animação
     private int frames, index; 
     private int cd = 0;
 
@@ -33,12 +56,11 @@ public class Player{
     private BufferedImage[] right, left;
     private BufferedImage[] attacking_right, attacking__left;
     private BufferedImage[] jumping_right, jumping_left;
+    private BufferedImage[] grab_right, grab_left;
 
     public Player(int x, int y, int width, int height){
         this.x = x;
         this.y = y;
-        this.width = width;
-        this.height = height;
 
         //Inicializa as listas com os números dos frames
         right = new BufferedImage[1];
@@ -47,20 +69,24 @@ public class Player{
         attacking__left = new BufferedImage[1];
         jumping_right = new BufferedImage[4];
         jumping_left = new BufferedImage[4];
+        grab_right = new BufferedImage[1];
+        grab_left = new BufferedImage[1];
 
         //pegando as coordenadas dos frames nas imagens fornecidas
-        right[0] = Main.idle.getSprite(0, 0, 32, 32);
-        left[0] = Main.idle.getSprite(32, 0, 32, 32);
-        attacking_right[0] = Main.attack.getSprite(0, 0, 64, 32);
-        attacking__left[0] = Main.attack.getSprite(64, 0, 64, 32);
+        right[0] = Main.ninja.getSprite(0, 32*2, 32, 32);
+        left[0] = Main.ninja.getSprite(32, 32*2, 32, 32);
+        attacking_right[0] = Main.ninja.getSprite(0, 32, 64, 32);
+        attacking__left[0] = Main.ninja.getSprite(32*2, 32, 64, 32);
+        grab_right[0] = Main.ninja.getSprite(0, 32*3, 32, 32);
+        grab_left[0] = Main.ninja.getSprite(32, 32*3, 32, 32);
 
         //como essas possuem mais de um frame, cria-se um loop para armazenar na lista todos os frames da animação
         for(int i = 0; i < 4; i++){
-            jumping_right[i] = Main.jump.getSprite(32*i, 0, 32, 32);
+            jumping_right[i] = Main.ninja.getSprite(32*i, 0, 32, 32);
         }
 
         for(int i = 0; i < 4; i++){
-            jumping_left[i] = Main.jump.getSprite(128+(32*i), 0, 32, 32);
+            jumping_left[i] = Main.ninja.getSprite(32*4+(32*i), 0, 32, 32);
         }
 
     }
@@ -68,32 +94,40 @@ public class Player{
     public void render(Graphics g){
 
        //decide qual animação vai ser usada
-       switch (hori_dir){
+       switch (last_hori_dir){
         case 1:
-            if (!isAttacking){
-                g.drawImage(right[0], (int)this.x, (int)this.y, null);
-            }else {
-                g.drawImage(attacking_right[0], (int)this.x, (int)this.y, null);
+            if (isAttacking){
+                g.drawImage(attacking_right[0], (int)this.x - Camera.x, (int)this.y - Camera.y, null);
+                //g.drawImage(right[0], (int)this.x, (int)this.y, null);
+
+            }else if(!inGround && !inGrip){
+                g.drawImage(jumping_right[index], (int)this.x - Camera.x, (int)this.y - Camera.y, null);
+
+            }else if (inGround){
+                //g.drawImage(attacking_right[0], (int)this.x, (int)this.y, null);
+                g.drawImage(right[0], (int)this.x - Camera.x, (int)this.y - Camera.y, null);
+
+            }else if (inGrip){
+                g.drawImage(grab_right[0], getX() - Camera.x + 2, getY() - Camera.y, null);
             }
             break;
         case -1:
-            if (!isAttacking){
-                g.drawImage(left[0], (int)this.x, (int)this.y, null);
-            }else {
-                g.drawImage(attacking__left[0], ((int)this.x) - 32, (int)this.y, null);
+            if (isAttacking){
+                g.drawImage(attacking__left[0], (int)this.x - Camera.x - 32, (int)this.y - Camera.y, null);
+                //g.drawImage(right[0], (int)this.x, (int)this.y, null);
+
+            }else if(!inGround && !inGrip){
+                g.drawImage(jumping_left[index], (int)this.x - Camera.x, (int)this.y - Camera.y, null);
+
+            }else if (inGround){
+                //g.drawImage(attacking_right[0], (int)this.x, (int)this.y, null);
+                g.drawImage(left[0], (int)this.x - Camera.x - 4, (int)this.y - Camera.y, null);
+
+            }else if (inGrip){
+                g.drawImage(grab_left[0], getX() - Camera.x - 2, getY() - Camera.y, null);
             }
             break;
-        case 0:
-            switch (last_hori_dir){
-                case 1:
-                    g.drawImage(jumping_right[index], (int)this.x, (int)this.y, null);
-                    break;
-                case -1:
-                    g.drawImage(jumping_left[index], (int)this.x, (int)this.y, null);
-                    break;
-            }
-            break;
-       }
+        }
     }
 
     //Método que diz quando chamar a próxima imagem da animação
@@ -109,33 +143,114 @@ public class Player{
     }
 
     public void update(){
+
         animFrames();
-
-        if(this.y >= 244){
-            inGround = true;
-            this.speed = 0;
-            hori_dir = last_hori_dir;
-        }else{
-            inGround = false;
-            this.jumped = false;
-            this.speed += this.aceleration;
-        }
-
+        fallSpeed += aceleration;
+        hori_dir = rig - lef;
+        vert_dir = down - up;
+        if (fallSpeed >= 7) fallSpeed= 6.5;
         if(this.jumped){
-            speed = -10;
-            hori_dir = 0;
+            fallSpeed = -7;
+            if (hori_dir != 0) last_hori_dir = hori_dir;
+        }
+        
+        if(!inGround) {
+            maskX = getX() + 6;
+            maskY = getY() + 5;
+            maskWidth = 20;
+            maskHeight = 20;
+        }else{
+            maskX = getX();
+            maskY = getY();
+            maskWidth = 28;
+            maskHeight = 32;
         }
 
         //Controla quanto tempo dura o ataque
         if(isAttacking){
             cd++;
-            if (cd >= 5){
+            if (cd >= 15){
                 cd = 0;
                 isAttacking = false;
             }
         }
 
-        this.y += this.speed;
+        for (int i = 0; i < speed; i++){
 
+            Tile hit = World.isFree((int)(x + hori_dir), (int)y, 28, 32);
+
+            switch (hit){
+                case null -> {
+                    x += hori_dir;
+                }
+                case Grip_Wall g -> {
+                    if(getY() >= g.getY() || (getY()+32) < (g.getY()+32)){
+                        if (!inGround && !isGrabbing){
+                            isGrabbing = true;
+                            inGrip = true;
+                        }
+                    }
+                    break;
+                }
+                case Floor_tile f -> {
+                    break;
+                }
+                default -> { 
+                    break;
+                }
+            }
+        }
+        System.out.println(hori_dir);
+        
+        if (inGrip){
+            fallSpeed = 0;
+            speed = 0;
+        }else {
+            speed = 3.3;
+        }
+        for (int i = 0; i < Math.abs(fallSpeed); i++){
+            double moveStep = Math.signum(fallSpeed);
+
+            Tile hit = World.isFree((int) x, (int)(y + moveStep), 28, 32);
+
+            /*if (hit == null){
+                y += moveStep;
+                inGround = false;
+                jumped = false;
+                
+            }else {
+                inGround = true;
+                fallSpeed = 0;
+            }*/
+
+            switch (hit){
+                case null -> {
+                    y += moveStep;
+                    inGround = false;
+                    jumped = false;
+                    break;
+                }
+                default -> {
+                    inGround = true;
+                    fallSpeed = 0;
+                    break;
+                }
+            }
+        }
+    }
+
+    public int getX(){
+        return (int)this.x;
+    }
+    public int getY(){
+        return (int)this.y;
+    }
+
+    public void setX(double X){
+        this.x = X;
+    }
+
+    public void setY(double Y){
+        this.y = Y;
     }
 }
