@@ -1,4 +1,4 @@
-package Player;
+package Entities;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -22,6 +22,14 @@ public class Player{
     private double fallSpeed = 0;
     private double aceleration = 0.4;
 
+    public int lives = 10;
+    public int hitCd = 0;
+    private int knockBackCD = 0;
+
+    public boolean knockBack = false;
+    public boolean inKnockBack = false;
+    public boolean hitted = false;
+    public boolean gotHit = false;
     public boolean jumped = false;
     public boolean jumped_from_wall = false;
     public boolean isJumping = false;
@@ -59,6 +67,7 @@ public class Player{
     private BufferedImage[] attacking_right, attacking__left;
     private BufferedImage[] jumping_right, jumping_left;
     private BufferedImage[] grab_right, grab_left;
+    private BufferedImage[] knockingBack_right, knockingBack_left;
 
     public Player(int x, int y, int width, int height){
         this.x = x;
@@ -73,6 +82,8 @@ public class Player{
         jumping_left = new BufferedImage[4];
         grab_right = new BufferedImage[1];
         grab_left = new BufferedImage[1];
+        knockingBack_right = new BufferedImage[1];
+        knockingBack_left = new BufferedImage[1];
 
         //pegando as coordenadas dos frames nas imagens fornecidas
         right[0] = Main.ninja.getSprite(0, 32*2, 32, 32);
@@ -81,6 +92,8 @@ public class Player{
         attacking__left[0] = Main.ninja.getSprite(32*2, 32, 64, 32);
         grab_right[0] = Main.ninja.getSprite(0, 32*3, 32, 32);
         grab_left[0] = Main.ninja.getSprite(32, 32*3, 32, 32);
+        knockingBack_right[0] = Main.ninja.getSprite(32, 32*4, 32, 32);
+        knockingBack_left[0] = Main.ninja.getSprite(0, 32*4, 32, 32);
 
         //como essas possuem mais de um frame, cria-se um loop para armazenar na lista todos os frames da animação
         for(int i = 0; i < 4; i++){
@@ -94,6 +107,8 @@ public class Player{
     }
 
     public void render(Graphics g){
+        //g.setColor(Color.red);
+        //g.fillRect(maskX - Camera.x, maskY - Camera.y, maskWidth, maskHeight);
 
        //decide qual animação vai ser usada
        switch (last_hori_dir){
@@ -102,6 +117,9 @@ public class Player{
                 g.drawImage(attacking_right[0], (int)this.x - Camera.x, (int)this.y - Camera.y, null);
                 //g.drawImage(right[0], (int)this.x, (int)this.y, null);
 
+            }else if (knockBack){
+                g.drawImage(knockingBack_right[0], getX() - Camera.x, getY() - Camera.y, null);
+            
             }else if(!inGround && !inGrip){
                 g.drawImage(jumping_right[index], (int)this.x - Camera.x, (int)this.y - Camera.y, null);
 
@@ -111,13 +129,17 @@ public class Player{
 
             }else if (inGrip){
                 g.drawImage(grab_right[0], getX() - Camera.x + 2, getY() - Camera.y, null);
+            
             }
             break;
         case -1:
             if (isAttacking){
-                g.drawImage(attacking__left[0], (int)this.x - Camera.x - 32, (int)this.y - Camera.y, null);
+                g.drawImage(attacking__left[0], (int)this.x - Camera.x - 36, (int)this.y - Camera.y, null);
                 //g.drawImage(right[0], (int)this.x, (int)this.y, null);
 
+            }else if (knockBack){
+                g.drawImage(knockingBack_left[0], getX() - Camera.x, getY() - Camera.y, null);
+            
             }else if(!inGround && !inGrip){
                 g.drawImage(jumping_left[index], (int)this.x - Camera.x, (int)this.y - Camera.y, null);
 
@@ -127,6 +149,7 @@ public class Player{
 
             }else if (inGrip){
                 g.drawImage(grab_left[0], getX() - Camera.x - 2, getY() - Camera.y, null);
+            
             }
             break;
         }
@@ -134,92 +157,139 @@ public class Player{
 
     //Método que diz quando chamar a próxima imagem da animação
     public void animFrames(){
-        frames++;
-        if (frames >= 5){
-            index++;
-            frames = 0;
-            if (index >= 3){
-                index = 0;
+        this.frames++;
+        if (this.frames >= 5){
+            this.index++;
+            this.frames = 0;
+            if (this.index >= 3){
+                this.index = 0;
             }
         }
     }
 
     public void update(){
-
-        animFrames();
-        fallSpeed += aceleration;
-        hori_dir = rig - lef;
-        vert_dir = down - up;
-        if (fallSpeed >= 7) fallSpeed= 6.5;
-        if(this.jumped){
-            fallSpeed = -7;
-            if (hori_dir != 0) last_hori_dir = hori_dir;
-        }
+        System.out.println(lives);
+        this.fallSpeed += aceleration;
+        this.animFrames();
+        this.hori_dir = this.rig - this.lef;
+        this.vert_dir = this.down - this.up;
+        if (this.fallSpeed >= 7) this.fallSpeed= 6.5;
         
+        if(this.jumped){
+            
+            this.fallSpeed = -7;
+            
+            if (this.hori_dir != 0) this.last_hori_dir = this.hori_dir;
+        }
+
         //Muda o formato da hitbox para quando o personagem estiver no ar
-        if(!inGround) {
-            maskX = getX() + 6;
-            maskY = getY() + 5;
-            maskWidth = 20;
-            maskHeight = 20;
+        if(!this.inGround) {
+            this.maskX = getX() + 6;
+            this.maskY = getY() + 5;
+            this.maskWidth = 20;
+            this.maskHeight = 20;
         }else{
-            maskX = getX();
-            maskY = getY();
-            maskWidth = 28;
-            maskHeight = 32;
+            this.maskX = getX();
+            this.maskY = getY();
+            this.maskWidth = 28;
+            this.maskHeight = 32;
         }
 
         //Controla quanto tempo dura o ataque
-        if(isAttacking){
-            cd++;
-            if (cd >= 15){
-                cd = 0;
-                isAttacking = false;
+        if(this.isAttacking){
+            this.cd++;
+            if (this.cd >= 15){
+                this.cd = 0;
+                this.isAttacking = false;
             }
         }
 
-        //Para cada valor da velocidade do jogar roda um codigo para detectar colisão pixel por pixel
-        for (int i = 0; i < speed; i++){
+        if (gotHit){
+            hitCd ++;
+            if (hitCd >= 60){
+                hitCd = 0;
+                hitted = false;
+                gotHit = false;
+            }
+        }
+        if (inKnockBack){
+            fallSpeed = -4;
+        }
+
+        if (knockBack){
+            this.speed = 2.5;
+            knockBackCD++;
+            if (knockBackCD >= 25){
+                knockBack = false;
+                knockBackCD = 0;
+            }
+
+        }else {
+            this.speed = 3.3;
+        }
+            //Para cada valor da velocidade do jogar roda um codigo para detectar colisão pixel por pixel
+        for (int i = 0; i < this.speed; i++){
 
             Tile hit = World.isFree((int)(x + hori_dir), (int)y, 28, 32);
-
-            switch (hit){
-                case null -> {
-                    x += hori_dir;
-                }
-                case Grip_Wall g -> {
-                    if(getY()+8 >= g.getY() && (getY()+24) < (g.getY()+32)){
-                        if (!inGround && !isGrabbing){
-                            isGrabbing = true;
-                            inGrip = true;
-                        }
+            Tile hitted = World.isFree((int)(x - last_hori_dir), (int)y, 28, 32);
+            if(!knockBack){
+                switch (hit){
+                    case null -> {
+                        
+                        this.x += this.hori_dir;
+                            
                     }
-                    break;
-                }
-                case Ladder l -> {
-                    if(getY()+8 >= l.getY() && (getY()+24) < (l.getY()+32)){
-                        if (!inGround && !isGrabbing){
-                            isGrabbing = true;
-                            inGrip = true;
+                    case Grip_Wall g -> {
+                        if(getY()+8 >= g.getY() && (getY()+24) < (g.getY()+32)){
+                            if (!this.inGround && !this.isGrabbing){
+                                this.isGrabbing = true;
+                                this.inGrip = true;
+                            }
                         }
+                        break;
                     }
-                    break;
+                    case Ladder l -> {
+                        if(getY()+8 >= l.getY() && (getY()+24) < (l.getY()+32)){
+                            if (!this.inGround && !this.isGrabbing){
+                                this.isGrabbing = true;
+                                this.inGrip = true;
+                            }
+                        }
+                        break;
+                    }
+                    case Floor_tile f -> {
+                        break;
+                    }
+                    default -> { 
+                        break;
+                    }
                 }
-                case Floor_tile f -> {
-                    break;
-                }
-                default -> { 
-                    break;
+            
+            }else {
+                switch (hitted){
+                    case null -> {
+                        if(!inGrip){
+                            x-=last_hori_dir;
+                        }
+                        break;
+                    }
+                    default -> {
+                        break;
+                    }
                 }
             }
+            
         }
 
-        if (inGrip){
-            fallSpeed = 0;
-            speed = 0;
+
+        //Se o personagem estiver se segurando na parede, velocidade é zero, previne que o personagem se movimente na horizontal
+        if (this.inGrip){
+            this.fallSpeed = 0;
+            this.speed = 0;
 
             //Verifica se o que está se segurando é uma Escada sendo uma escada podemos subir e descer livremente
             Tile ladder = World.isFree((int)x + last_hori_dir, (int)(y), 28, 32);
+
             //Verificar colisão enquanto se move para cima ou para baixo copiando as outras colisões
             if (!(ladder instanceof Ladder)){
                 for (int i = 0; i < climbSpeed; i++){
@@ -229,21 +299,21 @@ public class Player{
                     switch (hit){
                         case null -> {
 
-                            y += vert_dir;
+                            this.y += this.vert_dir;
 
                             //Verificações para os blocos na base e o topo do personagem
                             Tile Topo = World.isFree((int)x + last_hori_dir, (int)(y + 8), 28, 1);
                             Tile Base = World.isFree((int)x + last_hori_dir, (int)(y + 30), 28, 1);
 
                             //Se abaixo ou acima do personagem não for uma escada ele para de se mover
-                            if (vert_dir < 0){
+                            if (this.vert_dir < 0){
                                 if (!(Topo instanceof Ladder)){
-                                    y -= vert_dir;
+                                    this.y -= this.vert_dir;
                                 }
 
-                            }else if (vert_dir > 0){
+                            }else if (this.vert_dir > 0){
                                 if (!(Base instanceof Ladder)){
-                                    y -= vert_dir;
+                                    this.y -= this.vert_dir;
                                 }
                             }
                         }
@@ -256,26 +326,26 @@ public class Player{
                     }
                 }
             }
-            for (int i = 0; i < climbSpeed; i++){
+            for (int i = 0; i < this.climbSpeed; i++){
 
-                Tile hit = World.isFree((int)x, (int)(y+vert_dir), 28, 32);
+                Tile hit = World.isFree((int)this.x, (int)(this.y+this.vert_dir), 28, 32);
 
                 switch (hit){
                     case null -> {
 
-                        y += vert_dir;
+                        this.y += this.vert_dir;
 
                         Tile Topo = World.isFree((int)x + last_hori_dir, (int)(y + 8), 28, 1);
                         Tile Base = World.isFree((int)x + last_hori_dir, (int)(y + 30), 28, 1);
 
-                        if (vert_dir < 0){
+                        if (this.vert_dir < 0){
                             if (!(Topo instanceof Ladder)){
-                                y -= vert_dir;
+                               this.y -= this.vert_dir;
                             }
 
-                        }else if (vert_dir > 0){
+                        }else if (this.vert_dir > 0){
                             if (!(Base instanceof Ladder)){
-                                y -= vert_dir;
+                                this.y -= this.vert_dir;
                             }
                         }
                     }
@@ -288,29 +358,27 @@ public class Player{
                 }
             }
         }else {
-            speed = 3.3;
-        }
-        System.out.println(vert_dir);
-         
-
-        //Se o personagem estiver se segurando na parede, velocidade é zero, previne que o personagem se movimente na horizontal
+            this.speed = 3.3;
+            
+        }    
 
         //Mesmo sistema de colisão, mas para o eixo y
-        for (int i = 0; i < Math.abs(fallSpeed); i++){
-            double moveStep = Math.signum(fallSpeed);
+        for (int i = 0; i < Math.abs(this.fallSpeed); i++){
+            double moveStep = Math.signum(this.fallSpeed);
 
-            Tile hit = World.isFree((int) x, (int)(y + moveStep), 28, 32);
+            Tile hit = World.isFree((int) x, (int)(this.y + moveStep), 28, 32);
 
             switch (hit){
                 case null -> {
-                    y += moveStep;
-                    inGround = false;
-                    jumped = false;
+                    this.y += moveStep;
+                    this.inGround = false;
+                    this.jumped = false;
+                    inKnockBack = false;
                     break;
                 }
                 default -> {
-                    inGround = true;
-                    fallSpeed = 0;
+                    this.inGround = true;
+                    this.fallSpeed = 0;
                     break;
                 }
             }
@@ -330,4 +398,18 @@ public class Player{
     public void setY(double Y){
         this.y = Y;
     }
+
+    public int getMaskWidth(){
+        return this.maskWidth;
+    }
+    public int getMaskHeight(){
+        return this.maskHeight;
+    }
+    public int getMaskX(){
+        return this.maskX;
+    }
+    public int getMaskY(){
+        return this.maskY;
+    }
+
 }

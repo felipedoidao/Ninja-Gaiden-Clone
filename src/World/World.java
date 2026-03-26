@@ -7,6 +7,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import Entities.Enemies.Red_ninja;
+
 public class World {
 
     public static Tile[] tiles;
@@ -61,6 +63,16 @@ public class World {
                         case 0xFFffff2e:
                             tiles[xx + (yy * WIDTH)] = new Ladder(xx*32, yy*32, Tile.LADDER_LEFT);
                             break;
+                        case 0xFFac3232:
+                            Red_ninja red_ninja = new Red_ninja(xx*32, yy*32, 32, 32);
+                            Main.entities.add(red_ninja);
+                            break;
+                        case 0xFFd95763:
+
+                            break;
+                        case 0xFF1eff00:
+                            Main.player.setX(xx*32);
+                            Main.player.setY(yy*32);
                    }
                 }
             }

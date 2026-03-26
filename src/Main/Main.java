@@ -4,13 +4,17 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.*;
 
-import Player.Player;
+import Entities.Player;
 import Graficos.Graficos;
 import World.World;
 import World.Camera;
+import Entities.Enemies.Enemies;
+import Entities.Enemies.Red_ninja;
 
 public class Main extends Canvas implements Runnable, KeyListener{
 
@@ -25,9 +29,10 @@ public class Main extends Canvas implements Runnable, KeyListener{
 
     public static Player player;
     public static World world;
+    public static List<Enemies> entities;
 
     //Controla as imagens usadas para o jogador
-    public static Graficos ninja, level;
+    public static Graficos ninja, level, enemies;
 
     public static void main(String[] args) throws Exception {
         frame = new JFrame("Nijna Gaiden");
@@ -59,9 +64,12 @@ public class Main extends Canvas implements Runnable, KeyListener{
         //Inicializa as imagens para serem usadas
         ninja = new Graficos("/rsc/Ninja Spritesheet.png");
         level = new Graficos("/rsc/Mundo Bizarro.png");
+        enemies = new Graficos("/rsc/Enemies.png");
         
         //Dimensionando o tamanho da janela utilizando escala para manter o aspecto pixelado
         this.setPreferredSize(new Dimension(Largura*Escala, Altura*Escala));
+
+        entities = new ArrayList<Enemies>();
 
         //Inicia o jogador
         player = new Player((Largura/2)-32, 0, 32, 32);
@@ -96,6 +104,11 @@ public class Main extends Canvas implements Runnable, KeyListener{
         g.fillRect(0, 0, Largura, Altura);
 
         world.render(g);
+
+        for (int i = 0; i < entities.size(); i++){
+            Enemies e = entities.get(i);
+            e.render(g);
+        }
         
         //Método de renderização do jogador
         player.render(g);
@@ -119,6 +132,11 @@ public class Main extends Canvas implements Runnable, KeyListener{
     //Função para a lógica das classes
     public void update(){
         player.update();
+        
+        for (int i = 0; i < entities.size(); i++){
+            Enemies e = entities.get(i);
+            e.update();
+        }
 
         Camera.x = (int)player.getX() - (Largura/2);
 
