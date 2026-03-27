@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import Entities.Enemies.Bird;
 import Entities.Enemies.Red_ninja;
 
 public class World {
@@ -68,7 +69,8 @@ public class World {
                             Main.entities.add(red_ninja);
                             break;
                         case 0xFFd95763:
-
+                            Bird bird = new Bird(xx*32, yy*32, 32, 32);
+                            Main.entities.add(bird);
                             break;
                         case 0xFF1eff00:
                             Main.player.setX(xx*32);

@@ -168,7 +168,7 @@ public class Player{
     }
 
     public void update(){
-        System.out.println(lives);
+        //System.out.println(lives);
         this.fallSpeed += aceleration;
         this.animFrames();
         this.hori_dir = this.rig - this.lef;
@@ -224,10 +224,9 @@ public class Player{
                 knockBackCD = 0;
             }
 
-        }else {
-            this.speed = 3.3;
         }
-            //Para cada valor da velocidade do jogar roda um codigo para detectar colisão pixel por pixel
+
+        //Para cada valor da velocidade do jogar roda um codigo para detectar colisão pixel por pixel
         for (int i = 0; i < this.speed; i++){
 
             Tile hit = World.isFree((int)(x + hori_dir), (int)y, 28, 32);
@@ -240,7 +239,7 @@ public class Player{
                             
                     }
                     case Grip_Wall g -> {
-                        if(getY()+8 >= g.getY() && (getY()+24) < (g.getY()+32)){
+                        if(getY()+8 >= g.getY() && (getY()+24) < (g.getY()+32) && hori_dir == last_hori_dir){
                             if (!this.inGround && !this.isGrabbing){
                                 this.isGrabbing = true;
                                 this.inGrip = true;
@@ -249,7 +248,7 @@ public class Player{
                         break;
                     }
                     case Ladder l -> {
-                        if(getY()+8 >= l.getY() && (getY()+24) < (l.getY()+32)){
+                        if(getY()+8 >= l.getY() && (getY()+24) < (l.getY()+32) && hori_dir == last_hori_dir){
                             if (!this.inGround && !this.isGrabbing){
                                 this.isGrabbing = true;
                                 this.inGrip = true;
@@ -379,6 +378,9 @@ public class Player{
                 default -> {
                     this.inGround = true;
                     this.fallSpeed = 0;
+                    this.knockBack = false;
+                    this.knockBackCD = 0;
+                    this.isGrabbing = false;
                     break;
                 }
             }

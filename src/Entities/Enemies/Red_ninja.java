@@ -67,7 +67,7 @@ public class Red_ninja extends Enemies{
 
         this.fallSpeed += this.aceleration;
 
-        if (this.hitPlayer(Main.player) && !Main.player.hitted){
+        if (this.hitPlayer(Main.player, this.getX(), this.getY()) && !Main.player.hitted){
             this.attacking = true;
             this.jumped = true;
             Main.player.gotHit = true;

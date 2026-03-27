@@ -43,9 +43,9 @@ public class Enemies {
         }
     }
 
-    public boolean hitPlayer(Player player){
+    public boolean hitPlayer(Player player, int x, int y){
 
-        return (player.getMaskX() + player.getMaskWidth() > this.x && 
+        return (player.getMaskX() + player.getMaskWidth() > this.x &&
                 player.getMaskX() < this.x + this.width && 
                 player.getMaskY() + player.getMaskHeight() >= this.y &&
                 player.getMaskY() <= this.y + this.height);
