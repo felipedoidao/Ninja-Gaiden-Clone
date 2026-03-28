@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 
 import Entities.Enemies.Bird;
 import Entities.Enemies.Red_ninja;
+import Entities.Enemies.Soldier;
 
 public class World {
 
@@ -71,10 +72,16 @@ public class World {
                             Main.entities.add(red_ninja);
                             break;
                         case 0xFFd95763:
-                            Bird bird = new Bird(xx*32, yy*32, 32, 32);
+                            Bird bird = new Bird(xx*32, yy*32, 28, 10);
                             bird.xStart = xx*32;
                             bird.yStart = yy*32;
                             Main.entities.add(bird);
+                            break;
+                        case 0xFFff0000:
+                            Soldier soldier = new Soldier(xx*32, yy*32, 25, 32);
+                            soldier.xStart = xx*32;
+                            soldier.yStart = yy*32;
+                            Main.entities.add(soldier);
                             break;
                         case 0xFF1eff00:
                             Main.player.setX(xx*32);

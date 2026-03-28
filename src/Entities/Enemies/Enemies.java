@@ -21,7 +21,7 @@ public class Enemies {
     protected boolean isDead = true;
     protected boolean canRespawn = true;
 
-    protected int index, frames, maxIndex, maxFrames;
+    protected int index = 0, frames = 0, maxIndex, maxFrames;
 
     public Enemies(int x, int y, int width, int height){
 
@@ -54,34 +54,30 @@ public class Enemies {
     public boolean hitPlayer(Player player, int x, int y){
 
         return (player.getMaskX() + player.getMaskWidth() > x &&
-                player.getMaskX() < x + this.width && 
+                player.getMaskX() < x + this.width &&
                 player.getMaskY() + player.getMaskHeight() >= y &&
                 player.getMaskY() <= y + this.height);
     }
 
-    public void hurt(Player player, int x, int y){
+    public boolean hurt(Player player, int x, int y){
 
-        boolean hurt = (player.getSwordX() + player.getSwordWidth() > this.x &&
-                player.getSwordX() < this.x + this.width && 
-                player.getSwordY() + player.getSwordHeight() >= this.y &&
-                player.getSwordY() <= this.y + this.height);
-
-        if (hurt){
-            this.isDead = true;
-        }
+        return (player.getSwordX() + player.getSwordWidth() > x &&
+                player.getSwordX() < x + this.width && 
+                player.getSwordY() + player.getSwordHeight() >= y &&
+                player.getSwordY() <= y + this.height);
     }
 
     public void respawn(){
         if (this.isDead){
 
-            if (this.xStart > Camera.x + Main.Largura || this.xStart < Camera.x - 32){
+            if (this.xStart + 32 < Camera.x || this.xStart > Camera.x + Main.Largura){
                 this.canRespawn = true;
             }
-            if (this.canRespawn && this.xStart+32 >= Camera.x-1 || this.canRespawn && this.xStart <= Camera.x+1+Main.Largura){
+            if (this.canRespawn && this.xStart+32 > Camera.x && this.xStart < Camera.x + Main.Largura){
                 this.x = this.xStart;
                 this.y = this.yStart;
-                isDead = false;
-                canRespawn = false;
+                this.isDead = false;
+                this.canRespawn = false;
                 this.locatePlayer(Main.player);
             }
         }

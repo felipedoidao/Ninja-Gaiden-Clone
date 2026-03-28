@@ -6,6 +6,7 @@ import World.Floor_tile;
 import World.Tile;
 import World.World;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
@@ -46,6 +47,7 @@ public class Red_ninja extends Enemies{
     }
 
     public void render(Graphics g){
+
         if(!this.isDead){
             if (this.hori_dir > 0){
                 if(attacking){
@@ -71,9 +73,10 @@ public class Red_ninja extends Enemies{
             this.move();
             this.hit();
             this.fallSpeed += this.aceleration;
-            this.hurt(Main.player, this.getX(), this.getY());
         
         }else {
+            this.attacking = false;
+            this.jumped = false;
             this.respawn();
         }
 
@@ -88,6 +91,10 @@ public class Red_ninja extends Enemies{
             Main.player.hitted = true;
             Main.player.knockBack = true;
             Main.player.inKnockBack = true;
+        }
+
+        if (this.hurt(Main.player, this.getX(), this.getY())){
+            this.isDead = true;
         }
 
     }
@@ -118,12 +125,12 @@ public class Red_ninja extends Enemies{
 
             if (this.inGround){
                 if (this.hori_dir < 0){
-                    if (!(left instanceof Floor_tile)){
+                    if (left == null){
                         this.hori_dir *= -1;
                     }
             
                 }else if (this.hori_dir > 0) {
-                    if (!(right instanceof Floor_tile)){
+                    if (right == null){
                         this.hori_dir *= -1;
                     }
 

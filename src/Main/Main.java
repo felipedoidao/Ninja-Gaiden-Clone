@@ -219,7 +219,7 @@ public class Main extends Canvas implements Runnable, KeyListener{
             break;
         
         case KeyEvent.VK_F:
-            if (!player.attacked){
+            if (!player.attacked && !player.inGrip && !player.knockBack){
                 player.isAttacking = true;
                 player.attacked = true;
             }

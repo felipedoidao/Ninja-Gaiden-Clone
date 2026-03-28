@@ -21,15 +21,11 @@ public class Bird extends Enemies{
         this.maxFrames = 5;
         this.maxIndex = 4;
 
-        this.width = 28;
-        this.height = 10;
-
-
         right = new BufferedImage[4];
         left = new BufferedImage[4];
 
         for (int i = 0; i < 4; i++){
-            right[i] = Main.enemies.getSprite(128+(32*i), 32, 32, 32);
+            right[i] = Main.enemies.getSprite((32*4)+(32*i), 32, 32, 32);
             left[i] = Main.enemies.getSprite(32*i, 32, 32, 32);
         }
 
@@ -58,7 +54,6 @@ public class Bird extends Enemies{
             this.hit();
             this.move(Main.player);
             this.animFrames();
-            this.hurt(Main.player, this.getX(), this.getY() - 8);
         
         }else {
             ver_speed = 0;
@@ -69,12 +64,16 @@ public class Bird extends Enemies{
     }
 
     public void hit(){
-        if (this.hitPlayer(Main.player, this.getX(), this.getY() - 8) && !Main.player.hitted){
+        if (this.hitPlayer(Main.player, this.getX(), this.getY() + 8) && !Main.player.hitted){
             Main.player.gotHit = true;
             Main.player.lives -= 1;
             Main.player.hitted = true;
             Main.player.knockBack = true;
             Main.player.inKnockBack = true;
+        }
+
+        if (this.hurt(Main.player, this.getX(), this.getY() + 8)){
+            this.isDead = true;
         }
 
     }

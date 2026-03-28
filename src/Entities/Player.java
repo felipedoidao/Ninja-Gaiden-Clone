@@ -201,23 +201,21 @@ public class Player{
             this.maskHeight = 32;
         }
 
-        if(!inGrip){
-            if(this.isAttacking){
-                this.ySword = getY() +9;
-            if(last_hori_dir > 0){
-                this.xSword = this.getX() +32;
-            }else {
-                this.xSword = this.getX() - 32;
-            }
-            this.cd++;
-            if (this.cd >= 15){
-                this.cd = 0;
-                this.isAttacking = false;
-            }
-            }else {
-                this.xSword = -10;
-                this.ySword = -10;
-            }
+        if(this.isAttacking){
+            this.ySword = getY() +9;
+        if(last_hori_dir > 0){
+            this.xSword = this.getX() +32;
+        }else {
+            this.xSword = this.getX() - 32;
+        }
+        this.cd++;
+        if (this.cd >= 15){
+            this.cd = 0;
+            this.isAttacking = false;
+        }
+        }else {
+            this.xSword = -10;
+            this.ySword = -10;
         }
         //Controla quanto tempo dura o ataque
         
@@ -305,6 +303,7 @@ public class Player{
         if (this.inGrip){
             this.fallSpeed = 0;
             this.speed = 0;
+            this.isAttacking = false;
 
             //Verifica se o que está se segurando é uma Escada sendo uma escada podemos subir e descer livremente
             Tile ladder = World.isFree((int)x + last_hori_dir, (int)(y), 28, 32);
