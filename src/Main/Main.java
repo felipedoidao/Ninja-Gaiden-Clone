@@ -14,7 +14,6 @@ import Graficos.Graficos;
 import World.World;
 import World.Camera;
 import Entities.Enemies.Enemies;
-import Entities.Enemies.Red_ninja;
 
 public class Main extends Canvas implements Runnable, KeyListener{
 
@@ -167,6 +166,12 @@ public class Main extends Canvas implements Runnable, KeyListener{
 
             //desenha na tela a cada loop
             renderizar();
+
+            try {
+                Thread.sleep(1); 
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 

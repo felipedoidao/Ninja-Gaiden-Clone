@@ -39,23 +39,32 @@ public class Bird extends Enemies{
     }
 
     public void render (Graphics g){
-        
-        if (this.hori_dir > 0){
-            g.drawImage(right[index], this.getX() - Camera.x, this.getY() - Camera.y, null);
-        
-        }else if (this.hori_dir < 0){
-            g.drawImage(left[index], this.getX() - Camera.x, this.getY() - Camera.y, null);
 
+        if(!this.isDead){
+            if (this.hori_dir > 0){
+                g.drawImage(right[index], this.getX() - Camera.x, this.getY() - Camera.y, null);
+        
+            }else if (this.hori_dir < 0){
+                g.drawImage(left[index], this.getX() - Camera.x, this.getY() - Camera.y, null);
+
+            }
         }
 
     }
 
     public void update(){
-        this.animFrames();
 
-        this.move(Main.player);
-
-        this.hit();
+        if(!this.isDead){
+            this.hit();
+            this.move(Main.player);
+            this.animFrames();
+            this.hurt(Main.player, this.getX(), this.getY() - 8);
+        
+        }else {
+            ver_speed = 0;
+            hori_speed = 0;
+            this.respawn();
+        }
 
     }
 
@@ -67,6 +76,7 @@ public class Bird extends Enemies{
             Main.player.knockBack = true;
             Main.player.inKnockBack = true;
         }
+
     }
 
     public void move(Player player){

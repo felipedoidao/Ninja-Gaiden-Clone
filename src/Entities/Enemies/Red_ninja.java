@@ -46,27 +46,40 @@ public class Red_ninja extends Enemies{
     }
 
     public void render(Graphics g){
-        if (this.hori_dir > 0){
-            if(attacking){
-                g.drawImage(attack_right[0], this.getX() - Camera.x, this.getY() - Camera.y, null);
-            }else {
-                g.drawImage(right[index], this.getX() - Camera.x, this.getY() - Camera.y, null);
-            }
-        }else if (this.hori_dir < 0){
-            if(attacking){
-                g.drawImage(attack_left[0], this.getX() - Camera.x -10, this.getY() - Camera.y, null);
-            }else {
-                g.drawImage(left[index], this.getX() - Camera.x, this.getY() - Camera.y, null);
+        if(!this.isDead){
+            if (this.hori_dir > 0){
+                if(attacking){
+                    g.drawImage(attack_right[0], this.getX() - Camera.x, this.getY() - Camera.y, null);
+                }else {
+                    g.drawImage(right[index], this.getX() - Camera.x, this.getY() - Camera.y, null);
+                }
+            }else if (this.hori_dir < 0){
+                if(attacking){
+                    g.drawImage(attack_left[0], this.getX() - Camera.x -10, this.getY() - Camera.y, null);
+                }else {
+                    g.drawImage(left[index], this.getX() - Camera.x, this.getY() - Camera.y, null);
+                }
             }
         }
+        
 
     }
 
     public void update(){
-        animFrames();
+        if(!this.isDead){
+            this.animFrames();
+            this.move();
+            this.hit();
+            this.fallSpeed += this.aceleration;
+            this.hurt(Main.player, this.getX(), this.getY());
+        
+        }else {
+            this.respawn();
+        }
 
-        this.fallSpeed += this.aceleration;
+    }
 
+    public void hit(){
         if (this.hitPlayer(Main.player, this.getX(), this.getY()) && !Main.player.hitted){
             this.attacking = true;
             this.jumped = true;
@@ -76,6 +89,10 @@ public class Red_ninja extends Enemies{
             Main.player.knockBack = true;
             Main.player.inKnockBack = true;
         }
+
+    }
+
+    public void move(){
         if (this.jumped && this.inGround) {
             this.fallSpeed = -3;
         }
@@ -137,5 +154,6 @@ public class Red_ninja extends Enemies{
                 }
             }
         }
+
     }
 }

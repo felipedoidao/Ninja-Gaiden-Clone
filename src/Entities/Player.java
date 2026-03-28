@@ -37,6 +37,12 @@ public class Player{
     public boolean inGrip = false;
     public boolean isGrabbing = false;
 
+    //Hurtbox
+    private int xSword;
+    private int ySword;
+    private int widthSword = 27;
+    private int heightSword = 7;
+
     //Hitbox
     private int maskX;
     private int maskY;
@@ -107,13 +113,13 @@ public class Player{
     }
 
     public void render(Graphics g){
-        //g.setColor(Color.red);
-        //g.fillRect(maskX - Camera.x, maskY - Camera.y, maskWidth, maskHeight);
+        g.setColor(Color.red);
+        g.fillRect(xSword-Camera.x, ySword - Camera.y, widthSword, heightSword);
 
        //decide qual animação vai ser usada
        switch (last_hori_dir){
         case 1:
-            if (isAttacking){
+            if (isAttacking && !inGrip){
                 g.drawImage(attacking_right[0], (int)this.x - Camera.x, (int)this.y - Camera.y, null);
                 //g.drawImage(right[0], (int)this.x, (int)this.y, null);
 
@@ -133,7 +139,7 @@ public class Player{
             }
             break;
         case -1:
-            if (isAttacking){
+            if (isAttacking && !inGrip){
                 g.drawImage(attacking__left[0], (int)this.x - Camera.x - 36, (int)this.y - Camera.y, null);
                 //g.drawImage(right[0], (int)this.x, (int)this.y, null);
 
@@ -195,14 +201,26 @@ public class Player{
             this.maskHeight = 32;
         }
 
-        //Controla quanto tempo dura o ataque
-        if(this.isAttacking){
+        if(!inGrip){
+            if(this.isAttacking){
+                this.ySword = getY() +9;
+            if(last_hori_dir > 0){
+                this.xSword = this.getX() +32;
+            }else {
+                this.xSword = this.getX() - 32;
+            }
             this.cd++;
             if (this.cd >= 15){
                 this.cd = 0;
                 this.isAttacking = false;
             }
+            }else {
+                this.xSword = -10;
+                this.ySword = -10;
+            }
         }
+        //Controla quanto tempo dura o ataque
+        
 
         if (gotHit){
             hitCd ++;
@@ -231,6 +249,8 @@ public class Player{
 
             Tile hit = World.isFree((int)(x + hori_dir), (int)y, 28, 32);
             Tile hitted = World.isFree((int)(x - last_hori_dir), (int)y, 28, 32);
+            Tile grab = World.isFree((int)(x + hori_dir), (int)y+16, 28, 1);
+
             if(!knockBack){
                 switch (hit){
                     case null -> {
@@ -239,7 +259,7 @@ public class Player{
                             
                     }
                     case Grip_Wall g -> {
-                        if(getY()+8 >= g.getY() && (getY()+24) < (g.getY()+32) && hori_dir == last_hori_dir){
+                        if(hori_dir == last_hori_dir && grab != null){
                             if (!this.inGround && !this.isGrabbing){
                                 this.isGrabbing = true;
                                 this.inGrip = true;
@@ -248,7 +268,7 @@ public class Player{
                         break;
                     }
                     case Ladder l -> {
-                        if(getY()+8 >= l.getY() && (getY()+24) < (l.getY()+32) && hori_dir == last_hori_dir){
+                        if(hori_dir == last_hori_dir && grab != null){
                             if (!this.inGround && !this.isGrabbing){
                                 this.isGrabbing = true;
                                 this.inGrip = true;
@@ -381,6 +401,7 @@ public class Player{
                     this.knockBack = false;
                     this.knockBackCD = 0;
                     this.isGrabbing = false;
+                    if (this.hori_dir != 0) this.last_hori_dir = this.hori_dir;
                     break;
                 }
             }
@@ -393,7 +414,6 @@ public class Player{
     public int getY(){
         return (int)this.y;
     }
-
     public void setX(double X){
         this.x = X;
     }
@@ -412,6 +432,19 @@ public class Player{
     }
     public int getMaskY(){
         return this.maskY;
+    }
+
+    public int getSwordWidth(){
+        return this.widthSword;
+    }
+    public int getSwordHeight(){
+        return this.heightSword;
+    }
+    public int getSwordX(){
+        return this.xSword;
+    }
+    public int getSwordY(){
+        return this.ySword;
     }
 
 }
