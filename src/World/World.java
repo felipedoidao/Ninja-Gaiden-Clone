@@ -1,15 +1,16 @@
 package World;
 
-import Main.Main;
-import java.awt.image.BufferedImage;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
 import Entities.Enemies.Bird;
+import Entities.Enemies.Launcher;
 import Entities.Enemies.Red_ninja;
 import Entities.Enemies.Soldier;
+import Main.Main;
 
 public class World {
 
@@ -83,9 +84,16 @@ public class World {
                             soldier.yStart = yy*32;
                             Main.entities.add(soldier);
                             break;
+                        case 0xFFdf7126:
+                            Launcher launcher = new Launcher(xx*32, yy*32, 32, 32);
+                            launcher.xStart = xx*32;
+                            launcher.yStart = yy*32;
+                            Main.entities.add(launcher);
+                            break;
                         case 0xFF1eff00:
                             Main.player.setX(xx*32);
                             Main.player.setY(yy*32);
+                            break;
                    }
                 }
             }

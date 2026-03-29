@@ -1,11 +1,11 @@
 package Entities.Enemies;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+
+import Entities.Player;
 import Main.Main;
 import World.Camera;
-import Entities.Player;
 
 public class Bird extends Enemies{
 

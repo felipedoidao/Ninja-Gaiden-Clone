@@ -1,7 +1,8 @@
 package Entities;
 
-import java.awt.*;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+
 import Main.Main;
 import World.Camera;
 import World.Floor_tile;
@@ -113,8 +114,6 @@ public class Player{
     }
 
     public void render(Graphics g){
-        g.setColor(Color.red);
-        g.fillRect(xSword-Camera.x, ySword - Camera.y, widthSword, heightSword);
 
        //decide qual animação vai ser usada
        switch (last_hori_dir){
@@ -209,7 +208,7 @@ public class Player{
             this.xSword = this.getX() - 32;
         }
         this.cd++;
-        if (this.cd >= 15){
+        if (this.cd >= 20){
             this.cd = 0;
             this.isAttacking = false;
         }
@@ -249,7 +248,7 @@ public class Player{
             Tile hitted = World.isFree((int)(x - last_hori_dir), (int)y, 28, 32);
             Tile grab = World.isFree((int)(x + hori_dir), (int)y+16, 28, 1);
 
-            if(!knockBack){
+            if(!knockBack && !isAttacking){
                 switch (hit){
                     case null -> {
                         
@@ -282,7 +281,7 @@ public class Player{
                     }
                 }
             
-            }else {
+            }else if (knockBack){
                 switch (hitted){
                     case null -> {
                         if(!inGrip){
@@ -400,7 +399,7 @@ public class Player{
                     this.knockBack = false;
                     this.knockBackCD = 0;
                     this.isGrabbing = false;
-                    if (this.hori_dir != 0) this.last_hori_dir = this.hori_dir;
+                    if (!isAttacking && this.hori_dir != 0) this.last_hori_dir = this.hori_dir;
                     break;
                 }
             }

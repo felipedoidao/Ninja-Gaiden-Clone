@@ -1,14 +1,12 @@
 package Entities.Enemies;
 
-import Main.Main;
-import World.Camera;
-import World.Floor_tile;
-import World.Tile;
-import World.World;
-
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+
+import Main.Main;
+import World.Camera;
+import World.Tile;
+import World.World;
 
 public class Red_ninja extends Enemies{
 

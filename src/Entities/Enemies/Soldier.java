@@ -1,13 +1,11 @@
 package Entities.Enemies;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 import Entities.Player;
 import Main.Main;
 import World.Camera;
-import World.Floor_tile;
 import World.Tile;
 import World.World;
 
@@ -82,6 +80,7 @@ public class Soldier extends Enemies{
         }else {
             this.respawn();
         }
+
     }
 
     public void attack(){
@@ -92,12 +91,15 @@ public class Soldier extends Enemies{
             switch (attackingTime) {
                 case 10:
                     Bullet bullet = new Bullet(this.getX()+16, this.getY()-2, 4, 3, this);
+                    Main.entities.add(bullet);
                     break;
                 case 20:
                     Bullet bullet1 = new Bullet(this.getX()+16, this.getY()-2, 4, 3, this);
+                    Main.entities.add(bullet1);
                     break;
                 case 30:
                     Bullet bullet2 = new Bullet(this.getX()+16, this.getY()-2, 4, 3, this);
+                    Main.entities.add(bullet2);
                     break;
             }
             if (attackingTime >= 30){
@@ -107,7 +109,9 @@ public class Soldier extends Enemies{
             }
         }
 
-        if (!attacking) this.maxFrames = 10; else this.maxFrames = 4;
+        this.maxFrames = 20;
+        if (attacking) this.maxFrames = 4;
+
     }
 
     public void hit(){

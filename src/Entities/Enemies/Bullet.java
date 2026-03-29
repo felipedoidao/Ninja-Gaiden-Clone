@@ -1,8 +1,8 @@
 package Entities.Enemies;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+
 import Main.Main;
 import World.Camera;
 
@@ -54,7 +54,5 @@ public class Bullet extends Enemies{
         }else {
             this.speed = -4;
         }
-
-        Main.entities.add(this);
     }
 }
