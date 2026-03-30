@@ -66,7 +66,8 @@ public class Red_ninja extends Enemies{
     }
 
     public void update(){
-        if(!this.isDead){
+
+        if(!this.isDead && this.inScreen()){
             this.animFrames();
             this.move();
             this.hit();

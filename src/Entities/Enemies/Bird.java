@@ -50,7 +50,7 @@ public class Bird extends Enemies{
 
     public void update(){
 
-        if(!this.isDead){
+        if(!this.isDead && inScreen()){
             this.hit();
             this.move(Main.player);
             this.animFrames();

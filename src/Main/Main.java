@@ -106,7 +106,9 @@ public class Main extends Canvas implements Runnable, KeyListener{
 
         for (int i = 0; i < entities.size(); i++){
             Enemies e = entities.get(i);
-            e.render(g);
+            if (e.inScreen()){
+                e.render(g);
+            }
         }
         
         //Método de renderização do jogador

@@ -43,7 +43,7 @@ public class Bullet extends Enemies{
             Main.entities.remove(this);
         }
 
-        if (this.x > Camera.x + Main.Largura || this.x + 4 < Camera.x){
+        if (this.x >= Camera.x + Main.Largura || this.x + 4 <= Camera.x){
             Main.entities.remove(this);
         }
     }

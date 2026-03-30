@@ -51,6 +51,10 @@ public class Enemies {
         }
     }
 
+    public boolean inScreen(){
+        return this.getX() + 32 > Camera.x && this.getX() < Camera.x + Main.Largura;
+    }
+
     public boolean hitPlayer(Player player, int x, int y){
 
         return (player.getMaskX() + player.getMaskWidth() > x &&

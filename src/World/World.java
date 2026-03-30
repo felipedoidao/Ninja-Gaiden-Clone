@@ -85,7 +85,7 @@ public class World {
                             Main.entities.add(soldier);
                             break;
                         case 0xFFdf7126:
-                            Launcher launcher = new Launcher(xx*32, yy*32, 32, 32);
+                            Launcher launcher = new Launcher(xx*32, yy*32, 17, 32);
                             launcher.xStart = xx*32;
                             launcher.yStart = yy*32;
                             Main.entities.add(launcher);

@@ -70,11 +70,13 @@ public class Soldier extends Enemies{
     public void update(){
 
         if (!isDead){
-            vSpeed = speed * hori_dir;
-            this.animFrames();
-            this.locatePlayer2(Main.player);
-            this.hit();
-            this.move();
+            if(this.inScreen()){
+                vSpeed = speed * hori_dir;
+                this.animFrames();
+                this.locatePlayer2(Main.player);
+                this.hit();
+                this.move();
+            }
             this.attack();
         
         }else {
