@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 import Entities.Enemies.Bird;
 import Entities.Enemies.Launcher;
 import Entities.Enemies.Red_ninja;
+import Entities.Enemies.Runner;
 import Entities.Enemies.Soldier;
 import Main.Main;
 
@@ -89,6 +90,12 @@ public class World {
                             launcher.xStart = xx*32;
                             launcher.yStart = yy*32;
                             Main.entities.add(launcher);
+                            break;
+                        case 0xFF00ffe6:
+                            Runner runner = new Runner(xx*32, yy*32, 32, 32);
+                            runner.xStart = xx*32;
+                            runner.yStart = yy*32;
+                            Main.entities.add(runner);
                             break;
                         case 0xFF1eff00:
                             Main.player.setX(xx*32);

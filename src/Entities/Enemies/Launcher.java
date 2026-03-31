@@ -34,15 +34,15 @@ public class Launcher extends Enemies{
 
         right = new BufferedImage[2];
         left = new BufferedImage[2];
-        attack_right = new BufferedImage[2];
-        attack_left = new BufferedImage[2];
+        attack_right = new BufferedImage[1];
+        attack_left = new BufferedImage[1];
+
+        attack_right[0] = Main.enemies.getSprite((32*7), 32*3, 32, 32);
+        attack_left[0] = Main.enemies.getSprite((32*5), 32*3, 32, 32);
 
         for (int i = 0; i < 2; i++){
             right[i] = Main.enemies.getSprite((32*2) + 32*i, 32*3, 32, 32);
             left[i] = Main.enemies.getSprite(32*i, 32*3, 32, 32);
-
-            attack_right[i] = Main.enemies.getSprite((32*6) + 32*i, 32*3, 32, 32);
-            attack_left[i] = Main.enemies.getSprite((32*4) + 32*i, 32*3, 32, 32);
 
         }
 
@@ -58,7 +58,7 @@ public class Launcher extends Enemies{
                     g.drawImage(right[index], this.getX() - Camera.x, this.getY() - Camera.y, null);
                 
                 }else {
-                    g.drawImage(attack_right[index], this.getX() - Camera.x, this.getY() - Camera.y, null);
+                    g.drawImage(attack_right[0], this.getX() - Camera.x, this.getY() - Camera.y, null);
                 }
                 
         
@@ -67,7 +67,7 @@ public class Launcher extends Enemies{
                     g.drawImage(left[index], this.getX() - Camera.x, this.getY() - Camera.y, null);
                 
                 }else {
-                    g.drawImage(attack_left[index], this.getX() - Camera.x, this.getY() - Camera.y, null);
+                    g.drawImage(attack_left[0], this.getX() - Camera.x, this.getY() - Camera.y, null);
                 }
                 
             }
@@ -108,7 +108,7 @@ public class Launcher extends Enemies{
 
             if (attacking){
                 attackingTime++;
-                if(attackingTime >= 8){
+                if(attackingTime >= 20){
                     attacking = false;
                     attackingTime = 0;
                 }
@@ -149,7 +149,7 @@ public class Launcher extends Enemies{
 
             switch (hit) {
                 case null ->{
-                    this.x += vSpeed;
+                    if (!attacking) this.x += vSpeed;
                     break;
                 }
                 default ->{

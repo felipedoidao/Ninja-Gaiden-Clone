@@ -116,7 +116,7 @@ public class Red_ninja extends Enemies{
                     break;
                 }
                 default ->{
-                    this.hori_dir *= -1;
+                    if (inGround) this.hori_dir *= -1;
                     break;
                 }
 
