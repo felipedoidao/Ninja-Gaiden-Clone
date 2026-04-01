@@ -11,6 +11,7 @@ import Entities.Enemies.Launcher;
 import Entities.Enemies.Red_ninja;
 import Entities.Enemies.Runner;
 import Entities.Enemies.Soldier;
+import Entities.Enemies.Tracker;
 import Main.Main;
 
 public class World {
@@ -92,10 +93,16 @@ public class World {
                             Main.entities.add(launcher);
                             break;
                         case 0xFF00ffe6:
-                            Runner runner = new Runner(xx*32, yy*32, 32, 32);
+                            Runner runner = new Runner(xx*32, (yy*32)-16, 48, 48);
                             runner.xStart = xx*32;
-                            runner.yStart = yy*32;
+                            runner.yStart = (yy*32)-16;
                             Main.entities.add(runner);
+                            break;
+                        case 0xFF76428a:
+                            Tracker tracker = new Tracker(xx*32, yy*32, 40, 24);
+                            tracker.xStart = xx*32;
+                            tracker.yStart = yy*32;
+                            Main.entities.add(tracker);
                             break;
                         case 0xFF1eff00:
                             Main.player.setX(xx*32);
@@ -121,8 +128,8 @@ public class World {
         int yStart = Camera.y >> 5;
 
         //Pega o inicio e soma com a largura e altura também divididos por 32 para saber quantos blocos de 32x32 cabem nesse espaço
-        int xFinal = xStart + (Main.Largura >> 5);
-        int yFinal = yStart + (Main.Altura >> 5);
+        int xFinal = xStart + (Main.WIDTH >> 5);
+        int yFinal = yStart + (Main.HEIGHT >> 5);
 
         //Escaneia o espaço recebido para desenhar nas posições
         for (int xx = xStart; xx <= xFinal; xx++){
@@ -161,7 +168,8 @@ public class World {
         int y4 = (yNext+height-1) / TILE_SIZE;
         
         //Impede que o jogo dê erro ao sair da tela pela parte de cima 
-        if (y1 < 0 || y2 < 0 || y3 < 0 || y4 < 0) return null;
+        if (y1 < 0 || y2 < 0 || y3 < 0 || y4 < 0 ||
+           y1 >= World.HEIGHT || y2 >= World.HEIGHT || y3 >= World.HEIGHT || y4 >= World.HEIGHT ) return null;
 
         //Checa qual a posição na lista do bloco que a entidade encontrou
         Tile[] check = {

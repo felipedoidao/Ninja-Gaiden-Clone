@@ -20,9 +20,9 @@ public class Main extends Canvas implements Runnable, KeyListener{
     //Variáveis para renderização da janela
     private boolean rodando = false;
     private static JFrame frame;
-    private static int Escala = 2;
-    public static int Largura = 512;
-    public static int Altura = 288;
+    final static int SCALE = 3;
+    public final static int WIDTH = 320;
+    public final static int HEIGHT = 288;
 
     private BufferedImage image;
 
@@ -58,7 +58,7 @@ public class Main extends Canvas implements Runnable, KeyListener{
         requestFocusInWindow();
 
         //prepara uma imagem vazia para desenhar
-        image = new BufferedImage(Largura, Altura, BufferedImage.TYPE_INT_RGB);
+        image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 
         //Inicializa as imagens para serem usadas
         ninja = new Graficos("/rsc/Ninja Spritesheet.png");
@@ -66,12 +66,12 @@ public class Main extends Canvas implements Runnable, KeyListener{
         enemies = new Graficos("/rsc/Enemies.png");
         
         //Dimensionando o tamanho da janela utilizando escala para manter o aspecto pixelado
-        this.setPreferredSize(new Dimension(Largura*Escala, Altura*Escala));
+        this.setPreferredSize(new Dimension(WIDTH*SCALE, HEIGHT*SCALE));
 
         entities = new ArrayList<Enemies>();
 
         //Inicia o jogador
-        player = new Player((Largura/2)-32, 0, 32, 32);
+        player = new Player((WIDTH/2)-32, 0, 32, 32);
         
         world = new World("/rsc/Mapa medonho.png");
 
@@ -100,15 +100,13 @@ public class Main extends Canvas implements Runnable, KeyListener{
 
         //desenhos na tela
         g.setColor(new Color(0, 0, 0));
-        g.fillRect(0, 0, Largura, Altura);
+        g.fillRect(0, 0, WIDTH, HEIGHT);
 
         world.render(g);
 
         for (int i = 0; i < entities.size(); i++){
             Enemies e = entities.get(i);
-            if (e.inScreen()){
-                e.render(g);
-            }
+            if (e.inScreen()) e.render(g);
         }
         
         //Método de renderização do jogador
@@ -119,7 +117,7 @@ public class Main extends Canvas implements Runnable, KeyListener{
 
         //Trazer os desenhos prontos para a imagem vazia
         Graphics g2 = bs.getDrawGraphics();
-        g2.drawImage(image, 0, 0, Largura * Escala, Altura * Escala, null);
+        g2.drawImage(image, 0, 0, WIDTH * SCALE, HEIGHT * SCALE, null);
 
         g2.dispose();
 
@@ -139,9 +137,9 @@ public class Main extends Canvas implements Runnable, KeyListener{
             e.update();
         }
 
-        Camera.x = (int)player.getX() - (Largura/2);
+        Camera.x = (int)player.getX() - (WIDTH/2);
 
-        Camera.x = Camera.clamp(Camera.x, 0, (World.WIDTH*32) - Largura);
+        Camera.x = Camera.clamp(Camera.x, 0, (World.WIDTH*32) - WIDTH);
     }
 
     //Loop do jogo

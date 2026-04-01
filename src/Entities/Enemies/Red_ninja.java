@@ -60,6 +60,12 @@ public class Red_ninja extends Enemies{
                     g.drawImage(left[index], this.getX() - Camera.x, this.getY() - Camera.y, null);
                 }
             }
+        }else if (this.dead){
+            g.drawImage(this.explosion[index], this.getX() - Camera.x, this.getY() - Camera.y, null);
+            g.drawImage(this.p1[0], (int)this.p1x - Camera.x, (int)this.p1y - Camera.y, null);
+            g.drawImage(this.p2[0], (int)this.p2x - Camera.x, (int)this.p2y - Camera.y, null);
+            g.drawImage(this.p3[0], (int)this.p3x - Camera.x, (int)this.p3y - Camera.y, null);
+            g.drawImage(this.p4[0], (int)this.p4x - Camera.x, (int)this.p4y - Camera.y, null);
         }
         
 
@@ -67,16 +73,23 @@ public class Red_ninja extends Enemies{
 
     public void update(){
 
-        if(!this.isDead && this.inScreen()){
+        if(!this.isDead){
+            this.maxFrames = 20;
+            this.maxIndex = 2;
             this.animFrames();
             this.move();
             this.hit();
             this.fallSpeed += this.aceleration;
+            if (this.y > Camera.y+Main.HEIGHT) {
+                this.isDead = true;
+            }
         
         }else {
+            this.animFrames();
             this.attacking = false;
             this.jumped = false;
             this.respawn();
+            this.deathAnimation();
         }
 
     }
@@ -94,6 +107,9 @@ public class Red_ninja extends Enemies{
 
         if (this.hurt(Main.player, this.getX(), this.getY())){
             this.isDead = true;
+            this.index = 0;
+            this.frames = 0;
+            this.dead = true;
         }
 
     }

@@ -64,23 +64,29 @@ public class Soldier extends Enemies{
                 }
                 
             }
-        }  
+        }else if (this.dead){
+            g.drawImage(this.explosion[index], this.getX() - Camera.x, this.getY() - Camera.y, null);
+            g.drawImage(this.p1[0], (int)this.p1x - Camera.x, (int)this.p1y - Camera.y, null);
+            g.drawImage(this.p2[0], (int)this.p2x - Camera.x, (int)this.p2y - Camera.y, null);
+            g.drawImage(this.p3[0], (int)this.p3x - Camera.x, (int)this.p3y - Camera.y, null);
+            g.drawImage(this.p4[0], (int)this.p4x - Camera.x, (int)this.p4y - Camera.y, null);
+        }
     }
 
     public void update(){
 
         if (!isDead){
-            if(this.inScreen()){
-                vSpeed = speed * hori_dir;
-                this.animFrames();
-                this.locatePlayer2(Main.player);
-                this.hit();
-                this.move();
-            }
+            vSpeed = speed * hori_dir;
+            this.animFrames();
+            this.locatePlayer2(Main.player);
+            this.hit();
+            this.move();
             this.attack();
         
         }else {
+            this.animFrames();
             this.respawn();
+            this.deathAnimation();
         }
 
     }
@@ -92,15 +98,15 @@ public class Soldier extends Enemies{
             attackingTime++;
             switch (attackingTime) {
                 case 10:
-                    Bullet bullet = new Bullet(this.getX()+16, this.getY()-2, 4, 3, this);
+                    Bullet bullet = new Bullet(this.getX()+16, this.getY()-2, 5, 3, this);
                     Main.entities.add(bullet);
                     break;
                 case 20:
-                    Bullet bullet1 = new Bullet(this.getX()+16, this.getY()-2, 4, 3, this);
+                    Bullet bullet1 = new Bullet(this.getX()+16, this.getY()-2, 5, 3, this);
                     Main.entities.add(bullet1);
                     break;
                 case 30:
-                    Bullet bullet2 = new Bullet(this.getX()+16, this.getY()-2, 4, 3, this);
+                    Bullet bullet2 = new Bullet(this.getX()+16, this.getY()-2, 5, 3, this);
                     Main.entities.add(bullet2);
                     break;
             }
@@ -128,6 +134,9 @@ public class Soldier extends Enemies{
 
         if (this.hurt(Main.player, this.getX() + 3, this.getY())){
             this.isDead = true;
+            this.index = 0;
+            this.frames = 0;
+            this.dead = true;
         }
     }
 

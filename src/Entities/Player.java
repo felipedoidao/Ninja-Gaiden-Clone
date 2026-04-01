@@ -1,5 +1,6 @@
 package Entities;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
@@ -18,7 +19,7 @@ public class Player{
     private double y;
     
     //Controladors dos movimentos do personagem
-    private double speed = 3.3;
+    private double speed = 3;
     private double climbSpeed = 2;
     private double fallSpeed = 0;
     private double aceleration = 0.4;
@@ -173,7 +174,10 @@ public class Player{
     }
 
     public void update(){
-        //System.out.println(lives);
+        if (this.y > Camera.y+Main.HEIGHT) {
+            this.setX(2*32);
+            this.setY(2*32);
+        }
         this.fallSpeed += aceleration;
         this.animFrames();
         this.hori_dir = this.rig - this.lef;
@@ -248,11 +252,13 @@ public class Player{
             Tile hitted = World.isFree((int)(x - last_hori_dir), (int)y, 28, 32);
             Tile grab = World.isFree((int)(x + hori_dir), (int)y+16, 28, 1);
 
+            if (!inGround && hit == null && isAttacking) this.x += this.hori_dir;
+
             if(!knockBack && !isAttacking){
                 switch (hit){
                     case null -> {
                         
-                        this.x += this.hori_dir;
+                       this.x += this.hori_dir;
                             
                     }
                     case Grip_Wall g -> {
@@ -300,6 +306,7 @@ public class Player{
 
         //Se o personagem estiver se segurando na parede, velocidade é zero, previne que o personagem se movimente na horizontal
         if (this.inGrip){
+            inKnockBack = false;
             this.fallSpeed = 0;
             this.speed = 0;
             this.isAttacking = false;

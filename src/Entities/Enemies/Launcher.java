@@ -1,5 +1,6 @@
 package Entities.Enemies;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
@@ -55,10 +56,10 @@ public class Launcher extends Enemies{
          if (!isDead){
             if (this.last_hori_dir > 0){
                 if(!this.attacking){
-                    g.drawImage(right[index], this.getX() - Camera.x, this.getY() - Camera.y, null);
+                    g.drawImage(right[index], this.getX() + 5 - Camera.x, this.getY() - Camera.y, null);
                 
                 }else {
-                    g.drawImage(attack_right[0], this.getX() - Camera.x, this.getY() - Camera.y, null);
+                    g.drawImage(attack_right[0], this.getX() + 5 - Camera.x, this.getY() - Camera.y, null);
                 }
                 
         
@@ -71,11 +72,19 @@ public class Launcher extends Enemies{
                 }
                 
             }
+        }else if (this.dead){
+            g.drawImage(this.explosion[index], this.getX() - Camera.x, this.getY() - Camera.y, null);
+            g.drawImage(this.p1[0], (int)this.p1x - Camera.x, (int)this.p1y - Camera.y, null);
+            g.drawImage(this.p2[0], (int)this.p2x - Camera.x, (int)this.p2y - Camera.y, null);
+            g.drawImage(this.p3[0], (int)this.p3x - Camera.x, (int)this.p3y - Camera.y, null);
+            g.drawImage(this.p4[0], (int)this.p4x - Camera.x, (int)this.p4y - Camera.y, null);
         }
     }
 
     public void update(){
-        if (!isDead && inScreen()){
+        if (!isDead){
+            this.maxFrames = 10;
+            this.maxIndex = 2;
             vSpeed = speed * hori_dir;
             this.animFrames();
             this.move();
@@ -84,7 +93,9 @@ public class Launcher extends Enemies{
             this.hit();
         
         }else {
+            this.animFrames();
             this.respawn();
+            this.deathAnimation();
         }
         
     }
@@ -142,7 +153,7 @@ public class Launcher extends Enemies{
             Tile right = World.isFree(this.getX()+ 9 + this.width + hori_dir, this.getY()+32, 20, 1);
             Tile left = World.isFree(this.getX()+ 9 - this.width + hori_dir, this.getY()+32, 20, 1);
 
-            if (dirTimer >= 120){
+            if (dirTimer >= 180){
                 this.locatePlayer(Main.player);
                 dirTimer = 0;
             }
@@ -174,7 +185,7 @@ public class Launcher extends Enemies{
 
     public void hit(){
 
-        if (this.hitPlayer(Main.player, this.getX(), this.getY()) && !Main.player.hitted){
+        if (this.hitPlayer(Main.player, this.getX()+10, this.getY()) && !Main.player.hitted){
             Main.player.gotHit = true;
             Main.player.lives -= 1;
             Main.player.hitted = true;
@@ -182,8 +193,11 @@ public class Launcher extends Enemies{
             Main.player.inKnockBack = true;
         }
 
-        if (this.hurt(Main.player, this.getX() , this.getY())){
+        if (this.hurt(Main.player, this.getX()+10, this.getY())){
             this.isDead = true;
+            this.index = 0;
+            this.frames = 0;
+            this.dead = true;
         }
     }
 

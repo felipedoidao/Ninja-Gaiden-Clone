@@ -1,6 +1,5 @@
 package Entities.Enemies;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
@@ -43,7 +42,7 @@ public class Projectile extends Enemies{
             Main.entities.remove(this);
         }
 
-        if (this.y > Camera.y + Main.Altura){
+        if (!this.inScreen()){
             Main.entities.remove(this);
         }
 
