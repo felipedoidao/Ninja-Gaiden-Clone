@@ -6,11 +6,10 @@ import java.awt.image.BufferedImage;
 import Entities.Player;
 import Main.Main;
 import World.Camera;
-import World.Tile;
 
 public class Enemies {
 
-    private int deathTimer = 0;
+    protected int deathTimer = 0;
     protected boolean dead = false;
 
     protected double x;
@@ -129,7 +128,7 @@ public class Enemies {
         if (this.dead){
             this.maxFrames = 4;
             this.maxIndex = 2;
-            deathTimer++;
+            this.deathTimer++;
             this.p1x -= tspeed;
             this.p1y -= tspeed;
 
@@ -142,9 +141,9 @@ public class Enemies {
             this.p4x += tspeed;
             this.p4y += tspeed;
 
-            if (deathTimer >= 10){
+            if (this.deathTimer >= 10){
                 this.dead = false;
-                deathTimer = 0;
+                this.deathTimer = 0;
             }
         }
     }

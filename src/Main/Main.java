@@ -11,6 +11,7 @@ import javax.swing.*;
 
 import Entities.Player;
 import Graficos.Graficos;
+import Graficos.Ui;
 import World.World;
 import World.Camera;
 import Entities.Enemies.Enemies;
@@ -28,7 +29,10 @@ public class Main extends Canvas implements Runnable, KeyListener{
 
     public static Player player;
     public static World world;
+    public Ui ui;
     public static List<Enemies> entities;
+    public int timerCD = 0;
+    public static int timer = 300;
 
     //Controla as imagens usadas para o jogador
     public static Graficos ninja, level, enemies;
@@ -75,6 +79,8 @@ public class Main extends Canvas implements Runnable, KeyListener{
         
         world = new World("/rsc/Mapa medonho.png");
 
+        ui = new Ui();
+
     }
 
     //Função para iniciar a renderização de forma a não ocorrer o "thread racing"
@@ -99,7 +105,7 @@ public class Main extends Canvas implements Runnable, KeyListener{
         Graphics g = image.getGraphics();
 
         //desenhos na tela
-        g.setColor(new Color(0, 0, 0));
+        g.setColor(new Color(200, 200, 255));
         g.fillRect(0, 0, WIDTH, HEIGHT);
 
         world.render(g);
@@ -111,6 +117,8 @@ public class Main extends Canvas implements Runnable, KeyListener{
         
         //Método de renderização do jogador
         player.render(g);
+
+        ui.render(g);
 
         //sumir com o pincel após o uso para evitar vazamento de memória
         g.dispose();
@@ -131,6 +139,12 @@ public class Main extends Canvas implements Runnable, KeyListener{
     //Função para a lógica das classes
     public void update(){
         player.update();
+
+        timerCD ++;
+        if (timerCD >= 60){
+            timer--;
+            timerCD = 0;
+        }
         
         for (int i = 0; i < entities.size(); i++){
             Enemies e = entities.get(i);

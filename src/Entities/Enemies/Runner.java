@@ -3,6 +3,7 @@ package Entities.Enemies;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
+import Entities.Player;
 import Main.Main;
 import World.Camera;
 import World.Tile;
@@ -138,7 +139,7 @@ public class Runner extends Enemies{
 
         if (this.hitPlayer(Main.player, this.getX() + 3, this.getY()) && !Main.player.hitted){
             Main.player.gotHit = true;
-            Main.player.lives -= 1;
+            Player.lives -= 1;
             Main.player.hitted = true;
             Main.player.knockBack = true;
             Main.player.inKnockBack = true;
@@ -149,6 +150,7 @@ public class Runner extends Enemies{
             this.index = 0;
             this.frames = 0;
             this.dead = true;
+            Player.score += 5;
         }
     }
 }

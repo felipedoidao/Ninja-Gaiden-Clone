@@ -1,9 +1,9 @@
 package Entities.Enemies;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
+import Entities.Player;
 import Main.Main;
 import World.Camera;
 import World.Tile;
@@ -18,7 +18,7 @@ public class Tracker extends Enemies{
 
     private boolean jumped = false;
     private boolean littleJump = false;
-    private boolean inGround;
+    private int littleJumpCD = 0;
 
     private BufferedImage[] right, left;
 
@@ -40,9 +40,6 @@ public class Tracker extends Enemies{
 
     public void render(Graphics g){
         if (!this.isDead) {
-            g.setColor(Color.red);
-            g.fillRect(this.getX() - Camera.x, this.getY() - Camera.y, this.width, this.height);
-
             if (this.hori_dir > 0){
                 g.drawImage(right[index], this.getX() - Camera.x, this.getY() - Camera.y, null);
 
@@ -62,7 +59,7 @@ public class Tracker extends Enemies{
     public void update(){
 
         if(!isDead){
-            this.maxFrames = 8;
+            this.maxFrames = 15;
             this.animFrames();
             this.locatePlayer(Main.player);
             this.move();
@@ -96,10 +93,15 @@ public class Tracker extends Enemies{
         if (this.speed <= -4) this.speed = -3;
 
         if (this.jumped){
-            fallSpeed = -7;
+            fallSpeed = -5;
         }
         if (this.littleJump){
             fallSpeed = -2;
+        }
+        this.littleJumpCD ++;
+        if (this.littleJumpCD >= 15){
+            this.littleJump = true;
+            this.littleJumpCD = 0;
         }
 
         for (int i = 0; i < Math.abs(this.speed); i++){
@@ -108,12 +110,11 @@ public class Tracker extends Enemies{
 
             Tile hit = World.isFree(this.getX() + (int)moveStep, this.getY(), this.width, this.height);
 
-            Tile right = World.isFree(this.getX() + this.width + (int)moveStep, this.getY()+40, this.width, 1);
-            Tile left = World.isFree(this.getX() - this.width + (int)moveStep, this.getY()+40, this.width, 1);
+            Tile right = World.isFree(this.getX() + this.width + (int)moveStep, this.getY()+40, this.width, 5);
+            Tile left = World.isFree(this.getX() - this.width + (int)moveStep, this.getY()+40, this.width, 5);
 
             if (hit == null){
                 this.x += moveStep;
-                this.littleJump = true;
             }
 
             if (this.hori_dir > 0){
@@ -132,15 +133,17 @@ public class Tracker extends Enemies{
             double moveStep = Math.signum(this.fallSpeed);
 
             Tile hit = World.isFree(this.getX(), this.getY() + (int)moveStep, this.width, this.height);
+            Tile jump = World.isFree(this.getX(), this.getY()+24 + (int)moveStep, this.width, 10);
+
+            if(jump == null){
+                this.jumped = false;
+            }
 
             if (hit == null){
-                this.inGround = true;
                 this.y += moveStep;
-                this.jumped = false;
                 this.littleJump = false;
 
             }else {
-                this.inGround = true;
                 this.fallSpeed = 0;
             }
         }
@@ -151,7 +154,7 @@ public class Tracker extends Enemies{
 
         if (this.hitPlayer(Main.player, this.getX(), this.getY()) && !Main.player.hitted){
             Main.player.gotHit = true;
-            Main.player.lives -= 1;
+            Player.lives -= 1;
             Main.player.hitted = true;
             Main.player.knockBack = true;
             Main.player.inKnockBack = true;
@@ -162,6 +165,7 @@ public class Tracker extends Enemies{
             this.index = 0;
             this.frames = 0;
             this.dead = true;
+            Player.score += 5;
         }
     }
 }

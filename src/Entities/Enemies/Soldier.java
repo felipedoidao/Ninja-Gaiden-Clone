@@ -84,9 +84,9 @@ public class Soldier extends Enemies{
             this.attack();
         
         }else {
+            this.deathAnimation();
             this.animFrames();
             this.respawn();
-            this.deathAnimation();
         }
 
     }
@@ -126,7 +126,7 @@ public class Soldier extends Enemies{
 
         if (this.hitPlayer(Main.player, this.getX() + 3, this.getY()) && !Main.player.hitted){
             Main.player.gotHit = true;
-            Main.player.lives -= 1;
+            Player.lives -= 1;
             Main.player.hitted = true;
             Main.player.knockBack = true;
             Main.player.inKnockBack = true;
@@ -137,6 +137,7 @@ public class Soldier extends Enemies{
             this.index = 0;
             this.frames = 0;
             this.dead = true;
+            Player.score += 5;
         }
     }
 

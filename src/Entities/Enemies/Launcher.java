@@ -1,6 +1,5 @@
 package Entities.Enemies;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
@@ -187,7 +186,7 @@ public class Launcher extends Enemies{
 
         if (this.hitPlayer(Main.player, this.getX()+10, this.getY()) && !Main.player.hitted){
             Main.player.gotHit = true;
-            Main.player.lives -= 1;
+            Player.lives -= 1;
             Main.player.hitted = true;
             Main.player.knockBack = true;
             Main.player.inKnockBack = true;
@@ -198,6 +197,7 @@ public class Launcher extends Enemies{
             this.index = 0;
             this.frames = 0;
             this.dead = true;
+            Player.score += 5;
         }
     }
 

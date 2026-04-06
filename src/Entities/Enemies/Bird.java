@@ -76,7 +76,7 @@ public class Bird extends Enemies{
     public void hit(){
         if (this.hitPlayer(Main.player, this.getX(), this.getY() + 8) && !Main.player.hitted){
             Main.player.gotHit = true;
-            Main.player.lives -= 1;
+            Player.lives -= 1;
             Main.player.hitted = true;
             Main.player.knockBack = true;
             Main.player.inKnockBack = true;
@@ -87,6 +87,7 @@ public class Bird extends Enemies{
             this.index = 0;
             this.frames = 0;
             this.dead = true;
+            Player.score += 5;
         }
 
     }
@@ -109,9 +110,9 @@ public class Bird extends Enemies{
 
 
         if (this.y >= player.getY()){
-            this.ver_speed -= this.aceleration + 0.01;
+            this.ver_speed -= this.aceleration + 0.02;
         }else if(this.y <= player.getY()){
-            this.ver_speed += this.aceleration + 0.01;
+            this.ver_speed += this.aceleration + 0.02;
         }
 
         if (this.hori_speed >= 3){

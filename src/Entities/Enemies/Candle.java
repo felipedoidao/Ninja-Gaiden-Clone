@@ -1,0 +1,57 @@
+package Entities.Enemies;
+
+import Entities.Collectibles.*;
+import java.util.Random;
+import java.awt.Color;
+import java.awt.Graphics;
+import Main.Main;
+import World.Camera;
+
+public class Candle extends Enemies{
+
+    private Random random;
+
+    public Candle (int x, int y, int width, int height){
+        super(x, y, width, height);
+
+        random = new Random();
+    }
+
+    public void render(Graphics g){
+        if (!isDead) {
+            g.setColor(Color.orange);
+            g.fillRect(this.getX() - Camera.x, this.getY() - Camera.y, this.width, this.height);
+        }
+
+    }
+
+    public void update(){
+        if (!isDead) {
+            if (this.hurt(Main.player, this.getX(), this.getY())){
+
+                switch (random.nextInt(3)) {
+                    case 0:
+                        Collectible_shuriken s = new Collectible_shuriken(this.getX(), this.getY(), 16, 16);
+                        Main.entities.add(s);
+                        break;
+                
+                    case 1:
+                        Collectible_spin sp = new Collectible_spin(this.getX(), this.getY(), 16, 16);
+                        Main.entities.add(sp);
+                        break;
+
+                    case 2:
+                        Collectible_fireball fb = new Collectible_fireball(this.getX(), this.getY(), 16, 16);
+                        Main.entities.add(fb);
+                        break;
+                }
+                this.isDead = true;
+        
+            }
+        }else {
+            this.respawn();
+        }
+        
+    }
+
+}

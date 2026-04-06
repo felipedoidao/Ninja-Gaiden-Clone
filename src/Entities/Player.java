@@ -1,9 +1,12 @@
 package Entities;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
+import Entities.Collectibles.Collectible_fireball;
+import Entities.Collectibles.Collectible_shuriken;
+import Entities.Collectibles.Collectible_spin;
+import Entities.Collectibles.Collectibles;
 import Main.Main;
 import World.Camera;
 import World.Floor_tile;
@@ -17,6 +20,9 @@ public class Player{
     //Coordenadas do personagem
     private double x;
     private double y;
+
+    //Inventário
+    public static Collectibles[] bag;
     
     //Controladors dos movimentos do personagem
     private double speed = 3;
@@ -24,7 +30,9 @@ public class Player{
     private double fallSpeed = 0;
     private double aceleration = 0.4;
 
-    public int lives = 10;
+    public static int lives = 16;
+    public static int score = 0;
+
     public int hitCd = 0;
     private int knockBackCD = 0;
 
@@ -80,6 +88,8 @@ public class Player{
     public Player(int x, int y, int width, int height){
         this.x = x;
         this.y = y;
+
+        bag = new Collectibles[1];
 
         //Inicializa as listas com os números dos frames
         right = new BufferedImage[1];
@@ -174,22 +184,59 @@ public class Player{
     }
 
     public void update(){
+
+        animFrames();
+        move();
+        hit();
+        attack();
+
         if (this.y > Camera.y+Main.HEIGHT) {
             this.setX(2*32);
             this.setY(2*32);
         }
-        this.fallSpeed += aceleration;
-        this.animFrames();
-        this.hori_dir = this.rig - this.lef;
-        this.vert_dir = this.down - this.up;
-        if (this.fallSpeed >= 7) this.fallSpeed= 6.5;
-        
-        if(this.jumped){
-            
-            this.fallSpeed = -7;
-            
-            if (this.hori_dir != 0) this.last_hori_dir = this.hori_dir;
+
+    }
+
+    private void attack(){
+        if(this.isAttacking){
+            this.ySword = getY() +9;
+        if(last_hori_dir > 0){
+            this.xSword = this.getX() +32;
+        }else {
+            this.xSword = this.getX() - 32;
         }
+        //Controla quanto tempo dura o ataque
+        this.cd++;
+        if (this.cd >= 20){
+            this.cd = 0;
+            this.isAttacking = false;
+        }
+        }else {
+            this.xSword = -10;
+            this.ySword = -10;
+        }
+        
+    }
+
+    private void equipments(){
+        if (Player.bag[0] != null){
+            switch (Player.bag[0]){
+                case Collectible_shuriken s:
+
+                    break;
+                case Collectible_fireball f:
+
+                    break; 
+                case Collectible_spin s:
+
+                    break; 
+                default:
+                    break;
+            }
+        }
+    }
+
+    private void hit(){
 
         //Muda o formato da hitbox para quando o personagem estiver no ar
         if(!this.inGround) {
@@ -204,25 +251,6 @@ public class Player{
             this.maskHeight = 32;
         }
 
-        if(this.isAttacking){
-            this.ySword = getY() +9;
-        if(last_hori_dir > 0){
-            this.xSword = this.getX() +32;
-        }else {
-            this.xSword = this.getX() - 32;
-        }
-        this.cd++;
-        if (this.cd >= 20){
-            this.cd = 0;
-            this.isAttacking = false;
-        }
-        }else {
-            this.xSword = -10;
-            this.ySword = -10;
-        }
-        //Controla quanto tempo dura o ataque
-        
-
         if (gotHit){
             hitCd ++;
             if (hitCd >= 60){
@@ -236,6 +264,7 @@ public class Player{
         }
 
         if (knockBack){
+            isAttacking = false;
             this.speed = 2.5;
             knockBackCD++;
             if (knockBackCD >= 25){
@@ -243,6 +272,20 @@ public class Player{
                 knockBackCD = 0;
             }
 
+        }
+    }
+
+    private void move(){
+        this.fallSpeed += aceleration;
+        this.hori_dir = this.rig - this.lef;
+        this.vert_dir = this.down - this.up;
+        if (this.fallSpeed >= 7) this.fallSpeed= 6.5;
+        
+        if(this.jumped){
+            
+            this.fallSpeed = -7;
+            
+            if (this.hori_dir != 0) this.last_hori_dir = this.hori_dir;
         }
 
         //Para cada valor da velocidade do jogar roda um codigo para detectar colisão pixel por pixel

@@ -3,6 +3,7 @@ package Entities.Enemies;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
+import Entities.Player;
 import Main.Main;
 import World.Camera;
 import World.Tile;
@@ -99,7 +100,7 @@ public class Red_ninja extends Enemies{
             this.attacking = true;
             this.jumped = true;
             Main.player.gotHit = true;
-            Main.player.lives -= 1;
+            Player.lives -= 1;
             Main.player.hitted = true;
             Main.player.knockBack = true;
             Main.player.inKnockBack = true;
@@ -110,6 +111,7 @@ public class Red_ninja extends Enemies{
             this.index = 0;
             this.frames = 0;
             this.dead = true;
+            Player.score += 5;
         }
 
     }

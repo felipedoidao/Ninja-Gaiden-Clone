@@ -7,6 +7,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import Entities.Enemies.Bird;
+import Entities.Enemies.Candle;
 import Entities.Enemies.Launcher;
 import Entities.Enemies.Red_ninja;
 import Entities.Enemies.Runner;
@@ -104,6 +105,12 @@ public class World {
                             tracker.yStart = yy*32;
                             Main.entities.add(tracker);
                             break;
+                        case 0xFF8f974a:
+                            Candle c = new Candle(xx*32, yy*32, 16, 16);
+                            c.xStart = xx*32;
+                            c.yStart = yy*32;
+                            Main.entities.add(c);
+                            break;
                         case 0xFF1eff00:
                             Main.player.setX(xx*32);
                             Main.player.setY(yy*32);
@@ -169,7 +176,9 @@ public class World {
         
         //Impede que o jogo dê erro ao sair da tela pela parte de cima 
         if (y1 < 0 || y2 < 0 || y3 < 0 || y4 < 0 ||
-           y1 >= World.HEIGHT || y2 >= World.HEIGHT || y3 >= World.HEIGHT || y4 >= World.HEIGHT ) return null;
+           y1 >= World.HEIGHT || y2 >= World.HEIGHT || y3 >= World.HEIGHT || y4 >= World.HEIGHT ||
+            x1 < 0 || x2 < 0 || x3 < 0 || x4 < 0 ||
+           x1 >= World.WIDTH|| x2 >= World.WIDTH || x3 >= World.WIDTH || x4 >= World.WIDTH ) return null;
 
         //Checa qual a posição na lista do bloco que a entidade encontrou
         Tile[] check = {
