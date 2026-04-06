@@ -6,7 +6,6 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 import Main.Main;
-import World.Camera;
 import Entities.Player;
 import Entities.Collectibles.Collectible_fireball;
 import Entities.Collectibles.Collectible_shuriken;

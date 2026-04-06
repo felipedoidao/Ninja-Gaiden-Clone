@@ -3,7 +3,6 @@ package Entities.Collectibles;
 import World.Camera;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.awt.Color;
 import Main.Main;
 
 public class Collectible_shuriken extends Collectibles{
