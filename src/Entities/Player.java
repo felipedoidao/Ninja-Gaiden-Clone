@@ -7,6 +7,7 @@ import Entities.Collectibles.Collectible_fireball;
 import Entities.Collectibles.Collectible_shuriken;
 import Entities.Collectibles.Collectible_spin;
 import Entities.Collectibles.Collectibles;
+import Entities.Weapons.Shuriken;
 import Main.Main;
 import World.Camera;
 import World.Floor_tile;
@@ -23,6 +24,9 @@ public class Player{
 
     //Inventário
     public static Collectibles[] bag;
+
+    public boolean isUsing = false;
+    public boolean used = false;
     
     //Controladors dos movimentos do personagem
     private double speed = 3;
@@ -30,9 +34,12 @@ public class Player{
     private double fallSpeed = 0;
     private double aceleration = 0.4;
 
+    //Ui e mecânicas
     public static int lives = 16;
     public static int score = 0;
+    public static int energy = 50;
 
+    //Reação ao tomar dano
     public int hitCd = 0;
     private int knockBackCD = 0;
 
@@ -40,6 +47,8 @@ public class Player{
     public boolean inKnockBack = false;
     public boolean hitted = false;
     public boolean gotHit = false;
+
+    //Controles aéreos e em paredes
     public boolean jumped = false;
     public boolean jumped_from_wall = false;
     public boolean isJumping = false;
@@ -189,6 +198,7 @@ public class Player{
         move();
         hit();
         attack();
+        equipments();
 
         if (this.y > Camera.y+Main.HEIGHT) {
             this.setX(2*32);
@@ -219,20 +229,26 @@ public class Player{
     }
 
     private void equipments(){
-        if (Player.bag[0] != null){
-            switch (Player.bag[0]){
-                case Collectible_shuriken s:
+        if (Player.bag[0] != null && Player.energy >= 5){
+            if (isUsing){
+                switch (Player.bag[0]){
+                    case Collectible_shuriken s:
+                        Player.energy -= 5;
+                        Shuriken.destroy = false;
+                        Shuriken shuriken = new Shuriken(this.getX()+4, this.getY()+8, 16, 16);
+                        Main.entities.add(shuriken);
+                        isUsing = false;
+                        break;
+                    case Collectible_fireball f:
 
-                    break;
-                case Collectible_fireball f:
+                        break; 
+                    case Collectible_spin s:
 
-                    break; 
-                case Collectible_spin s:
-
-                    break; 
-                default:
-                    break;
-            }
+                        break; 
+                    default:
+                        break;
+                }
+            } 
         }
     }
 

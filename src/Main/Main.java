@@ -1,5 +1,9 @@
 package Main;
-import java.awt.*;
+import java.awt.Canvas;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
@@ -7,14 +11,14 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.JFrame;
 
 import Entities.Player;
-import Graficos.Graficos;
-import Graficos.Ui;
-import World.World;
-import World.Camera;
 import Entities.Enemies.Enemies;
+import Graphics.Textures;
+import Graphics.Ui;
+import World.Camera;
+import World.World;
 
 public class Main extends Canvas implements Runnable, KeyListener{
 
@@ -35,7 +39,7 @@ public class Main extends Canvas implements Runnable, KeyListener{
     public static int timer = 300;
 
     //Controla as imagens usadas para o jogador
-    public static Graficos ninja, level, enemies;
+    public static Textures ninja, level, enemies;
 
     public static void main(String[] args) throws Exception {
         frame = new JFrame("Nijna Gaiden");
@@ -65,9 +69,9 @@ public class Main extends Canvas implements Runnable, KeyListener{
         image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 
         //Inicializa as imagens para serem usadas
-        ninja = new Graficos("/rsc/Ninja Spritesheet.png");
-        level = new Graficos("/rsc/Mundo Bizarro.png");
-        enemies = new Graficos("/rsc/Enemies.png");
+        ninja = new Textures("/rsc/Ninja Spritesheet.png");
+        level = new Textures("/rsc/Mundo Bizarro.png");
+        enemies = new Textures("/rsc/Enemies.png");
         
         //Dimensionando o tamanho da janela utilizando escala para manter o aspecto pixelado
         this.setPreferredSize(new Dimension(WIDTH*SCALE, HEIGHT*SCALE));
@@ -238,6 +242,16 @@ public class Main extends Canvas implements Runnable, KeyListener{
                 player.attacked = true;
             }
             break;
+
+        case KeyEvent.VK_E:
+            if (Player.bag[0] != null){
+                if (!player.used && !player.isUsing){
+                    player.isUsing = true;
+                    player.used = true;
+                }
+                
+            }
+            break;
        }
     }
 
@@ -268,7 +282,10 @@ public class Main extends Canvas implements Runnable, KeyListener{
             break;
         
         case KeyEvent.VK_F:
-                player.attacked = false;
+            player.attacked = false;
+            break;
+        case KeyEvent.VK_E:
+            player.used = false;
             break;
        }
     }

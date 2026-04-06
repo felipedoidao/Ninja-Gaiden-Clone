@@ -1,15 +1,15 @@
-package Graficos;
+package Graphics;
 
 import java.awt.image.BufferedImage;
 
 import javax.imageio.ImageIO;
 
-public class Graficos {
+public class Textures {
 
     private BufferedImage spritesheet;
 
     //Construtor da classe que pega uma imagem spritesheet pedindo o caminho dela na pasta
-    public Graficos(String path) {
+    public Textures(String path) {
     try {
         // Tenta carregar o arquivo como um fluxo de dados
         this.spritesheet = ImageIO.read(getClass().getResourceAsStream(path));
