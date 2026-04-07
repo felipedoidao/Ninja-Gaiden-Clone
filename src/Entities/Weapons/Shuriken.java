@@ -14,7 +14,7 @@ public class Shuriken extends Weapons{
 
     private BufferedImage[] shuriken;
 
-    public static boolean destroy;
+    public boolean destroy;
 
     public Shuriken(int x, int y, int width, int height){
         super(x, y, width, height);
@@ -27,7 +27,7 @@ public class Shuriken extends Weapons{
         this.speed = 10;
         this.speed *= hori_dir;
 
-        Shuriken.destroy = false;
+        this.destroy = false;
 
         shuriken = new BufferedImage[2];
 
@@ -42,16 +42,20 @@ public class Shuriken extends Weapons{
     }
 
     public void update(){
-        this.move(Main.player);
         this.animFrames();
-
+        this.move(Main.player);
     }
 
     public void move(Player player){
+
+        if(!this.inScreen()){
+            this.destroy = true;
+            Main.player.usingIten = false;
+        }
         
         this.x += speed;
 
-        if (Shuriken.destroy || this.getX()+this.width < Camera.x || this.getX() > Camera.x + Main.WIDTH){
+        if (this.destroy || this.getX()+this.width < Camera.x || this.getX() > Camera.x + Main.WIDTH){
             Main.entities.remove(this);
         }
         

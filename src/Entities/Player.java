@@ -27,6 +27,7 @@ public class Player{
 
     public boolean isUsing = false;
     public boolean used = false;
+    public boolean usingIten = false;
     
     //Controladors dos movimentos do personagem
     private double speed = 3;
@@ -37,7 +38,7 @@ public class Player{
     //Ui e mecânicas
     public static int lives = 16;
     public static int score = 0;
-    public static int energy = 50;
+    public static int energy = 200;
 
     //Reação ao tomar dano
     public int hitCd = 0;
@@ -98,7 +99,10 @@ public class Player{
         this.x = x;
         this.y = y;
 
+        Collectible_shuriken s = new Collectible_shuriken(1, 1, 16, 16);
+
         bag = new Collectibles[1];
+        bag[0] = s;
 
         //Inicializa as listas com os números dos frames
         right = new BufferedImage[1];
@@ -195,8 +199,8 @@ public class Player{
     public void update(){
 
         animFrames();
-        move();
         hit();
+        move();
         attack();
         equipments();
 
@@ -229,15 +233,16 @@ public class Player{
     }
 
     private void equipments(){
+
         if (Player.bag[0] != null && Player.energy >= 5){
             if (isUsing){
                 switch (Player.bag[0]){
                     case Collectible_shuriken s:
                         Player.energy -= 5;
-                        Shuriken.destroy = false;
                         Shuriken shuriken = new Shuriken(this.getX()+4, this.getY()+8, 16, 16);
                         Main.entities.add(shuriken);
                         isUsing = false;
+                        usingIten = true;
                         break;
                     case Collectible_fireball f:
 
@@ -289,6 +294,8 @@ public class Player{
             }
 
         }
+
+        System.out.println(knockBack);
     }
 
     private void move(){

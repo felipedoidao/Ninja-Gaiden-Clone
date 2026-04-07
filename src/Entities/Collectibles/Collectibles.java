@@ -2,13 +2,14 @@ package Entities.Collectibles;
 
 import java.awt.Graphics;
 
+import Entities.Entities;
 import Entities.Player;
 import World.Tile;
 import World.World;
 import Entities.Enemies.Enemies;
 import Main.Main;
 
-public class Collectibles extends Enemies{
+public class Collectibles extends Entities{
 
     protected double gravity = 0.4;
     protected double fallSpeed = 0;

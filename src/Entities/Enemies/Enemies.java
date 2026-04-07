@@ -3,20 +3,16 @@ package Entities.Enemies;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
+import Entities.Entities;
 import Entities.Player;
+import Entities.Weapons.Shuriken;
 import Main.Main;
 import World.Camera;
 
-public class Enemies {
+public class Enemies extends Entities{
 
     protected int deathTimer = 0;
     protected boolean dead = false;
-
-    protected double x;
-    protected double y;
-
-    protected int width;
-    protected int height;
     protected int hori_dir;
 
     public int xStart;
@@ -31,11 +27,7 @@ public class Enemies {
     protected int index = 0, frames = 0, maxIndex, maxFrames;
 
     public Enemies(int x, int y, int width, int height){
-
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
+        super(x, y, width, height);
 
         explosion = new BufferedImage[2];
         p1 = new BufferedImage[1];
@@ -77,10 +69,6 @@ public class Enemies {
         }
     }
 
-    public boolean inScreen(){
-        return this.getX() + 32 > Camera.x && this.getX() < Camera.x + Main.WIDTH && this.getY() > Camera.y && this.getY() < Camera.y + Main.HEIGHT;
-    }
-
     public boolean hitPlayer(Player player, int x, int y){
 
         return (player.getMaskX() + player.getMaskWidth() > x &&
@@ -103,6 +91,20 @@ public class Enemies {
         this.p4x = this.getX();
         this.p4y = this.getY();
 
+        for (int i = 0; i < Main.entities.size(); i++){
+            Entities e = Main.entities.get(i);
+            if (e instanceof Shuriken){
+
+                if (e.getX() + e.getWidth()> x &&
+                e.getX() < x + this.width && 
+                e.getY() + e.getHeight() >= y &&
+                e.getY() <= y + this.height){
+
+                    ((Shuriken)e).destroy = true;
+                    return true;
+                }   
+            }
+        }
         return (player.getSwordX() + player.getSwordWidth() > x &&
                 player.getSwordX() < x + this.width && 
                 player.getSwordY() + player.getSwordHeight() >= y &&
@@ -124,6 +126,7 @@ public class Enemies {
     }
 
     public void deathAnimation(){
+
         int tspeed = 3;
         if (this.dead){
             this.maxFrames = 4;
@@ -153,17 +156,4 @@ public class Enemies {
 
     public void update(){}
 
-    public int getX(){
-        return (int)this.x;
-    }
-    public int getY(){
-        return (int)this.y;
-    }
-
-    public void setX(int x){
-        this.x = x;
-    }
-    public void setY(int y){
-        this.y = y;
-    }
 }

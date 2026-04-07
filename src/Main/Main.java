@@ -13,8 +13,8 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
+import Entities.Entities;
 import Entities.Player;
-import Entities.Enemies.Enemies;
 import Graphics.Textures;
 import Graphics.Ui;
 import World.Camera;
@@ -34,7 +34,7 @@ public class Main extends Canvas implements Runnable, KeyListener{
     public static Player player;
     public static World world;
     public Ui ui;
-    public static List<Enemies> entities;
+    public static List<Entities> entities;
     public int timerCD = 0;
     public static int timer = 300;
 
@@ -76,7 +76,7 @@ public class Main extends Canvas implements Runnable, KeyListener{
         //Dimensionando o tamanho da janela utilizando escala para manter o aspecto pixelado
         this.setPreferredSize(new Dimension(WIDTH*SCALE, HEIGHT*SCALE));
 
-        entities = new ArrayList<Enemies>();
+        entities = new ArrayList<Entities>();
 
         //Inicia o jogador
         player = new Player((WIDTH/2)-32, 0, 32, 32);
@@ -115,7 +115,7 @@ public class Main extends Canvas implements Runnable, KeyListener{
         world.render(g);
 
         for (int i = 0; i < entities.size(); i++){
-            Enemies e = entities.get(i);
+            Entities e = entities.get(i);
             if (e.inScreen()) e.render(g);
         }
         
@@ -151,7 +151,7 @@ public class Main extends Canvas implements Runnable, KeyListener{
         }
         
         for (int i = 0; i < entities.size(); i++){
-            Enemies e = entities.get(i);
+            Entities e = entities.get(i);
             e.update();
         }
 
