@@ -14,13 +14,13 @@ public class Shuriken extends Weapons{
 
     private BufferedImage[] shuriken;
 
-    public boolean destroy;
-
     public Shuriken(int x, int y, int width, int height){
         super(x, y, width, height);
 
         this.maxFrames = 5;
         this.maxIndex = 2;
+
+        this.destroy = false;
 
         this.first_move(Main.player);
 

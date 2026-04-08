@@ -38,12 +38,10 @@ public class Ui {
                     g.drawImage(Collectible_shuriken.shuriken[0], 106, 26 , 16, 16, null);
                     break;
                 case Collectible_fireball f:
-                    g.setColor(Color.yellow);
-                    g.fillRect(106, 26, 16, 16);
+                    g.drawImage(Collectible_fireball.image, 106, 26 , 16, 16, null);
                     break; 
                 case Collectible_spin s:
-                    g.setColor(Color.blue);
-                    g.fillRect(106, 26, 16, 16);
+                    g.drawImage(Collectible_spin.image, 106, 26 , 16, 16, null);
                     break; 
                 default:
                     break;

@@ -244,7 +244,7 @@ public class Main extends Canvas implements Runnable, KeyListener{
             break;
 
         case KeyEvent.VK_E:
-            if (Player.bag[0] != null){
+            if (Player.bag[0] != null && Player.energy >= 5){
                 if (!player.used && !player.isUsing){
                     player.isUsing = true;
                     player.used = true;

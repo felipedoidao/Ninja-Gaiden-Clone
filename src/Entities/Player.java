@@ -7,6 +7,7 @@ import Entities.Collectibles.Collectible_fireball;
 import Entities.Collectibles.Collectible_shuriken;
 import Entities.Collectibles.Collectible_spin;
 import Entities.Collectibles.Collectibles;
+import Entities.Weapons.Ball;
 import Entities.Weapons.Shuriken;
 import Main.Main;
 import World.Camera;
@@ -95,14 +96,13 @@ public class Player{
     private BufferedImage[] grab_right, grab_left;
     private BufferedImage[] knockingBack_right, knockingBack_left;
 
+    Ball ball;
+
     public Player(int x, int y, int width, int height){
         this.x = x;
         this.y = y;
 
-        Collectible_shuriken s = new Collectible_shuriken(1, 1, 16, 16);
-
         bag = new Collectibles[1];
-        bag[0] = s;
 
         //Inicializa as listas com os números dos frames
         right = new BufferedImage[1];
@@ -134,7 +134,6 @@ public class Player{
         for(int i = 0; i < 4; i++){
             jumping_left[i] = Main.ninja.getSprite(32*4+(32*i), 0, 32, 32);
         }
-
     }
 
     public void render(Graphics g){
@@ -245,7 +244,11 @@ public class Player{
                         usingIten = true;
                         break;
                     case Collectible_fireball f:
-
+                        Player.energy -= 5;
+                        Ball b = new Ball(this.getX()+4, this.getY()+8, 16, 16);
+                        Main.entities.add(b);
+                        isUsing = false;
+                        usingIten = true;
                         break; 
                     case Collectible_spin s:
 
@@ -294,8 +297,6 @@ public class Player{
             }
 
         }
-
-        System.out.println(knockBack);
     }
 
     private void move(){

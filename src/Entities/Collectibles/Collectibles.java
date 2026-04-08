@@ -6,7 +6,6 @@ import Entities.Entities;
 import Entities.Player;
 import World.Tile;
 import World.World;
-import Entities.Enemies.Enemies;
 import Main.Main;
 
 public class Collectibles extends Entities{
@@ -51,6 +50,9 @@ public class Collectibles extends Entities{
     public void update(){
         this.caught(Main.player);
         this.move();
+        if(!inScreen()){
+            Main.entities.remove(this);
+        }
 
     }
 }

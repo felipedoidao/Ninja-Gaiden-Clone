@@ -5,14 +5,15 @@ import java.awt.image.BufferedImage;
 
 import Entities.Entities;
 import Entities.Player;
+import Entities.Weapons.Fire;
 import Entities.Weapons.Shuriken;
+import Entities.Weapons.Weapons;
 import Main.Main;
 import World.Camera;
 
 public class Enemies extends Entities{
 
     protected int deathTimer = 0;
-    protected boolean dead = false;
     protected int hori_dir;
 
     public int xStart;
@@ -24,9 +25,7 @@ public class Enemies extends Entities{
     protected BufferedImage[] explosion, p1, p2, p3, p4;
     protected double p1x, p1y, p2x, p2y, p3x, p3y, p4x, p4y;
 
-    protected int index = 0, frames = 0, maxIndex, maxFrames;
-
-    public Enemies(int x, int y, int width, int height){
+    public Enemies(double x, double y, int width, int height){
         super(x, y, width, height);
 
         explosion = new BufferedImage[2];
@@ -54,21 +53,6 @@ public class Enemies extends Entities{
         }
     }
 
-    public void animFrames(){
-        frames++;
-        if (frames >= maxFrames){
-            index++;
-            frames = 0;
-            if (index >= maxIndex){
-                if (!dead){
-                    index = 0;
-                }else{
-                    index = maxIndex-1;
-                }
-            }
-        }
-    }
-
     public boolean hitPlayer(Player player, int x, int y){
 
         return (player.getMaskX() + player.getMaskWidth() > x &&
@@ -93,14 +77,14 @@ public class Enemies extends Entities{
 
         for (int i = 0; i < Main.entities.size(); i++){
             Entities e = Main.entities.get(i);
-            if (e instanceof Shuriken){
+            if (e instanceof Weapons){
 
                 if (e.getX() + e.getWidth()> x &&
-                e.getX() < x + this.width && 
+                e.getX() < x + this.width &&
                 e.getY() + e.getHeight() >= y &&
                 e.getY() <= y + this.height){
 
-                    ((Shuriken)e).destroy = true;
+                    ((Weapons)e).destroy = true;
                     return true;
                 }   
             }
