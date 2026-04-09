@@ -5,8 +5,6 @@ import java.awt.image.BufferedImage;
 
 import Entities.Entities;
 import Entities.Player;
-import Entities.Weapons.Fire;
-import Entities.Weapons.Shuriken;
 import Entities.Weapons.Weapons;
 import Main.Main;
 import World.Camera;

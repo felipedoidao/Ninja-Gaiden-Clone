@@ -1,5 +1,6 @@
 package Entities;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
@@ -17,7 +18,7 @@ import World.Ladder;
 import World.Tile;
 import World.World;
 
-public class Player{
+public class Player extends Entities{
 
     //Coordenadas do personagem
     private double x;
@@ -84,43 +85,53 @@ public class Player{
     public int last_hori_dir = 1;
 
     //variavéis para animação
-    private int frames, index; 
+    public int frames, index; 
     private int cd = 0;
 
     public BufferedImage sprite_standing, sprite_attacking, sprite_jummping;
 
     //Listas dos frames para animações
-    private BufferedImage[] right, left;
-    private BufferedImage[] attacking_right, attacking__left;
-    private BufferedImage[] jumping_right, jumping_left;
+    private BufferedImage[] right, left, walk_right, walk_left;
+    private BufferedImage[] attacking_right, attacking_left;
+    private BufferedImage[] jumping_right, jumping_left, spin_right, spin_left;
     private BufferedImage[] grab_right, grab_left;
     private BufferedImage[] knockingBack_right, knockingBack_left;
 
     Ball ball;
 
     public Player(int x, int y, int width, int height){
-        this.x = x;
-        this.y = y;
+        super(x, y, width, height);
+
+        maxFrames = 5;
+        maxIndex = 4;
 
         bag = new Collectibles[1];
 
-        //Inicializa as listas com os números dos frames
+        //Inicializa as listas com os números de frames
         right = new BufferedImage[1];
         left = new BufferedImage[1];
-        attacking_right = new BufferedImage[1];
-        attacking__left = new BufferedImage[1];
+
+        walk_right = new BufferedImage[4];
+        walk_left = new BufferedImage[4];
+
+        attacking_right = new BufferedImage[4];
+        attacking_left = new BufferedImage[4];
+
         jumping_right = new BufferedImage[4];
         jumping_left = new BufferedImage[4];
+
+        spin_right = new BufferedImage[4];
+        spin_left = new BufferedImage[4];
+
         grab_right = new BufferedImage[1];
         grab_left = new BufferedImage[1];
+
         knockingBack_right = new BufferedImage[1];
         knockingBack_left = new BufferedImage[1];
 
         //pegando as coordenadas dos frames nas imagens fornecidas
         right[0] = Main.ninja.getSprite(0, 32*2, 32, 32);
         left[0] = Main.ninja.getSprite(32, 32*2, 32, 32);
-        attacking_right[0] = Main.ninja.getSprite(0, 32, 64, 32);
-        attacking__left[0] = Main.ninja.getSprite(32*2, 32, 64, 32);
         grab_right[0] = Main.ninja.getSprite(0, 32*3, 32, 32);
         grab_left[0] = Main.ninja.getSprite(32, 32*3, 32, 32);
         knockingBack_right[0] = Main.ninja.getSprite(32, 32*4, 32, 32);
@@ -129,20 +140,35 @@ public class Player{
         //como essas possuem mais de um frame, cria-se um loop para armazenar na lista todos os frames da animação
         for(int i = 0; i < 4; i++){
             jumping_right[i] = Main.ninja.getSprite(32*i, 0, 32, 32);
-        }
-
-        for(int i = 0; i < 4; i++){
             jumping_left[i] = Main.ninja.getSprite(32*4+(32*i), 0, 32, 32);
+
+            walk_right[i] = Main.ninja.getSprite(32*i, 32*6, 32, 32);
+            walk_left[i] = Main.ninja.getSprite(32*i, 32*7, 32, 32);
+
+            attacking_right[i] = Main.ninja.getSprite(64*i, 32, 64, 32);
+            attacking_left[i] = Main.ninja.getSprite(64+(64*i), 64, 64, 32);
+
+            spin_right[i] = Main.ninja.getSprite(256+(32*i), 0, 32, 32);
+            spin_left[i] = Main.ninja.getSprite(384+(32*i), 0, 32, 32);
+
         }
     }
 
     public void render(Graphics g){
-
+        //g.setColor(Color.red);
+        //g.fillRect(xSword - Camera.x, ySword-Camera.y, widthSword, heightSword);
        //decide qual animação vai ser usada
        switch (last_hori_dir){
+
         case 1:
-            if (isAttacking && !inGrip){
-                g.drawImage(attacking_right[0], (int)this.x - Camera.x, (int)this.y - Camera.y, null);
+            if (usingIten){
+                g.drawImage(spin_right[index], getX() - Camera.x, getY() - Camera.y, null);
+
+            }else if (hori_dir == last_hori_dir && inGround && !isAttacking){
+                g.drawImage(walk_right[index], getX() - Camera.x, getY() - Camera.y, null);
+            
+            }else if (isAttacking && !inGrip){
+                g.drawImage(attacking_right[index], (int)this.x - Camera.x, (int)this.y - Camera.y, null);
                 //g.drawImage(right[0], (int)this.x, (int)this.y, null);
 
             }else if (knockBack){
@@ -153,16 +179,22 @@ public class Player{
 
             }else if (inGround){
                 //g.drawImage(attacking_right[0], (int)this.x, (int)this.y, null);
-                g.drawImage(right[0], (int)this.x - Camera.x, (int)this.y - Camera.y, null);
+                g.drawImage(right[0], getX() - Camera.x, getY() - Camera.y, null);
 
             }else if (inGrip){
-                g.drawImage(grab_right[0], getX() - Camera.x + 2, getY() - Camera.y, null);
+                g.drawImage(grab_right[0], getX() - Camera.x+2, getY() - Camera.y, null);
             
             }
             break;
         case -1:
-            if (isAttacking && !inGrip){
-                g.drawImage(attacking__left[0], (int)this.x - Camera.x - 36, (int)this.y - Camera.y, null);
+            if (usingIten){
+                g.drawImage(spin_left[index], getX() - Camera.x, getY() - Camera.y, null);
+
+            }else if (hori_dir == last_hori_dir && inGround){
+                g.drawImage(walk_left[index], getX() - Camera.x - 1, getY() - Camera.y, null);
+            
+            }else if (isAttacking && !inGrip){
+                g.drawImage(attacking_left[index], (int)this.x - Camera.x - 38, (int)this.y - Camera.y, null);
                 //g.drawImage(right[0], (int)this.x, (int)this.y, null);
 
             }else if (knockBack){
@@ -173,7 +205,7 @@ public class Player{
 
             }else if (inGround){
                 //g.drawImage(attacking_right[0], (int)this.x, (int)this.y, null);
-                g.drawImage(left[0], (int)this.x - Camera.x - 4, (int)this.y - Camera.y, null);
+                g.drawImage(left[0], (int)this.x - Camera.x -1, (int)this.y - Camera.y, null);
 
             }else if (inGrip){
                 g.drawImage(grab_left[0], getX() - Camera.x - 2, getY() - Camera.y, null);
@@ -186,10 +218,10 @@ public class Player{
     //Método que diz quando chamar a próxima imagem da animação
     public void animFrames(){
         this.frames++;
-        if (this.frames >= 5){
+        if (this.frames >= maxFrames){
             this.index++;
             this.frames = 0;
-            if (this.index >= 3){
+            if (this.index >= maxIndex){
                 this.index = 0;
             }
         }
@@ -212,21 +244,32 @@ public class Player{
 
     private void attack(){
         if(this.isAttacking){
+
             this.ySword = getY() +9;
-        if(last_hori_dir > 0){
-            this.xSword = this.getX() +32;
+            this.widthSword = 27;
+            this.heightSword = 7;
+            if(last_hori_dir > 0){
+                this.xSword = this.getX() +32;
+            }else {
+                this.xSword = this.getX() - 32;
+            }
+            //Controla quanto tempo dura o ataque
+            this.cd++;
+            if (this.cd >= 20){
+                this.cd = 0;
+                this.isAttacking = false;
+            }
+        }else if (usingIten){
+            this.xSword = this.getX()-6;
+            this.ySword = this.getY()-6;
+            this.widthSword = 40;
+            this.heightSword = 40;
+        
         }else {
-            this.xSword = this.getX() - 32;
-        }
-        //Controla quanto tempo dura o ataque
-        this.cd++;
-        if (this.cd >= 20){
-            this.cd = 0;
-            this.isAttacking = false;
-        }
-        }else {
-            this.xSword = -10;
-            this.ySword = -10;
+            this.xSword = 10;
+            this.ySword = 0;
+            this.widthSword = 1;
+            this.heightSword = 1;
         }
         
     }
@@ -241,17 +284,22 @@ public class Player{
                         Shuriken shuriken = new Shuriken(this.getX()+4, this.getY()+8, 16, 16);
                         Main.entities.add(shuriken);
                         isUsing = false;
-                        usingIten = true;
                         break;
+
                     case Collectible_fireball f:
                         Player.energy -= 5;
                         Ball b = new Ball(this.getX()+4, this.getY()+8, 16, 16);
                         Main.entities.add(b);
                         isUsing = false;
-                        usingIten = true;
                         break; 
+                        
                     case Collectible_spin s:
-
+                        if (!inGround){
+                            Player.energy -= 5;
+                            usingIten = true;
+                        }
+                        isUsing = false;
+                        
                         break; 
                     default:
                         break;
@@ -289,6 +337,7 @@ public class Player{
 
         if (knockBack){
             isAttacking = false;
+            cd = 0;
             this.speed = 2.5;
             knockBackCD++;
             if (knockBackCD >= 25){
@@ -315,9 +364,9 @@ public class Player{
         //Para cada valor da velocidade do jogar roda um codigo para detectar colisão pixel por pixel
         for (int i = 0; i < this.speed; i++){
 
-            Tile hit = World.isFree((int)(x + hori_dir), (int)y, 28, 32);
-            Tile hitted = World.isFree((int)(x - last_hori_dir), (int)y, 28, 32);
-            Tile grab = World.isFree((int)(x + hori_dir), (int)y+16, 28, 1);
+            Tile hit = World.isFree((this.getX() + hori_dir), getY(), width, height);
+            Tile hitted = World.isFree(this.getX() - last_hori_dir, getY(), width, height);
+            Tile grab = World.isFree((int)(x + hori_dir), (int)y+16, width, 1);
 
             if (!inGround && hit == null && isAttacking) this.x += this.hori_dir;
 
@@ -377,6 +426,7 @@ public class Player{
             this.fallSpeed = 0;
             this.speed = 0;
             this.isAttacking = false;
+            cd = 0;
 
             //Verifica se o que está se segurando é uma Escada sendo uma escada podemos subir e descer livremente
             Tile ladder = World.isFree((int)x + last_hori_dir, (int)(y), 28, 32);
@@ -461,6 +511,11 @@ public class Player{
 
             switch (hit){
                 case null -> {
+                    if (isAttacking || isUsing){
+                        maxFrames = 5;
+                    }else {
+                        maxFrames = 2;
+                    }
                     this.y += moveStep;
                     this.inGround = false;
                     this.jumped = false;
@@ -468,6 +523,8 @@ public class Player{
                     break;
                 }
                 default -> {
+                    maxFrames = 5;
+                    this.usingIten = false;
                     this.inGround = true;
                     this.fallSpeed = 0;
                     this.knockBack = false;

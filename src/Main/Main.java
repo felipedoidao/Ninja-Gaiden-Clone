@@ -79,7 +79,7 @@ public class Main extends Canvas implements Runnable, KeyListener{
         entities = new ArrayList<Entities>();
 
         //Inicia o jogador
-        player = new Player((WIDTH/2)-32, 0, 32, 32);
+        player = new Player(0, 0, 25, 32);
         
         world = new World("/rsc/Mapa medonho.png");
 
@@ -240,6 +240,8 @@ public class Main extends Canvas implements Runnable, KeyListener{
             if (!player.attacked && !player.inGrip && !player.knockBack){
                 player.isAttacking = true;
                 player.attacked = true;
+                Main.player.index = 0;
+                Main.player.frames = 0;
             }
             break;
 

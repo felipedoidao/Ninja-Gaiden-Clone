@@ -10,7 +10,7 @@ public class Ball extends Weapons{
     int[] pos1, pos2, pos3;
 
     private double angle = 0;
-    private double[] speed = {5, 4};
+    private double[] speed = {5, 5};
 
 
     public Ball(double x, double y, int width, int height){
