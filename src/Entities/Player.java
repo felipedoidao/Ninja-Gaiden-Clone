@@ -1,6 +1,5 @@
 package Entities;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
@@ -155,8 +154,6 @@ public class Player extends Entities{
     }
 
     public void render(Graphics g){
-        //g.setColor(Color.red);
-        //g.fillRect(xSword - Camera.x, ySword-Camera.y, widthSword, heightSword);
        //decide qual animação vai ser usada
        switch (last_hori_dir){
 
@@ -245,13 +242,13 @@ public class Player extends Entities{
     private void attack(){
         if(this.isAttacking){
 
-            this.ySword = getY() +9;
-            this.widthSword = 27;
-            this.heightSword = 7;
+            this.ySword = getY() +3;
+            this.widthSword = 34;
+            this.heightSword = 16;
             if(last_hori_dir > 0){
-                this.xSword = this.getX() +32;
+                this.xSword = this.getX() +29;
             }else {
-                this.xSword = this.getX() - 32;
+                this.xSword = this.getX() - 36;
             }
             //Controla quanto tempo dura o ataque
             this.cd++;
@@ -260,10 +257,10 @@ public class Player extends Entities{
                 this.isAttacking = false;
             }
         }else if (usingIten){
-            this.xSword = this.getX()-6;
-            this.ySword = this.getY()-6;
-            this.widthSword = 40;
-            this.heightSword = 40;
+            this.xSword = this.getX()-14;
+            this.ySword = this.getY()-14;
+            this.widthSword = 60;
+            this.heightSword = 60;
         
         }else {
             this.xSword = 10;
