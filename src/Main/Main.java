@@ -109,7 +109,7 @@ public class Main extends Canvas implements Runnable, KeyListener{
         Graphics g = image.getGraphics();
 
         //desenhos na tela
-        g.setColor(new Color(200, 200, 255));
+        g.setColor(Color.black);
         g.fillRect(0, 0, WIDTH, HEIGHT);
 
         world.render(g);

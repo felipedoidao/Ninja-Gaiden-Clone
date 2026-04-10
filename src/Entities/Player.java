@@ -148,8 +148,8 @@ public class Player extends Entities{
             attacking_right[i] = Main.ninja.getSprite(64*i, 32, 64, 32);
             attacking_left[i] = Main.ninja.getSprite(64+(64*i), 64, 64, 32);
 
-            spin_right[i] = Main.ninja.getSprite(256+(32*i), 0, 32, 32);
-            spin_left[i] = Main.ninja.getSprite(384+(32*i), 0, 32, 32);
+            spin_right[i] = Main.ninja.getSprite(128+(64*i), 64*2, 64, 64);
+            spin_left[i] = Main.ninja.getSprite(128+(64*i), 64*3, 64, 64);
 
         }
     }
@@ -162,7 +162,7 @@ public class Player extends Entities{
 
         case 1:
             if (usingIten){
-                g.drawImage(spin_right[index], getX() - Camera.x, getY() - Camera.y, null);
+                g.drawImage(spin_right[index], getX() - Camera.x - 16, getY() - Camera.y - 16, null);
 
             }else if (hori_dir == last_hori_dir && inGround && !isAttacking){
                 g.drawImage(walk_right[index], getX() - Camera.x, getY() - Camera.y, null);
@@ -188,7 +188,7 @@ public class Player extends Entities{
             break;
         case -1:
             if (usingIten){
-                g.drawImage(spin_left[index], getX() - Camera.x, getY() - Camera.y, null);
+                g.drawImage(spin_left[index], getX() - Camera.x - 16, getY() - Camera.y - 16, null);
 
             }else if (hori_dir == last_hori_dir && inGround){
                 g.drawImage(walk_left[index], getX() - Camera.x - 1, getY() - Camera.y, null);
@@ -429,13 +429,13 @@ public class Player extends Entities{
             cd = 0;
 
             //Verifica se o que está se segurando é uma Escada sendo uma escada podemos subir e descer livremente
-            Tile ladder = World.isFree((int)x + last_hori_dir, (int)(y), 28, 32);
+            Tile ladder = World.isFree((int)x + last_hori_dir, (int)(y), width, height);
 
             //Verificar colisão enquanto se move para cima ou para baixo copiando as outras colisões
             if (!(ladder instanceof Ladder)){
                 for (int i = 0; i < climbSpeed; i++){
 
-                    Tile hit = World.isFree((int)x, (int)(y+vert_dir), 28, 32);
+                    Tile hit = World.isFree((int)x, (int)(y+vert_dir), width, height);
 
                     switch (hit){
                         case null -> {
@@ -443,8 +443,8 @@ public class Player extends Entities{
                             this.y += this.vert_dir;
 
                             //Verificações para os blocos na base e o topo do personagem
-                            Tile Topo = World.isFree((int)x + last_hori_dir, (int)(y + 8), 28, 1);
-                            Tile Base = World.isFree((int)x + last_hori_dir, (int)(y + 30), 28, 1);
+                            Tile Topo = World.isFree((int)x + last_hori_dir, (int)(y + 8), width, 1);
+                            Tile Base = World.isFree((int)x + last_hori_dir, (int)(y + 30), width, 1);
 
                             //Se abaixo ou acima do personagem não for uma escada ele para de se mover
                             if (this.vert_dir < 0){
@@ -469,15 +469,15 @@ public class Player extends Entities{
             }
             for (int i = 0; i < this.climbSpeed; i++){
 
-                Tile hit = World.isFree((int)this.x, (int)(this.y+this.vert_dir), 28, 32);
+                Tile hit = World.isFree((int)this.x, (int)(this.y+this.vert_dir), width, height);
 
                 switch (hit){
                     case null -> {
 
                         this.y += this.vert_dir;
 
-                        Tile Topo = World.isFree((int)x + last_hori_dir, (int)(y + 8), 28, 1);
-                        Tile Base = World.isFree((int)x + last_hori_dir, (int)(y + 30), 28, 1);
+                        Tile Topo = World.isFree((int)x + last_hori_dir, (int)(y + 8), width, 1);
+                        Tile Base = World.isFree((int)x + last_hori_dir, (int)(y + 30), width, 1);
 
                         if (this.vert_dir < 0){
                             if (!(Topo instanceof Ladder)){
@@ -507,7 +507,7 @@ public class Player extends Entities{
         for (int i = 0; i < Math.abs(this.fallSpeed); i++){
             double moveStep = Math.signum(this.fallSpeed);
 
-            Tile hit = World.isFree((int) x, (int)(this.y + moveStep), 28, 32);
+            Tile hit = World.isFree((int) x, (int)(this.y + moveStep), width, height);
 
             switch (hit){
                 case null -> {
