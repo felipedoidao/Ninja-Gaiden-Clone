@@ -29,6 +29,8 @@ public class Player extends Entities{
     public boolean isUsing = false;
     public boolean used = false;
     public boolean usingIten = false;
+    public boolean launching = false;
+    private int launchingCd = 0;
     
     //Controladors dos movimentos do personagem
     private double speed = 3;
@@ -95,6 +97,7 @@ public class Player extends Entities{
     private BufferedImage[] jumping_right, jumping_left, spin_right, spin_left;
     private BufferedImage[] grab_right, grab_left;
     private BufferedImage[] knockingBack_right, knockingBack_left;
+    private BufferedImage[] using_right, using_left;
 
     Ball ball;
 
@@ -128,6 +131,9 @@ public class Player extends Entities{
         knockingBack_right = new BufferedImage[1];
         knockingBack_left = new BufferedImage[1];
 
+        using_right = new BufferedImage[1];
+        using_left = new BufferedImage[1];
+
         //pegando as coordenadas dos frames nas imagens fornecidas
         right[0] = Main.ninja.getSprite(0, 32*2, 32, 32);
         left[0] = Main.ninja.getSprite(32, 32*2, 32, 32);
@@ -135,6 +141,8 @@ public class Player extends Entities{
         grab_left[0] = Main.ninja.getSprite(32, 32*3, 32, 32);
         knockingBack_right[0] = Main.ninja.getSprite(32, 32*4, 32, 32);
         knockingBack_left[0] = Main.ninja.getSprite(0, 32*4, 32, 32);
+        using_right[0] = Main.ninja.getSprite(0, 256, 32, 32);
+        using_left[0] = Main.ninja.getSprite(96, 256, 32, 32);
 
         //como essas possuem mais de um frame, cria-se um loop para armazenar na lista todos os frames da animação
         for(int i = 0; i < 4; i++){
@@ -155,60 +163,48 @@ public class Player extends Entities{
 
     public void render(Graphics g){
        //decide qual animação vai ser usada
-       switch (last_hori_dir){
 
-        case 1:
-            if (usingIten){
-                g.drawImage(spin_right[index], getX() - Camera.x - 16, getY() - Camera.y - 16, null);
 
-            }else if (hori_dir == last_hori_dir && inGround && !isAttacking){
-                g.drawImage(walk_right[index], getX() - Camera.x, getY() - Camera.y, null);
-            
-            }else if (isAttacking && !inGrip){
-                g.drawImage(attacking_right[index], (int)this.x - Camera.x, (int)this.y - Camera.y, null);
-                //g.drawImage(right[0], (int)this.x, (int)this.y, null);
+        switch (last_hori_dir) {
+            case 1:
+                if (knockBack) {
+                    g.drawImage(knockingBack_right[0], getX() - Camera.x, getY() - Camera.y, null);
+                } else if (usingIten) {
+                    g.drawImage(spin_right[index], getX() - Camera.x - 16, getY() - Camera.y - 16, null);
+                } else if (launching) {
+                    g.drawImage(using_right[0], getX() - Camera.x, getY() - Camera.y, null);
+                } else if (inGrip) {
+                    g.drawImage(grab_right[0], getX() - Camera.x + 2, getY() - Camera.y, null);
+                } else if (isAttacking) {
+                    g.drawImage(attacking_right[index], (int)this.x - Camera.x, (int)this.y - Camera.y, null);
+                } else if (!inGround) {
+                    g.drawImage(jumping_right[index], (int)this.x - Camera.x, (int)this.y - Camera.y, null);
+                } else if (hori_dir == last_hori_dir) {
+                    g.drawImage(walk_right[index], getX() - Camera.x, getY() - Camera.y, null);
+                } else {
+                    g.drawImage(right[0], getX() - Camera.x, getY() - Camera.y, null);
+                }
+                break;
 
-            }else if (knockBack){
-                g.drawImage(knockingBack_right[0], getX() - Camera.x, getY() - Camera.y, null);
-            
-            }else if(!inGround && !inGrip){
-                g.drawImage(jumping_right[index], (int)this.x - Camera.x, (int)this.y - Camera.y, null);
-
-            }else if (inGround){
-                //g.drawImage(attacking_right[0], (int)this.x, (int)this.y, null);
-                g.drawImage(right[0], getX() - Camera.x, getY() - Camera.y, null);
-
-            }else if (inGrip){
-                g.drawImage(grab_right[0], getX() - Camera.x+2, getY() - Camera.y, null);
-            
-            }
-            break;
-        case -1:
-            if (usingIten){
-                g.drawImage(spin_left[index], getX() - Camera.x - 16, getY() - Camera.y - 16, null);
-
-            }else if (hori_dir == last_hori_dir && inGround){
-                g.drawImage(walk_left[index], getX() - Camera.x - 1, getY() - Camera.y, null);
-            
-            }else if (isAttacking && !inGrip){
-                g.drawImage(attacking_left[index], (int)this.x - Camera.x - 38, (int)this.y - Camera.y, null);
-                //g.drawImage(right[0], (int)this.x, (int)this.y, null);
-
-            }else if (knockBack){
-                g.drawImage(knockingBack_left[0], getX() - Camera.x, getY() - Camera.y, null);
-            
-            }else if(!inGround && !inGrip){
-                g.drawImage(jumping_left[index], (int)this.x - Camera.x, (int)this.y - Camera.y, null);
-
-            }else if (inGround){
-                //g.drawImage(attacking_right[0], (int)this.x, (int)this.y, null);
-                g.drawImage(left[0], (int)this.x - Camera.x -1, (int)this.y - Camera.y, null);
-
-            }else if (inGrip){
-                g.drawImage(grab_left[0], getX() - Camera.x - 2, getY() - Camera.y, null);
-            
-            }
-            break;
+            case -1:
+                if (knockBack) {
+                    g.drawImage(knockingBack_left[0], getX() - Camera.x, getY() - Camera.y, null);
+                } else if (usingIten) {
+                    g.drawImage(spin_left[index], getX() - Camera.x - 16, getY() - Camera.y - 16, null);
+                } else if (launching) {
+                    g.drawImage(using_left[0], getX() - Camera.x - 6, getY() - Camera.y, null);
+                } else if (inGrip) {
+                    g.drawImage(grab_left[0], getX() - Camera.x - 2, getY() - Camera.y, null);
+                } else if (isAttacking) {
+                    g.drawImage(attacking_left[index], (int)this.x - Camera.x - 38, (int)this.y - Camera.y, null);
+                } else if (!inGround) {
+                    g.drawImage(jumping_left[index], (int)this.x - Camera.x, (int)this.y - Camera.y, null);
+                } else if (hori_dir == last_hori_dir) {
+                    g.drawImage(walk_left[index], getX() - Camera.x - 1, getY() - Camera.y, null);
+                } else {
+                    g.drawImage(left[0], (int)this.x - Camera.x - 1, (int)this.y - Camera.y, null);
+                }
+                break;
         }
     }
 
@@ -273,6 +269,16 @@ public class Player extends Entities{
 
     private void equipments(){
 
+        if (launching){
+            isAttacking = false;
+            cd = 0;
+            launchingCd++;
+            if (launchingCd >= 20){
+                launchingCd = 0;
+                launching = false;
+            }
+        }
+
         if (Player.bag[0] != null && Player.energy >= 5){
             if (isUsing){
                 switch (Player.bag[0]){
@@ -281,6 +287,7 @@ public class Player extends Entities{
                         Shuriken shuriken = new Shuriken(this.getX()+4, this.getY()+8, 16, 16);
                         Main.entities.add(shuriken);
                         isUsing = false;
+                        launching = true;
                         break;
 
                     case Collectible_fireball f:
@@ -288,6 +295,7 @@ public class Player extends Entities{
                         Ball b = new Ball(this.getX()+4, this.getY()+8, 16, 16);
                         Main.entities.add(b);
                         isUsing = false;
+                        launching = true;
                         break; 
                         
                     case Collectible_spin s:
@@ -365,9 +373,7 @@ public class Player extends Entities{
             Tile hitted = World.isFree(this.getX() - last_hori_dir, getY(), width, height);
             Tile grab = World.isFree((int)(x + hori_dir), (int)y+16, width, 1);
 
-            if (!inGround && hit == null && isAttacking) this.x += this.hori_dir;
-
-            if(!knockBack && !isAttacking){
+            if(!knockBack && !isAttacking && !launching){
                 switch (hit){
                     case null -> {
                         
@@ -508,7 +514,7 @@ public class Player extends Entities{
 
             switch (hit){
                 case null -> {
-                    if (isAttacking || isUsing){
+                    if (isAttacking && !usingIten){
                         maxFrames = 5;
                     }else {
                         maxFrames = 2;
