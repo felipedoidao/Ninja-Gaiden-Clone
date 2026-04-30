@@ -91,7 +91,7 @@ public class Enemies extends Entities{
             }
         }
         return (player.getSwordX() + player.getSwordWidth() > x &&
-                player.getSwordX() < x + this.width && 
+                player.getSwordX() < x + this.width &&
                 player.getSwordY() + player.getSwordHeight() >= y &&
                 player.getSwordY() <= y + this.height);
     }

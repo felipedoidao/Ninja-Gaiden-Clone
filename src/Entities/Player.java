@@ -3,11 +3,14 @@ package Entities;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
+import javax.management.timer.Timer;
+
 import Entities.Collectibles.Collectible_fireball;
 import Entities.Collectibles.Collectible_shuriken;
 import Entities.Collectibles.Collectible_spin;
 import Entities.Collectibles.Collectibles;
 import Entities.Weapons.Ball;
+import Entities.Weapons.Invincible_fire;
 import Entities.Weapons.Shuriken;
 import Main.Main;
 import World.Camera;
@@ -53,6 +56,12 @@ public class Player extends Entities{
     public boolean inKnockBack = false;
     public boolean hitted = false;
     public boolean gotHit = false;
+
+    //Variáveis de invencibilidade
+    private boolean isInvincible = false;
+    private double angle = 0;
+    private Invincible_fire[] fire;
+    private int invincibleTimer = 0;
 
     //Controles aéreos e em paredes
     public boolean jumped = false;
@@ -108,6 +117,8 @@ public class Player extends Entities{
 
         maxFrames = 5;
         maxIndex = 4;
+
+        fire = new Invincible_fire[3];
 
         bag = new Collectibles[1];
 
@@ -229,12 +240,50 @@ public class Player extends Entities{
         move();
         attack();
         equipments();
+        invinclbe();
+
 
         if (this.y > Camera.y+Main.HEIGHT) {
             this.setX(2*32);
             this.setY(2*32);
         }
 
+    }
+
+    public void invinclbe(){
+        if (Player.invincible){
+            invincibleTimer++;
+            if (invincibleTimer >= 6*60){
+                invincibleTimer = 0;
+                Player.invincible = false;
+            }
+            
+            final double distance = ((2*Math.PI)/3);
+
+            if (!isInvincible){
+                for (int i = 0; i < 3; i++){
+                    Invincible_fire f = new Invincible_fire(0, 0, 16, 16);
+                    Main.entities.add(f);
+                    fire[i] = f;
+                }
+                isInvincible = true;
+            }
+            
+
+            for (int i = 0; i < 3; i++){
+                Invincible_fire f = fire[i];
+
+                double individualAngle = (angle + (i*distance));
+
+                f.setX((this.getX()+5) + 25 * Math.cos(individualAngle));
+
+                f.setY((this.getY()+5) + 25 * Math.sin(individualAngle));
+            }
+            angle += 0.3;
+        }else {
+            angle = 0;
+            isInvincible = false;
+        }
     }
 
     private void attack(){

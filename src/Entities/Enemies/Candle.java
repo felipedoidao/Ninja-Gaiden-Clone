@@ -10,6 +10,7 @@ import World.Camera;
 public class Candle extends Enemies{
 
     private Random random;
+    private int itemSelector = 0;
 
     public Candle (int x, int y, int width, int height){
         super(x, y, width, height);
@@ -28,8 +29,22 @@ public class Candle extends Enemies{
     public void update(){
         if (!isDead) {
             if (this.hurt(Main.player, this.getX(), this.getY())){
+                itemSelector = random.nextInt(100);
 
-                switch (random.nextInt(6)) {
+                if (itemSelector < 5){
+                    Main.entities.add(new Collectible_hourglass(getX(), getY(), 16, 16));
+                }else if (itemSelector < 10){
+                    Main.entities.add(new Collectible_star(getX(), getY(), 16, 16));
+                }else if (itemSelector < 40){
+                    Main.entities.add(new Collectible_ki(this.getX(), this.getY(), 16, 16));
+                }else if (itemSelector < 60){
+                    Main.entities.add(new Collectible_shuriken(this.getX(), this.getY(), 16, 16));
+                }else if (itemSelector < 80){
+                    Main.entities.add(new Collectible_spin(this.getX(), this.getY(), 16, 16));
+                }else{
+                    Main.entities.add(new Collectible_fireball(this.getX(), this.getY(), 16, 16));
+                }
+                /*switch (random.nextInt(100)) {
                     case 0:
                         Collectible_shuriken s = new Collectible_shuriken(this.getX(), this.getY(), 16, 16);
                         Main.entities.add(s);
@@ -60,7 +75,7 @@ public class Candle extends Enemies{
                         Main.entities.add(st);
                         break;
                         
-                }
+                }*/
                 this.isDead = true;
         
             }

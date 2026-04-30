@@ -162,7 +162,7 @@ public class Main extends Canvas implements Runnable, KeyListener{
 
         if (!time){
             timeStopCD++;
-            if (timeStopCD >= 7*60){
+            if (timeStopCD >= 6*60){
                 time = true;
                 timeStopCD = 0;
             }

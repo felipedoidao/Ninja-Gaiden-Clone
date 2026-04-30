@@ -54,24 +54,24 @@ public class Bullet extends Enemies{
 
             if (Main.time){
                 this.x+=this.speed;
-                if (this.hurt(Main.player, this.getX() + 2, this.getY() + 15)){
-                    this.canHit = false;
-                    this.index = 0;
-                    this.frames = 0;
-                    this.dead = true;
-                    Player.score += 2;
-                    this.isDead = true;
+                if (this.hitPlayer(Main.player, this.getX() + 2, this.getY() + 15) && !Main.player.hitted && this.canHit){
+                    Main.player.gotHit = true;
+                    Player.lives -= 1;
+                    Main.player.hitted = true;
+                    Main.player.knockBack = true;
+                    Main.player.inKnockBack = true;
+                    Main.entities.remove(this);
                 }
             }
-
-            if (this.hitPlayer(Main.player, this.getX() + 2, this.getY() + 15) && !Main.player.hitted && this.canHit){
-                Main.player.gotHit = true;
-                Player.lives -= 1;
-                Main.player.hitted = true;
-                Main.player.knockBack = true;
-                Main.player.inKnockBack = true;
-                Main.entities.remove(this);
+            if (this.hurt(Main.player, this.getX() + 2, this.getY() + 15)){
+                this.canHit = false;
+                this.index = 0;
+                this.frames = 0;
+                this.dead = true;
+                Player.score += 2;
+                this.isDead = true;
             }
+            
 
             if (!this.inScreen()){
                 Main.entities.remove(this);
