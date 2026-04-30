@@ -41,6 +41,9 @@ public class Main extends Canvas implements Runnable, KeyListener{
     //Controla as imagens usadas para o jogador
     public static Textures ninja, level, enemies;
 
+    public static boolean time = true;
+    private int timeStopCD = 0;
+
     public static void main(String[] args) throws Exception {
         frame = new JFrame("Nijna Gaiden");
         Main main = new Main();
@@ -144,16 +147,28 @@ public class Main extends Canvas implements Runnable, KeyListener{
     public void update(){
         player.update();
 
+
         timerCD ++;
         if (timerCD >= 60){
             timer--;
             timerCD = 0;
         }
-        
+
         for (int i = 0; i < entities.size(); i++){
             Entities e = entities.get(i);
             e.update();
         }
+        
+
+        if (!time){
+            timeStopCD++;
+            if (timeStopCD >= 7*60){
+                time = true;
+                timeStopCD = 0;
+            }
+        }
+        
+        
 
         Camera.x = (int)player.getX() - (WIDTH/2);
 

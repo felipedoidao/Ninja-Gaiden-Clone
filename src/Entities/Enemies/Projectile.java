@@ -43,16 +43,19 @@ public class Projectile extends Enemies{
 
     public void update(){
         this.deathAnimation();
-        this.launch();
         if (!isDead){
-            if(this.hitPlayer(Main.player, this.getX(), this.getY()+1)){
-                Main.player.gotHit = true;
-                Player.lives -= 1;
-                Main.player.hitted = true;
-                Main.player.knockBack = true;
-                Main.player.inKnockBack = true;
-                Main.entities.remove(this);
+            if (Main.time){
+                this.launch();
+                if(this.hitPlayer(Main.player, this.getX(), this.getY()+1)){
+                    Main.player.gotHit = true;
+                    Player.lives -= 1;
+                    Main.player.hitted = true;
+                    Main.player.knockBack = true;
+                    Main.player.inKnockBack = true;
+                    Main.entities.remove(this);
+                }
             }
+            
             if(this.hurt(Main.player, this.getX(), this.getY()+1)){
                 this.index = 0;
                 this.frames = 0;

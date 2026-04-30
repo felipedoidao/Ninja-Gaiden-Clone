@@ -23,18 +23,12 @@ public class Collectible_ki extends Collectibles{
 
     public void update(){
         this.move();
-        this.caught(Main.player);
-        if(!inScreen()){
-            Main.entities.remove(this);
-        }
-    }
-
-    public void caught(Player player){
-
-        if (this.x >= player.getX() && this.x+this.width <= player.getX()+32 && this.y >= player.getY() && this.y+this.height <= player.getY()+32){
+        if (this.caught(Main.player)){
             Player.energy += 10;
             Main.entities.remove(this);
         }
-
+        if(!inScreen()){
+            Main.entities.remove(this);
+        }
     }
 }

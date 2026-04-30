@@ -94,7 +94,7 @@ public class World {
                             Main.entities.add(launcher);
                             break;
                         case 0xFF00ffe6:
-                            Runner runner = new Runner(xx*32, (yy*32)-16, 48, 48);
+                            Runner runner = new Runner(xx*32, (yy*32)-16, 48, 40);
                             runner.xStart = xx*32;
                             runner.yStart = (yy*32)-16;
                             Main.entities.add(runner);

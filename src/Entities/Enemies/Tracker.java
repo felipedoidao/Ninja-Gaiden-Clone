@@ -60,10 +60,13 @@ public class Tracker extends Enemies{
 
         if(!isDead){
             this.maxFrames = 15;
-            this.animFrames();
-            this.locatePlayer(Main.player);
-            this.move();
-            this.hit();
+            if (Main.time){
+                this.animFrames();
+                this.locatePlayer(Main.player);
+                this.move();
+                this.hit();
+            }
+            this.hurt();
             if (this.y > Camera.y+Main.HEIGHT) {
                 this.isDead = true;
             }
@@ -160,6 +163,9 @@ public class Tracker extends Enemies{
             Main.player.inKnockBack = true;
         }
 
+    }
+
+    public void hurt(){
         if (this.hurt(Main.player, this.getX() + 3, this.getY())){
             this.isDead = true;
             this.index = 0;

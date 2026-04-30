@@ -85,11 +85,14 @@ public class Launcher extends Enemies{
             this.maxFrames = 10;
             this.maxIndex = 2;
             vSpeed = speed * hori_dir;
-            this.animFrames();
-            this.move();
-            attack(Main.player);
-            this.locatePlayer2(Main.player);
-            this.hit();
+            if(Main.time){
+                this.animFrames();
+                this.move();
+                attack(Main.player);
+                this.locatePlayer2(Main.player);
+                this.hit();
+            }
+            hurt();
         
         }else {
             this.animFrames();
@@ -191,7 +194,9 @@ public class Launcher extends Enemies{
             Main.player.knockBack = true;
             Main.player.inKnockBack = true;
         }
+    }
 
+    public void hurt(){
         if (this.hurt(Main.player, this.getX()+10, this.getY())){
             this.isDead = true;
             this.index = 0;

@@ -3,6 +3,8 @@ package Entities.Collectibles;
 import World.Camera;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+
+import Entities.Player;
 import Main.Main;
 
 public class Collectible_fireball extends Collectibles{
@@ -18,5 +20,19 @@ public class Collectible_fireball extends Collectibles{
 
     public void render(Graphics g){
         g.drawImage(image, this.getX() - Camera.x, this.getY() - Camera.y, null);
+    }
+
+    public void update(){
+        if(this.caught(Main.player)){
+            if (Player.bag[0] instanceof Collectible_fireball){
+                Player.energy += 5;
+            }
+            Player.bag[0] = this;
+            Main.entities.remove(this);
+        }
+        this.move();
+        if(!inScreen()){
+            Main.entities.remove(this);
+        }
     }
 }

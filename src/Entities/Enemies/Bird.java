@@ -59,9 +59,12 @@ public class Bird extends Enemies{
         if(!this.isDead){
             this.maxFrames = 5;
             this.maxIndex = 4;
-            this.hit();
-            this.move(Main.player);
-            this.animFrames();
+            if(Main.time){
+                this.hit();
+                this.move(Main.player);
+                this.animFrames();
+            }
+            hurt();
         
         }else {
             this.animFrames();
@@ -81,7 +84,9 @@ public class Bird extends Enemies{
             Main.player.knockBack = true;
             Main.player.inKnockBack = true;
         }
+    }
 
+    public void hurt(){
         if (this.hurt(Main.player, this.getX(), this.getY() + 8)){
             this.isDead = true;
             this.index = 0;
@@ -89,7 +94,6 @@ public class Bird extends Enemies{
             this.dead = true;
             Player.score += 5;
         }
-
     }
 
     public void move(Player player){

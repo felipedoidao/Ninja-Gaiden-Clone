@@ -19,6 +19,8 @@ import World.World;
 
 public class Player extends Entities{
 
+    public static boolean invincible = false;
+
     //Coordenadas do personagem
     private double x;
     private double y;

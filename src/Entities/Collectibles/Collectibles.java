@@ -17,11 +17,12 @@ public class Collectibles extends Entities{
         super(x, y, width, height);
     }
 
-    public void caught(Player player){
+    public boolean caught(Player player){
         if (this.x >= player.getX() && this.x+this.width <= player.getX()+32 && this.y >= player.getY() && this.y+this.height <= player.getY()+32){
-            Player.bag[0] = this;
-            Main.entities.remove(this);
+            return true;
         }
+
+        return false;
     }
 
     public void move(){
@@ -48,11 +49,6 @@ public class Collectibles extends Entities{
     public void render(Graphics g){}
 
     public void update(){
-        this.caught(Main.player);
-        this.move();
-        if(!inScreen()){
-            Main.entities.remove(this);
-        }
 
     }
 }

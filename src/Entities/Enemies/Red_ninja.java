@@ -77,10 +77,14 @@ public class Red_ninja extends Enemies{
         if(!this.isDead){
             this.maxFrames = 20;
             this.maxIndex = 2;
-            this.animFrames();
-            this.move();
-            this.hit();
-            this.fallSpeed += this.aceleration;
+            if(Main.time){
+                this.animFrames();
+                this.move();
+                this.hit();
+                this.fallSpeed += this.aceleration;
+            }
+            this.hurt();
+            
             if (this.y > Camera.y+Main.HEIGHT) {
                 this.isDead = true;
             }
@@ -105,15 +109,16 @@ public class Red_ninja extends Enemies{
             Main.player.knockBack = true;
             Main.player.inKnockBack = true;
         }
+    }
 
-        if (this.hurt(Main.player, this.getX(), this.getY())){
+    public void hurt(){
+         if (this.hurt(Main.player, this.getX(), this.getY())){
             this.isDead = true;
             this.index = 0;
             this.frames = 0;
             this.dead = true;
             Player.score += 5;
         }
-
     }
 
     public void move(){

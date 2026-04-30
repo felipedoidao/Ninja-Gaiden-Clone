@@ -77,11 +77,14 @@ public class Soldier extends Enemies{
 
         if (!isDead){
             vSpeed = speed * hori_dir;
-            this.animFrames();
-            this.locatePlayer2(Main.player);
-            this.hit();
-            this.move();
-            this.attack();
+            if (Main.time){
+                this.animFrames();
+                this.locatePlayer2(Main.player);
+                this.move();
+                this.hit();
+                this.attack();
+            }
+            this.hurt();
         
         }else {
             this.deathAnimation();
@@ -132,6 +135,9 @@ public class Soldier extends Enemies{
             Main.player.inKnockBack = true;
         }
 
+    }
+
+    public void hurt(){
         if (this.hurt(Main.player, this.getX() + 3, this.getY())){
             this.isDead = true;
             this.index = 0;

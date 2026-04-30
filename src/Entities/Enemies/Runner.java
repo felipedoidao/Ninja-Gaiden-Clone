@@ -1,5 +1,6 @@
 package Entities.Enemies;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
@@ -12,6 +13,7 @@ import World.World;
 public class Runner extends Enemies{
 
     private BufferedImage[] right, left;
+    private BufferedImage  jump_right, jump_left;
 
     private double fallSpeed;
     private double gravity = 0.4;
@@ -30,6 +32,8 @@ public class Runner extends Enemies{
 
         right = new BufferedImage[2];
         left = new BufferedImage[2];
+        jump_right = Main.enemies.getSprite(192, 176, 48, 48);
+        jump_left = Main.enemies.getSprite(192, 128, 48, 48);
 
         for (int i = 0; i < 2; i++){
             right[i] = Main.enemies.getSprite(96 + 48*i, 32*4, 48, 48);
@@ -40,10 +44,18 @@ public class Runner extends Enemies{
     public void render(Graphics g){
         if (!isDead){
             if (this.hori_dir > 0){
-                g.drawImage(right[index], this.getX() - Camera.x, this.getY() - Camera.y, null);
+                if (!inGround){
+                    g.drawImage(jump_right, this.getX() - Camera.x, this.getY() - Camera.y, null);
+                }else {
+                    g.drawImage(right[index], this.getX() - Camera.x, this.getY() - Camera.y, null);
+                } 
             
             }else {
-                g.drawImage(left[index], this.getX() - Camera.x, this.getY() - Camera.y, null);
+                if (!inGround){
+                    g.drawImage(jump_left, this.getX() - Camera.x, this.getY() - Camera.y, null);
+                }else {
+                    g.drawImage(left[index], this.getX() - Camera.x, this.getY() - Camera.y, null);
+                }
             }
             
         }else if (this.dead){
@@ -59,10 +71,13 @@ public class Runner extends Enemies{
         if(!isDead){
             this.maxFrames = 5;
             this.maxIndex = 2;
-            this.animFrames();
-            this.move();
-            if(!this.inScreen()) this.isDead = true;
-            this.hit();
+            if(Main.time){
+                this.animFrames();
+                this.move();
+                if(!this.inScreen()) this.isDead = true;
+                this.hit();
+            }
+            this.hurt();
         
         }else {
             this.animFrames();
@@ -82,8 +97,8 @@ public class Runner extends Enemies{
 
             Tile hit = World.isFree(this.getX() + hori_dir, this.getY(), 48, 48);
 
-            Tile right = World.isFree(this.getX() + this.width + hori_dir, this.getY()+48, 48, 1);
-            Tile left = World.isFree(this.getX() - this.width + hori_dir, this.getY()+48, 48, 1);
+            Tile right = World.isFree(this.getX()+ 24 + hori_dir, this.getY()+48, width, 1);
+            Tile left = World.isFree(this.getX() - this.width + hori_dir, this.getY()+48, width, 1);
 
             switch (hit) {
                 case null ->{
@@ -100,7 +115,7 @@ public class Runner extends Enemies{
             if (this.inGround){
                 if (this.hori_dir < 0){
                     if (left == null){
-                        jumped = true;;
+                        jumped = true;
                     }
             
                 }else if (this.hori_dir > 0) {
@@ -137,15 +152,17 @@ public class Runner extends Enemies{
 
     public void hit(){
 
-        if (this.hitPlayer(Main.player, this.getX() + 3, this.getY()) && !Main.player.hitted){
+        if (this.hitPlayer(Main.player, this.getX(), this.getY() + 8) && !Main.player.hitted){
             Main.player.gotHit = true;
             Player.lives -= 1;
             Main.player.hitted = true;
             Main.player.knockBack = true;
             Main.player.inKnockBack = true;
         }
+    }
 
-        if (this.hurt(Main.player, this.getX() + 3, this.getY())){
+    public void hurt(){
+        if (this.hurt(Main.player, this.getX(), this.getY() + 8)){
             this.isDead = true;
             this.index = 0;
             this.frames = 0;

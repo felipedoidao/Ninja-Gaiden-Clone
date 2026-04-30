@@ -53,10 +53,13 @@ public class Enemies extends Entities{
 
     public boolean hitPlayer(Player player, int x, int y){
 
-        return (player.getMaskX() + player.getMaskWidth() > x &&
+        if (!player.invincible && (player.getMaskX() + player.getMaskWidth() > x &&
                 player.getMaskX() < x + this.width &&
                 player.getMaskY() + player.getMaskHeight() >= y &&
-                player.getMaskY() <= y + this.height);
+                player.getMaskY() <= y + this.height)){
+            return true;
+        }
+        return false;
     }
 
     public boolean hurt(Player player, int x, int y){

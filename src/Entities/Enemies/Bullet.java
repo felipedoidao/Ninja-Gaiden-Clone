@@ -51,7 +51,18 @@ public class Bullet extends Enemies{
         this.deathAnimation();
 
         if (!isDead) {
-            this.x+=this.speed;
+
+            if (Main.time){
+                this.x+=this.speed;
+                if (this.hurt(Main.player, this.getX() + 2, this.getY() + 15)){
+                    this.canHit = false;
+                    this.index = 0;
+                    this.frames = 0;
+                    this.dead = true;
+                    Player.score += 2;
+                    this.isDead = true;
+                }
+            }
 
             if (this.hitPlayer(Main.player, this.getX() + 2, this.getY() + 15) && !Main.player.hitted && this.canHit){
                 Main.player.gotHit = true;
@@ -60,15 +71,6 @@ public class Bullet extends Enemies{
                 Main.player.knockBack = true;
                 Main.player.inKnockBack = true;
                 Main.entities.remove(this);
-            }
-
-            if (this.hurt(Main.player, this.getX() + 2, this.getY() + 15)){
-                this.canHit = false;
-                this.index = 0;
-                this.frames = 0;
-                this.dead = true;
-                Player.score += 2;
-                this.isDead = true;
             }
 
             if (!this.inScreen()){

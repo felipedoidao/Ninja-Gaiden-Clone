@@ -29,7 +29,7 @@ public class Candle extends Enemies{
         if (!isDead) {
             if (this.hurt(Main.player, this.getX(), this.getY())){
 
-                switch (random.nextInt(4)) {
+                switch (random.nextInt(6)) {
                     case 0:
                         Collectible_shuriken s = new Collectible_shuriken(this.getX(), this.getY(), 16, 16);
                         Main.entities.add(s);
@@ -44,10 +44,22 @@ public class Candle extends Enemies{
                         Collectible_fireball fb = new Collectible_fireball(this.getX(), this.getY(), 16, 16);
                         Main.entities.add(fb);
                         break;
+
                     case 3:
                         Collectible_ki ki = new Collectible_ki(this.getX(), this.getY(), 16, 16);
                         Main.entities.add(ki);
                         break;
+
+                    case 4:
+                        Collectible_hourglass hg = new Collectible_hourglass(this.getX(), this.getY(), 16, 16);
+                        Main.entities.add(hg);
+                        break;
+
+                    case 5:
+                        Collectible_star st = new Collectible_star(this.getX(), this.getY(), 16, 16);
+                        Main.entities.add(st);
+                        break;
+                        
                 }
                 this.isDead = true;
         
