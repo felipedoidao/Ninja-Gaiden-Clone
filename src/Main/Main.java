@@ -11,6 +11,8 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.java.games.input.ControllerEnvironment;
+
 import javax.swing.JFrame;
 
 import Entities.Entities;
@@ -38,6 +40,9 @@ public class Main extends Canvas implements Runnable, KeyListener{
     public int timerCD = 0;
     public static int timer = 300;
 
+    //Variável para o gamepad
+    public GamepadHandler gamepad;
+
     //Controla as imagens usadas para o jogador
     public static Textures ninja, level, enemies;
 
@@ -45,7 +50,13 @@ public class Main extends Canvas implements Runnable, KeyListener{
     private int timeStopCD = 0;
 
     public static void main(String[] args) throws Exception {
-        frame = new JFrame("Nijna Gaiden");
+        String path = new java.io.File(".").getAbsolutePath();
+        System.setProperty("net.java.games.input.librarypath", path);
+        System.setProperty("java.library.path", path);
+
+        System.out.println(ControllerEnvironment.getDefaultEnvironment().getControllers().length);
+        
+        frame = new JFrame("Ninja Gaiden");
         Main main = new Main();
 
         //Criação e renderização da janela
@@ -83,6 +94,8 @@ public class Main extends Canvas implements Runnable, KeyListener{
 
         //Inicia o jogador
         player = new Player(0, 0, 25, 32);
+
+        gamepad = new GamepadHandler();
         
         world = new World("/rsc/Mapa medonho.png");
 
@@ -145,8 +158,11 @@ public class Main extends Canvas implements Runnable, KeyListener{
 
     //Função para a lógica das classes
     public void update(){
-        player.update();
 
+        if (gamepad != null){
+            gamepad.readCommands(player);
+        }
+        player.update();
 
         timerCD ++;
         if (timerCD >= 60){
@@ -159,7 +175,6 @@ public class Main extends Canvas implements Runnable, KeyListener{
             e.update();
         }
         
-
         if (!time){
             timeStopCD++;
             if (timeStopCD >= 6*60){
@@ -167,8 +182,6 @@ public class Main extends Canvas implements Runnable, KeyListener{
                 timeStopCD = 0;
             }
         }
-        
-        
 
         Camera.x = (int)player.getX() - (WIDTH/2);
 
@@ -236,18 +249,18 @@ public class Main extends Canvas implements Runnable, KeyListener{
         case KeyEvent.VK_D:
             player.rig = 1;
                 
-                if(!player.inGrip && !player.knockBack && !player.isAttacking && !player.launching){
-                    player.last_hori_dir = 1;
-                }
+            if(!player.inGrip && !player.knockBack && !player.isAttacking && !player.launching){
+                player.last_hori_dir = 1;
+            }
             
             break;
 
         case KeyEvent.VK_A:
             player.lef = 1;
              
-                if(!player.inGrip && !player.knockBack && !player.isAttacking && !player.launching){
-                    player.last_hori_dir = -1;
-                }
+            if(!player.inGrip && !player.knockBack && !player.isAttacking && !player.launching){
+                player.last_hori_dir = -1;
+            }
             
             break;
         
@@ -265,8 +278,7 @@ public class Main extends Canvas implements Runnable, KeyListener{
                 if (!player.used && !player.isUsing){
                     player.isUsing = true;
                     player.used = true;
-                }
-                
+                }   
             }
             break;
        }
