@@ -47,7 +47,7 @@ public class Main extends Canvas implements Runnable, KeyListener{
     public static Textures ninja, level, enemies;
 
     public static boolean time = true;
-    private int timeStopCD = 0;
+    public static int timeStopCD = 0;
 
     public static void main(String[] args) throws Exception {
         String path = new java.io.File(".").getAbsolutePath();
@@ -235,6 +235,7 @@ public class Main extends Canvas implements Runnable, KeyListener{
                 player.jumped = true;
                 player.isJumping = true;
                 player.inGrip = false;
+                player.grabbed = true;
             }
             break;
 
@@ -290,6 +291,7 @@ public class Main extends Canvas implements Runnable, KeyListener{
         case KeyEvent.VK_SPACE:
             player.jumped = false;
             player.isJumping = false;
+            player.grabbed = false;
             break;
         
         case KeyEvent.VK_W:
@@ -302,12 +304,10 @@ public class Main extends Canvas implements Runnable, KeyListener{
 
         case KeyEvent.VK_D:
             player.rig = 0;
-            player.isGrabbing = false;
             break;
 
         case KeyEvent.VK_A:
             player.lef = 0;
-            player.isGrabbing = false;
             break;
         
         case KeyEvent.VK_F:

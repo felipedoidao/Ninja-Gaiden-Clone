@@ -8,6 +8,11 @@ public class GamepadHandler {
 
     private Controller joystick;
     private boolean searching;
+    private boolean stopAxisX;
+    private boolean stopAxisY;
+    private boolean stopPovX;
+    private boolean stopPovY;
+    private boolean stopJump;
 
     public GamepadHandler(){
         findJoystick();
@@ -61,11 +66,15 @@ public class GamepadHandler {
                 float val = comp.getPollData();
                 String name = comp.getIdentifier().getName();
 
+                if (val > 0.5 || val < -0.5){
+                    //System.out.println("ID: " + comp.getIdentifier().getName() + " | Valor: " + val);
+                }
                 //System.out.println("ID: " + comp.getIdentifier().getName() + " | Valor: " + val); 
-                if (name.equals("pov") &&  val !=0){
+                if (name.equals("pov")){
                     if (val == 0.5){
                         player.rig = 1;
                         player.lef = 0;
+                        stopPovX = false;
                         if(!player.inGrip && !player.knockBack && !player.isAttacking && !player.launching){
                             player.last_hori_dir = 1;
                         }
@@ -73,28 +82,34 @@ public class GamepadHandler {
                     }else if (val == 1.0){
                         player.lef = 1;
                         player.rig = 0;
+                        stopPovX = false;
                         if(!player.inGrip && !player.knockBack && !player.isAttacking && !player.launching){
                             player.last_hori_dir = -1;
                         }
                             
-                    }else {
+                    }else if (!stopPovX){
                         player.rig = 0;
                         player.lef = 0;
+                        stopPovX = true;
                     }
                     if (val == 0.25){
                         player.up = 1;
+                        stopPovY = false;
                     
                     }else if (val == 0.75){
                         player.down = 1;
+                        stopPovY = false;
                     
-                    }else {
+                    }else if (!stopPovY){
                         player.up = 0;
                         player.down = 0;
+                        stopPovY = true;
                     }
                 }else if (name.equals("x")){
                     if (val > 0.5 && val <= 1){
                         player.rig = 1;
                         player.lef = 0;
+                        stopAxisX = false;
                         if(!player.inGrip && !player.knockBack && !player.isAttacking && !player.launching){
                             player.last_hori_dir = 1;
                         }
@@ -102,26 +117,30 @@ public class GamepadHandler {
                     }else if (val < -0.5 && val >= -1){
                         player.lef = 1;
                         player.rig = 0;
+                        stopAxisX = false;
                         if(!player.inGrip && !player.knockBack && !player.isAttacking && !player.launching){
                             player.last_hori_dir = -1;
                         }
                         
-                    }else {
+                    }else if (!stopAxisX){
                         player.rig = 0;
                         player.lef = 0;
-                        player.isGrabbing = false;
+                        stopAxisX = true;
                     } 
                     
                 }else if (name.equals("y")){
                     if (val > 0.5 && val <= 1){
                         player.down = 1;
+                        stopAxisY = false;
                     
                     }else if (val < -0.5 && val >= -1){
                         player.up = 1;
+                        stopAxisY = false;
                     
-                    }else {
+                    }else if (!stopAxisY){
                         player.up = 0;
                         player.down = 0;
+                        stopAxisY = true;
                     }
                 }
                 
@@ -131,10 +150,14 @@ public class GamepadHandler {
                             player.jumped = true;
                             player.isJumping = true;
                             player.inGrip = false;
+                            player.grabbed = true;
+                            stopJump = false;
                         }
-                    }else {
+                    }else if (val == 0 && !stopJump){
                         player.jumped = false;
                         player.isJumping = false;
+                        player.grabbed = false;
+                        stopJump = true;
                     }
                 }
 

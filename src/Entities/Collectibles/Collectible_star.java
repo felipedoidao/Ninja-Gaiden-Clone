@@ -26,6 +26,7 @@ public class Collectible_star extends Collectibles{
     public void update(){
         if (this.caught(Main.player)){
             Player.invincible = true;
+            Player.invincibleTimer = 0;
             Main.entities.remove(this);
         }
         this.move();

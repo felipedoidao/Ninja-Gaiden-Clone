@@ -61,7 +61,7 @@ public class Player extends Entities{
     private boolean isInvincible = false;
     private double angle = 0;
     private Invincible_fire[] fire;
-    private int invincibleTimer = 0;
+    public static int invincibleTimer = 0;
 
     //Controles aéreos e em paredes
     public boolean jumped = false;
@@ -69,7 +69,7 @@ public class Player extends Entities{
     public boolean isJumping = false;
     public boolean inGround = false;
     public boolean inGrip = false;
-    public boolean isGrabbing = false;
+    public boolean grabbed;
 
     //Hurtbox
     private int xSword;
@@ -187,7 +187,7 @@ public class Player extends Entities{
                 } else if (launching) {
                     g.drawImage(using_right[0], getX() - Camera.x, getY() - Camera.y, null);
                 } else if (inGrip) {
-                    g.drawImage(grab_right[0], getX() - Camera.x + 2, getY() - Camera.y, null);
+                    g.drawImage(grab_right[0], getX() - Camera.x , getY() - Camera.y, null);
                 } else if (isAttacking) {
                     g.drawImage(attacking_right[index], (int)this.x - Camera.x, (int)this.y - Camera.y, null);
                 } else if (!inGround) {
@@ -234,6 +234,8 @@ public class Player extends Entities{
     }
 
     public void update(){
+
+        System.out.println(grabbed);
 
         animFrames();
         hit();
@@ -433,8 +435,8 @@ public class Player extends Entities{
                     }
                     case Grip_Wall g -> {
                         if(hori_dir == last_hori_dir && grab != null){
-                            if (!this.inGround && !this.isGrabbing){
-                                this.isGrabbing = true;
+                            if (!this.inGround && !this.grabbed){
+                                this.grabbed = true;
                                 this.inGrip = true;
                             }
                         }
@@ -442,8 +444,8 @@ public class Player extends Entities{
                     }
                     case Ladder l -> {
                         if(hori_dir == last_hori_dir && grab != null){
-                            if (!this.inGround && !this.isGrabbing){
-                                this.isGrabbing = true;
+                            if (!this.inGround && !this.grabbed){
+                                this.grabbed = true;
                                 this.inGrip = true;
                             }
                         }
@@ -582,8 +584,6 @@ public class Player extends Entities{
                     this.inGround = true;
                     this.fallSpeed = 0;
                     this.knockBack = false;
-                    this.knockBackCD = 0;
-                    this.isGrabbing = false;
                     if (!isAttacking && this.hori_dir != 0) this.last_hori_dir = this.hori_dir;
                     break;
                 }

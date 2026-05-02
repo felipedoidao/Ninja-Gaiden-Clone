@@ -27,6 +27,7 @@ public class Collectible_hourglass extends Collectibles{
 
         if (this.caught(Main.player)){
             Main.time = false;
+            Main.timeStopCD = 0;
             Main.entities.remove(this);
         }
 
