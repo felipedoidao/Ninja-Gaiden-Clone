@@ -3,8 +3,6 @@ package Entities;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
-import javax.management.timer.Timer;
-
 import Entities.Collectibles.Collectible_fireball;
 import Entities.Collectibles.Collectible_shuriken;
 import Entities.Collectibles.Collectible_spin;
@@ -478,6 +476,7 @@ public class Player extends Entities{
 
         //Se o personagem estiver se segurando na parede, velocidade é zero, previne que o personagem se movimente na horizontal
         if (this.inGrip){
+            this.usingIten = false;
             inKnockBack = false;
             this.fallSpeed = 0;
             this.speed = 0;

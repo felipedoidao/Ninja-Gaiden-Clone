@@ -30,7 +30,7 @@ public class Candle extends Enemies{
         if (!isDead) {
             if (this.hurt(Main.player, this.getX(), this.getY())){
                 //Seletor de número aleatório que vai de 0 a 99
-                itemSelector = random.nextInt(100);
+                itemSelector = random.nextInt(115);
                 //Dependendo do valor selecionado decide qual item será instanciado
                 if (itemSelector < 5){
                     Main.entities.add(new Collectible_hourglass(getX(), getY(), 16, 16));
@@ -42,8 +42,10 @@ public class Candle extends Enemies{
                     Main.entities.add(new Collectible_shuriken(this.getX(), this.getY(), 16, 16));
                 }else if (itemSelector < 80){
                     Main.entities.add(new Collectible_spin(this.getX(), this.getY(), 16, 16));
-                }else{
+                }else if (itemSelector< 100){
                     Main.entities.add(new Collectible_fireball(this.getX(), this.getY(), 16, 16));
+                }else {
+                    Main.entities.add(new Collectible_cure(this.getX(), this.getY(), 16, 16));
                 }
 
                 this.isDead = true;

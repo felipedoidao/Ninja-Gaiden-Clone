@@ -8,6 +8,12 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,12 +56,6 @@ public class Main extends Canvas implements Runnable, KeyListener{
     public static int timeStopCD = 0;
 
     public static void main(String[] args) throws Exception {
-        String path = new java.io.File(".").getAbsolutePath();
-        System.setProperty("net.java.games.input.librarypath", path);
-        System.setProperty("java.library.path", path);
-
-        System.out.println(ControllerEnvironment.getDefaultEnvironment().getControllers().length);
-        
         frame = new JFrame("Ninja Gaiden");
         Main main = new Main();
 
@@ -71,8 +71,20 @@ public class Main extends Canvas implements Runnable, KeyListener{
         main.start();
     }
 
+    private static void carregarLibNativa(String path) throws IOException {
+        // Cria um arquivo temporário que será deletado quando o programa fechar
+        InputStream in = Main.class.getResourceAsStream(path);
+        File tempFile = File.createTempFile("lib", ".dll");
+        tempFile.deleteOnExit();
+        
+        Files.copy(in, tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        System.load(tempFile.getAbsolutePath());
+    }
     
     public Main(){
+        String path = new java.io.File("Main/src").getAbsolutePath();
+        System.setProperty("net.java.games.input.librarypath", path);
+        System.setProperty("java.library.path", path);
         
         //Comandos para o teclado
         addKeyListener(this);
@@ -275,7 +287,7 @@ public class Main extends Canvas implements Runnable, KeyListener{
             break;
 
         case KeyEvent.VK_E:
-            if (Player.bag[0] != null && Player.energy >= 5){
+            if (Player.bag[0] != null && Player.energy >= 5 && !player.inGrip){
                 if (!player.used && !player.isUsing){
                     player.isUsing = true;
                     player.used = true;
