@@ -8,16 +8,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
-
-import net.java.games.input.ControllerEnvironment;
 
 import javax.swing.JFrame;
 
@@ -69,16 +61,6 @@ public class Main extends Canvas implements Runnable, KeyListener{
 
         //início da lógica
         main.start();
-    }
-
-    private static void carregarLibNativa(String path) throws IOException {
-        // Cria um arquivo temporário que será deletado quando o programa fechar
-        InputStream in = Main.class.getResourceAsStream(path);
-        File tempFile = File.createTempFile("lib", ".dll");
-        tempFile.deleteOnExit();
-        
-        Files.copy(in, tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-        System.load(tempFile.getAbsolutePath());
     }
     
     public Main(){
