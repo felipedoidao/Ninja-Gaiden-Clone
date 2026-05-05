@@ -1,6 +1,7 @@
 package Entities;
 
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 import Entities.Collectibles.Collectible_fireball;
@@ -232,16 +233,12 @@ public class Player extends Entities{
     }
 
     public void update(){
-
-        System.out.println(grabbed);
-
         animFrames();
         hit();
         move();
         attack();
         equipments();
         invinclbe();
-
 
         if (this.y > Camera.y+Main.HEIGHT) {
             this.setX(2*32);
@@ -335,8 +332,8 @@ public class Player extends Entities{
                 switch (Player.bag[0]){
                     case Collectible_shuriken s:
                         Player.energy -= 5;
-                        Shuriken shuriken = new Shuriken(this.getX()+4, this.getY()+8, 16, 16);
-                        Main.entities.add(shuriken);
+                        Shuriken sh = new Shuriken(this.getX()+4, this.getY()+8, 16, 16);
+                        Main.entities.add(sh);
                         isUsing = false;
                         launching = true;
                         break;
@@ -392,6 +389,7 @@ public class Player extends Entities{
         }
 
         if (knockBack){
+            knockBackCD = 0;
             isAttacking = false;
             cd = 0;
             this.speed = 2.5;
@@ -627,6 +625,10 @@ public class Player extends Entities{
     }
     public int getSwordY(){
         return this.ySword;
+    }
+
+    public Rectangle getSwordMask(){
+        return new Rectangle(getSwordX(), getSwordY(), getSwordWidth(), getSwordHeight());
     }
 
 }

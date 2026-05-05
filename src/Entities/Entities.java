@@ -1,6 +1,7 @@
 package Entities;
 
 import java.awt.Graphics;
+import java.awt.Rectangle;
 
 import World.Camera;
 import Main.Main;
@@ -58,6 +59,10 @@ public class Entities {
     }
     public int getHeight(){
         return this.height;
+    }
+
+    public Rectangle getMask(){
+        return new Rectangle(this.getX(), this.getY(), this.width, this.height);
     }
 
     public void setX(double x){

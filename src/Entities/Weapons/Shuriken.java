@@ -50,12 +50,12 @@ public class Shuriken extends Weapons{
 
         if(!this.inScreen()){
             this.destroy = true;
-            Main.player.usingIten = false;
+            player.usingIten = false;
         }
         
         this.x += speed;
 
-        if (this.destroy || this.getX()+this.width < Camera.x || this.getX() > Camera.x + Main.WIDTH){
+        if (this.destroy){
             Main.entities.remove(this);
         }
         

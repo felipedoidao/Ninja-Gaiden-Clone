@@ -1,6 +1,7 @@
 package Entities.Enemies;
 
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 import Entities.Player;
@@ -212,6 +213,10 @@ public class Launcher extends Enemies{
         }else if (this.x < player.getX()){
             this.last_hori_dir = 1;
         }
+    }
+
+    public Rectangle getMask(){
+        return new Rectangle(this.getX()+10, this.getY(), this.width, this.height);
     }
 
 }

@@ -8,6 +8,8 @@ import Entities.Player;
 import Entities.Weapons.Weapons;
 import Main.Main;
 import World.Camera;
+import World.Sounds;
+import World.Sounds.Clips;
 
 public class Enemies extends Entities{
 
@@ -53,10 +55,7 @@ public class Enemies extends Entities{
 
     public boolean hitPlayer(Player player, int x, int y){
 
-        if (!player.invincible && (player.getMaskX() + player.getMaskWidth() > x &&
-                player.getMaskX() < x + this.width &&
-                player.getMaskY() + player.getMaskHeight() >= y &&
-                player.getMaskY() <= y + this.height)){
+        if (!player.invincible && this.getMask().intersects(player.getMask())){
             return true;
         }
         return false;
@@ -80,20 +79,19 @@ public class Enemies extends Entities{
             Entities e = Main.entities.get(i);
             if (e instanceof Weapons){
 
-                if (e.getX() + e.getWidth()> x &&
-                e.getX() < x + this.width &&
-                e.getY() + e.getHeight() >= y &&
-                e.getY() <= y + this.height){
-
+                if (this.getMask().intersects(e.getMask())){
                     ((Weapons)e).destroy = true;
+                    Clips.dying_enemy.play();
                     return true;
-                }   
+                }
             }
         }
-        return (player.getSwordX() + player.getSwordWidth() > x &&
-                player.getSwordX() < x + this.width &&
-                player.getSwordY() + player.getSwordHeight() >= y &&
-                player.getSwordY() <= y + this.height);
+        if (this.getMask().intersects(player.getSwordMask())){
+            Clips.dying_enemy.play();
+            return true;
+        }
+
+        return false;
     }
 
     public void respawn(){

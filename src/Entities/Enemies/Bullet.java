@@ -1,6 +1,8 @@
 package Entities.Enemies;
 
+import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 import Entities.Player;
@@ -93,5 +95,9 @@ public class Bullet extends Enemies{
         }else {
             this.speed = -4;
         }
+    }
+
+    public Rectangle getMask(){
+        return new Rectangle(this.getX() + 2, this.getY() + 15, this.width, this.height);
     }
 }

@@ -1,9 +1,11 @@
 package Entities.Weapons;
 
 import java.awt.Graphics;
+
+import Entities.Entities;
 import Main.Main;
 
-public class Ball extends Weapons{
+public class Ball extends Entities{
 
     Fire f1, f2, f3;
     Fire[] fire;
