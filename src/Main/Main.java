@@ -19,6 +19,7 @@ import Graphics.Textures;
 import Graphics.Ui;
 import World.Camera;
 import World.World;
+import World.Sounds.Clips;
 
 public class Main extends Canvas implements Runnable, KeyListener{
 
@@ -225,7 +226,7 @@ public class Main extends Canvas implements Runnable, KeyListener{
     public void keyPressed(KeyEvent e) {
        switch (e.getKeyCode()) {
         case KeyEvent.VK_SPACE:
-            if (player.inGround && player.isJumping == false || player.inGrip && player.isJumping == false){
+            if (player.inGround && player.isJumping == false && !player.isAttacking || player.inGrip && player.isJumping == false){
                 player.jumped = true;
                 player.isJumping = true;
                 player.inGrip = false;
@@ -262,9 +263,11 @@ public class Main extends Canvas implements Runnable, KeyListener{
         case KeyEvent.VK_F:
             if (!player.attacked && !player.isAttacking &&!player.inGrip && !player.knockBack && !player.usingIten){
                 player.isAttacking = true;
+                player.cd = 0;
                 player.attacked = true;
                 Main.player.index = 0;
                 Main.player.frames = 0;
+                Clips.attack.play();
             }
             break;
 

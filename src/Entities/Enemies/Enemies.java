@@ -80,14 +80,11 @@ public class Enemies extends Entities{
             if (e instanceof Weapons){
 
                 if (this.getMask().intersects(e.getMask())){
-                    ((Weapons)e).destroy = true;
-                    Clips.dying_enemy.play();
                     return true;
                 }
             }
         }
         if (this.getMask().intersects(player.getSwordMask())){
-            Clips.dying_enemy.play();
             return true;
         }
 

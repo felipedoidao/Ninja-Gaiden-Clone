@@ -97,7 +97,7 @@ public class Player extends Entities{
 
     //variavéis para animação
     public int frames, index; 
-    private int cd = 0;
+    public int cd = 0;
 
     public BufferedImage sprite_standing, sprite_attacking, sprite_jummping;
 
@@ -319,7 +319,6 @@ public class Player extends Entities{
 
         if (launching){
             isAttacking = false;
-            cd = 0;
             launchingCd++;
             if (launchingCd >= 20){
                 launchingCd = 0;

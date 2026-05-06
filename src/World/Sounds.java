@@ -4,7 +4,6 @@ import java.io.*;
 import javax.sound.sampled.*;
 
 public class Sounds {
-
     public static class Clips {
         public Clip[] clips;
         private int p;
@@ -47,7 +46,6 @@ public class Sounds {
 
             float db = (float) (Math.log(volume) / Math.log(10.0) * 20.0);
 
-
             for (Clip clip : clips){
                 if (clip.isControlSupported(FloatControl.Type.MASTER_GAIN)){
                     FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
@@ -56,7 +54,7 @@ public class Sounds {
             }
         }
 
-        public static Clips dying_enemy = Clips.load("/rsc/Sounds/DyingEnemy.wav", 5);
+        public static Clips attack = Clips.load("/rsc/Sounds/Attack.wav", 5);
 
         public static Clips load(String name, int count){
             try{

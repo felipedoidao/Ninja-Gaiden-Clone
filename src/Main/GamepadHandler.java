@@ -146,7 +146,7 @@ public class GamepadHandler {
                 
                 if (name.equals("0")){
                     if (val != 0){
-                        if (player.inGround && player.isJumping == false || player.inGrip && player.isJumping == false){
+                        if (player.inGround && player.isJumping == false && !player.isAttacking || player.inGrip && player.isJumping == false){
                             player.jumped = true;
                             player.isJumping = true;
                             player.inGrip = false;
