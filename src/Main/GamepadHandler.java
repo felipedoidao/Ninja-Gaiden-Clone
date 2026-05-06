@@ -2,6 +2,8 @@ package Main;
 
 import net.java.games.input.*;
 import Entities.Player;
+import World.Sounds.Clips;
+
 import java.lang.reflect.Constructor;
 
 public class GamepadHandler {
@@ -166,8 +168,10 @@ public class GamepadHandler {
                         if (!player.attacked && !player.isAttacking &&!player.inGrip && !player.knockBack && !player.usingIten){
                             player.isAttacking = true;
                             player.attacked = true;
+                            player.cd = 0;
                             Main.player.index = 0;
                             Main.player.frames = 0;
+                            Clips.attack.play();
                         }
                     }else {
                         player.attacked = false;
