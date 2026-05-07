@@ -54,7 +54,7 @@ public class Sounds {
             }
         }
 
-        public static Clips attack = Clips.load("/rsc/Sounds/Attack.wav", 5);
+        public static Clips attack = Clips.load("/rsc/Sounds/Attack.wav", 1);
 
         public static Clips load(String name, int count){
             try{

@@ -16,6 +16,7 @@ import World.Camera;
 import World.Floor_tile;
 import World.Grip_Wall;
 import World.Ladder;
+import World.Sounds.Clips;
 import World.Tile;
 import World.World;
 
@@ -35,6 +36,7 @@ public class Player extends Entities{
     public boolean usingIten = false;
     public boolean launching = false;
     private int launchingCd = 0;
+    private int spin_soundCD = 0;
     
     //Controladors dos movimentos do personagem
     private double speed = 3;
@@ -286,6 +288,7 @@ public class Player extends Entities{
     private void attack(){
         if(this.isAttacking){
 
+            spin_soundCD = 0;
             this.ySword = getY() +3;
             this.widthSword = 34;
             this.heightSword = 16;
@@ -305,14 +308,46 @@ public class Player extends Entities{
             this.ySword = this.getY()-14;
             this.widthSword = 60;
             this.heightSword = 60;
+            spin_sound();
         
         }else {
+            spin_soundCD = 0;
             this.xSword = 10;
             this.ySword = 0;
             this.widthSword = 1;
             this.heightSword = 1;
         }
         
+    }
+
+    private void spin_sound(){
+        spin_soundCD++;
+            switch (spin_soundCD){
+                case 10*1:
+                    Clips.attack.play();
+                    break;
+                case 10*2:
+                    Clips.attack.play();
+                    break;
+                case 10*3:
+                    Clips.attack.play();
+                    break;
+                case 10*4:
+                    Clips.attack.play();
+                    break;
+                case 10*5:
+                    Clips.attack.play();
+                    break;
+                case 10*6:
+                    Clips.attack.play();
+                    break;
+                case 10*7:
+                    Clips.attack.play();
+                    break;
+                case 10*8:
+                    Clips.attack.play();
+                    break;
+            }
     }
 
     private void equipments(){
@@ -349,6 +384,7 @@ public class Player extends Entities{
                         if (!inGround){
                             Player.energy -= 5;
                             usingIten = true;
+                            Clips.attack.play();
                         }
                         isUsing = false;
                         

@@ -180,7 +180,7 @@ public class GamepadHandler {
 
                 if (name.equals("1")){
                     if (val != 0){
-                        if (Player.bag[0] != null && Player.energy >= 5 && !player.inGrip){
+                        if (Player.bag[0] != null && Player.energy >= 5 && !player.inGrip && !player.isAttacking){
                             if (!player.used && !player.isUsing){
                                 player.isUsing = true;
                                 player.used = true;

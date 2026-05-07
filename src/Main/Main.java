@@ -90,6 +90,8 @@ public class Main extends Canvas implements Runnable, KeyListener{
         //Inicia o jogador
         player = new Player(0, 0, 25, 32);
 
+        audio_design();
+
         gamepad = new GamepadHandler();
         
         world = new World("/rsc/Mapa medonho.png");
@@ -151,12 +153,17 @@ public class Main extends Canvas implements Runnable, KeyListener{
         bs.show();
     }
 
+    private void audio_design(){
+        Clips.attack.setVolume(0.3f);
+    }
+
     //Função para a lógica das classes
     public void update(){
 
         if (gamepad != null){
             gamepad.readCommands(player);
         }
+
         player.update();
 
         timerCD ++;
@@ -272,7 +279,7 @@ public class Main extends Canvas implements Runnable, KeyListener{
             break;
 
         case KeyEvent.VK_E:
-            if (Player.bag[0] != null && Player.energy >= 5 && !player.inGrip){
+            if (Player.bag[0] != null && Player.energy >= 5 && !player.inGrip && !player.isAttacking){
                 if (!player.used && !player.isUsing){
                     player.isUsing = true;
                     player.used = true;

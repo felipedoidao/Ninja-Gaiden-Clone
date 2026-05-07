@@ -29,6 +29,7 @@ public class Candle extends Enemies{
     public void update(){
         if (!isDead) {
             if (this.hurt(Main.player, this.getX(), this.getY())){
+                /*random.nextInt(115)*/
                 //Seletor de número aleatório que vai de 0 a 99
                 itemSelector = random.nextInt(115);
                 //Dependendo do valor selecionado decide qual item será instanciado
