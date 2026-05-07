@@ -12,11 +12,11 @@ import Entities.Weapons.Ball;
 import Entities.Weapons.Invincible_fire;
 import Entities.Weapons.Shuriken;
 import Main.Main;
+import Main.Sounds.Clips;
 import World.Camera;
 import World.Floor_tile;
 import World.Grip_Wall;
 import World.Ladder;
-import World.Sounds.Clips;
 import World.Tile;
 import World.World;
 

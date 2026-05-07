@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 
 import Entities.Player;
 import Main.Main;
+import Main.Sounds.Clips;
 import World.Camera;
 import World.Tile;
 import World.World;
@@ -78,10 +79,13 @@ public class Soldier extends Enemies{
         if (!isDead){
             vSpeed = speed * hori_dir;
             if (Main.time){
-                this.animFrames();
-                this.locatePlayer2(Main.player);
-                this.move();
-                this.hit();
+                if (this.inScreen()){
+                    attackCd++;
+                    this.animFrames();
+                    this.locatePlayer2(Main.player);
+                    this.move();
+                    this.hit();
+                }
                 this.attack();
             }
             this.hurt();
@@ -95,7 +99,6 @@ public class Soldier extends Enemies{
     }
 
     public void attack(){
-        attackCd++;
         if (attackCd >= 145){
             attacking = true;
             attackingTime++;
@@ -103,14 +106,17 @@ public class Soldier extends Enemies{
                 case 10:
                     Bullet bullet = new Bullet(this.getX()+16, this.getY()-2, 5, 3, this);
                     Main.entities.add(bullet);
+                    Clips.shot.play();
                     break;
                 case 20:
                     Bullet bullet1 = new Bullet(this.getX()+16, this.getY()-2, 5, 3, this);
                     Main.entities.add(bullet1);
+                    Clips.shot.play();
                     break;
                 case 30:
                     Bullet bullet2 = new Bullet(this.getX()+16, this.getY()-2, 5, 3, this);
                     Main.entities.add(bullet2);
+                    Clips.shot.play();
                     break;
             }
             if (attackingTime >= 30){

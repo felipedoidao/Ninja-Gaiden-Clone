@@ -7,9 +7,9 @@ import Entities.Entities;
 import Entities.Player;
 import Entities.Weapons.Weapons;
 import Main.Main;
+import Main.Sounds;
+import Main.Sounds.Clips;
 import World.Camera;
-import World.Sounds;
-import World.Sounds.Clips;
 
 public class Enemies extends Entities{
 
@@ -55,7 +55,7 @@ public class Enemies extends Entities{
 
     public boolean hitPlayer(Player player, int x, int y){
 
-        if (!player.invincible && this.getMask().intersects(player.getMask())){
+        if (!Player.invincible && this.getMask().intersects(player.getMask())){
             return true;
         }
         return false;
@@ -80,11 +80,13 @@ public class Enemies extends Entities{
             if (e instanceof Weapons){
 
                 if (this.getMask().intersects(e.getMask())){
+                    Clips.dying_enemy.play();
                     return true;
                 }
             }
         }
         if (this.getMask().intersects(player.getSwordMask())){
+            Clips.dying_enemy.play();
             return true;
         }
 

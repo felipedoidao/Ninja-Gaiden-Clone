@@ -17,9 +17,9 @@ import Entities.Entities;
 import Entities.Player;
 import Graphics.Textures;
 import Graphics.Ui;
+import Main.Sounds.Clips;
 import World.Camera;
 import World.World;
-import World.Sounds.Clips;
 
 public class Main extends Canvas implements Runnable, KeyListener{
 
@@ -155,6 +155,9 @@ public class Main extends Canvas implements Runnable, KeyListener{
 
     private void audio_design(){
         Clips.attack.setVolume(0.3f);
+        Clips.jump.setVolume(0.5f);
+        Clips.shot.setVolume(0.3f);
+        Clips.dying_enemy.setVolume(0.5f);
     }
 
     //Função para a lógica das classes
@@ -238,6 +241,7 @@ public class Main extends Canvas implements Runnable, KeyListener{
                 player.isJumping = true;
                 player.inGrip = false;
                 player.grabbed = true;
+                Clips.jump.play();
             }
             break;
 

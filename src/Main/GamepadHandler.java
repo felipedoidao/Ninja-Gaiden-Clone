@@ -2,7 +2,7 @@ package Main;
 
 import net.java.games.input.*;
 import Entities.Player;
-import World.Sounds.Clips;
+import Main.Sounds.Clips;
 
 import java.lang.reflect.Constructor;
 

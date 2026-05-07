@@ -1,10 +1,15 @@
 package Entities.Enemies;
 
+import Entities.Entities;
+import Entities.Player;
 import Entities.Collectibles.*;
+import Entities.Weapons.Weapons;
+
 import java.util.Random;
 import java.awt.Color;
 import java.awt.Graphics;
 import Main.Main;
+import Main.Sounds.Clips;
 import World.Camera;
 
 public class Candle extends Enemies{
@@ -31,7 +36,7 @@ public class Candle extends Enemies{
             if (this.hurt(Main.player, this.getX(), this.getY())){
                 /*random.nextInt(115)*/
                 //Seletor de número aleatório que vai de 0 a 99
-                itemSelector = random.nextInt(115);
+                itemSelector = 79;
                 //Dependendo do valor selecionado decide qual item será instanciado
                 if (itemSelector < 5){
                     Main.entities.add(new Collectible_hourglass(getX(), getY(), 16, 16));
@@ -55,7 +60,24 @@ public class Candle extends Enemies{
         }else {
             this.respawn();
         }
-        
     }
+    
+    public boolean hurt(Player player, int x, int y){
+
+        for (int i = 0; i < Main.entities.size(); i++){
+            Entities e = Main.entities.get(i);
+            if (e instanceof Weapons){
+
+                if (this.getMask().intersects(e.getMask())){
+                    return true;
+                }
+            }
+        }
+        if (this.getMask().intersects(player.getSwordMask())){
+            return true;
+        }
+
+        return false;
+    } 
 
 }

@@ -1,6 +1,5 @@
 package Entities.Enemies;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -12,7 +11,8 @@ import World.Camera;
 public class Bullet extends Enemies{
 
     private BufferedImage[] bullet;
-    private double speed = 10;
+    private double speed = 4;
+    private double hori_dir = 0;
     private boolean canHit;
     public int deadTimer;
 
@@ -34,6 +34,7 @@ public class Bullet extends Enemies{
         bullet[0] = Main.enemies.getSprite(32*8, 32*2, 8, 32);
 
         this.shoot(soldier);
+        this.speed *= hori_dir;
     }
 
     public void render (Graphics g){
@@ -75,7 +76,9 @@ public class Bullet extends Enemies{
             }
             
 
-            if (!this.inScreen()){
+            if (hori_dir == 1 && x + hori_dir > Camera.x + Main.WIDTH){
+                Main.entities.remove(this);
+            }else if (hori_dir == -1 && x + hori_dir < Camera.x){
                 Main.entities.remove(this);
             }
 
@@ -91,9 +94,9 @@ public class Bullet extends Enemies{
 
     public void shoot(Soldier soldier){
         if (soldier.last_hori_dir > 0){
-            this.speed = 4;
+            hori_dir = 1;
         }else {
-            this.speed = -4;
+            hori_dir = -1;
         }
     }
 

@@ -1,7 +1,9 @@
-package World;
+package Main;
 
 import java.io.*;
 import javax.sound.sampled.*;
+
+import Main.Sounds.Clips;
 
 public class Sounds {
     public static class Clips {
@@ -55,6 +57,9 @@ public class Sounds {
         }
 
         public static Clips attack = Clips.load("/rsc/Sounds/Attack.wav", 1);
+        public static Clips dying_enemy = Clips.load("/rsc/Sounds/DyingEn.wav", 5);
+        public static Clips jump = Clips.load("/rsc/Sounds/Jump.wav", 1);
+        public static Clips shot = Clips.load("/rsc/Sounds/Shot.wav", 6);
 
         public static Clips load(String name, int count){
             try{

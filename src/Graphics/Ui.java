@@ -61,118 +61,16 @@ public class Ui {
 
         for(int i = 0; i < 16; i++){
 
-            g.setColor(Color.pink);
+            g.setColor(Color.white);
             g.fillRect(distance + (6*i), 22, 5, 10);
-            g.fillRect(distance + (6*i), 33, 5, 10);
-            
-            player_life(g, i);
+            g.setColor(Color.black);
+            g.fillRect(distance + 1 + (6*i), 23, 3, 8);
         }
 
-    }
+        for(int i = 0; i < Player.lives; i++){
+            g.setColor(Color.pink);
+            g.fillRect(distance + (6*i), 22, 5, 10);
+        }
 
-    private void player_life(Graphics g, int i){
-         switch (Player.lives){
-            case 16:
-                break;
-            case 15:
-                g.setColor(Color.white);
-                if (i >= 15){
-                    g.fillRect(distance + (6*i), 22, 5, 10);
-                }
-                break;
-            case 14:
-                g.setColor(Color.white);
-                if (i >= 14){
-                    g.fillRect(distance + (6*i), 22, 5, 10);
-                }
-                break;
-            case 13:
-                g.setColor(Color.white);
-                if (i >= 13){
-                    g.fillRect(distance + (6*i), 22, 5, 10);
-                }
-                break;
-            case 12:
-                g.setColor(Color.white);
-                if (i >= 12){
-                    g.fillRect(distance + (6*i), 22, 5, 10);
-                }
-                break;
-            case 11:
-                g.setColor(Color.white);
-                if (i >= 11){
-                    g.fillRect(distance + (6*i), 22, 5, 10);
-                }
-                break;
-            case 10:
-                g.setColor(Color.white);
-                if (i >= 10){
-                    g.fillRect(distance + (6*i), 22, 5, 10);
-                }
-                break;
-            case 9:
-                g.setColor(Color.white);
-                if (i >= 9){
-                    g.fillRect(distance + (6*i), 22, 5, 10);
-                }
-                break;
-            case 8:
-                g.setColor(Color.white);
-                if (i >= 8){
-                    g.fillRect(distance + (6*i), 22, 5, 10);
-                }
-                break;
-            case 7:
-                g.setColor(Color.white);
-                if (i >= 7){
-                    g.fillRect(distance + (6*i), 22, 5, 10);
-                }
-                break;
-            case 6:
-                g.setColor(Color.white);
-                if (i >= 6){
-                    g.fillRect(distance + (6*i), 22, 5, 10);
-                }
-                break;
-            case 5:
-                g.setColor(Color.white);
-                if (i >= 5){
-                    g.fillRect(distance + (6*i), 22, 5, 10);
-                }
-                break;
-            case 4:
-                g.setColor(Color.white);
-                if (i >= 4){
-                    g.fillRect(distance + (6*i), 22, 5, 10);
-                }
-                break;
-            case 3:
-                g.setColor(Color.white);
-                if (i >= 3){
-                    g.fillRect(distance + (6*i), 22, 5, 10);
-                }
-                break;
-            case 2:
-                g.setColor(Color.white);
-                if (i >= 2){
-                    g.fillRect(distance + (6*i), 22, 5, 10);
-                }
-                break;
-            case 1:
-                g.setColor(Color.white);
-                if (i >= 1){
-                    g.fillRect(distance + (6*i), 22, 5, 10);
-                }
-                break;
-            case 0:
-                g.setColor(Color.white);
-                g.fillRect(distance + (6*i), 22, 5, 10);
-                break;
-            default:
-                g.setColor(Color.white);
-                g.fillRect(distance + (6*i), 22, 5, 10);
-                break;
-            }
-    }
-
+    }   
 }
