@@ -36,7 +36,7 @@ public class Candle extends Enemies{
             if (this.hurt(Main.player, this.getX(), this.getY())){
                 /*random.nextInt(115)*/
                 //Seletor de número aleatório que vai de 0 a 99
-                itemSelector = 79;
+                itemSelector = 99;
                 //Dependendo do valor selecionado decide qual item será instanciado
                 if (itemSelector < 5){
                     Main.entities.add(new Collectible_hourglass(getX(), getY(), 16, 16));

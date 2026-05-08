@@ -155,8 +155,13 @@ public class Main extends Canvas implements Runnable, KeyListener{
 
     private void audio_design(){
         Clips.attack.setVolume(0.3f);
-        Clips.jump.setVolume(0.5f);
-        Clips.shot.setVolume(0.3f);
+        Clips.jump.setVolume(0.3f);
+        Clips.shot.setVolume(0.4f);
+        Clips.shuriken.setVolume(0.3f);
+        Clips.taking_item.setVolume(0.3f);
+        Clips.hold.setVolume(0.3f);
+        Clips.fire_ball.setVolume(0.3f);
+        Clips.taking_damage.setVolume(0.4f);
         Clips.dying_enemy.setVolume(0.5f);
     }
 
@@ -241,6 +246,7 @@ public class Main extends Canvas implements Runnable, KeyListener{
                 player.isJumping = true;
                 player.inGrip = false;
                 player.grabbed = true;
+                player.climbing = false;
                 Clips.jump.play();
             }
             break;

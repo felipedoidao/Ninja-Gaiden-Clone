@@ -153,6 +153,8 @@ public class GamepadHandler {
                             player.isJumping = true;
                             player.inGrip = false;
                             player.grabbed = true;
+                            player.climbing = false;
+                            Clips.jump.play();
                             stopJump = false;
                         }
                     }else if (val == 0 && !stopJump){

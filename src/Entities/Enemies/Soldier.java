@@ -133,7 +133,7 @@ public class Soldier extends Enemies{
 
     public void hit(){
 
-        if (this.hitPlayer(Main.player, this.getX() + 3, this.getY()) && !Main.player.hitted){
+        if (this.hitPlayer(Main.player, this.getX() + 3, this.getY())){
             Main.player.gotHit = true;
             Player.lives -= 1;
             Main.player.hitted = true;

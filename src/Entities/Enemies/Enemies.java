@@ -55,7 +55,8 @@ public class Enemies extends Entities{
 
     public boolean hitPlayer(Player player, int x, int y){
 
-        if (!Player.invincible && this.getMask().intersects(player.getMask())){
+        if (!Player.invincible && this.getMask().intersects(player.getMask()) && !player.hitted){
+            Clips.taking_damage.play();
             return true;
         }
         return false;
@@ -80,6 +81,7 @@ public class Enemies extends Entities{
             if (e instanceof Weapons){
 
                 if (this.getMask().intersects(e.getMask())){
+                    ((Weapons)e).destroy = true;
                     Clips.dying_enemy.play();
                     return true;
                 }

@@ -34,10 +34,17 @@ public class Sounds {
             if (p>= count) p = 0;
         }
 
+        public void stopLoop(){
+            if (clips == null) return;
+
+            clips[p].stop();
+            clips[p].setFramePosition(0);
+        }
+
         public void loop(){
             if (clips == null) return;
 
-            clips[p].loop(300);
+            clips[p].loop(Clip.LOOP_CONTINUOUSLY);
         }
 
         public void setVolume(float volume){
@@ -58,8 +65,13 @@ public class Sounds {
 
         public static Clips attack = Clips.load("/rsc/Sounds/Attack.wav", 1);
         public static Clips dying_enemy = Clips.load("/rsc/Sounds/DyingEn.wav", 5);
-        public static Clips jump = Clips.load("/rsc/Sounds/Jump.wav", 1);
+        public static Clips jump = Clips.load("/rsc/Sounds/Jump.wav", 3);
         public static Clips shot = Clips.load("/rsc/Sounds/Shot.wav", 6);
+        public static Clips taking_damage = Clips.load("/rsc/Sounds/TakingDamage.wav", 1);
+        public static Clips shuriken = Clips.load("/rsc/Sounds/Shuriken.wav", 4);
+        public static Clips fire_ball = Clips.load("/rsc/Sounds/FireBall.wav", 4);
+        public static Clips hold = Clips.load("/rsc/Sounds/Grabbing.wav", 5);
+        public static Clips taking_item = Clips.load("/rsc/Sounds/TakingItem.wav", 2);
 
         public static Clips load(String name, int count){
             try{

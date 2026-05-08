@@ -7,6 +7,7 @@ import Entities.Player;
 import World.Tile;
 import World.World;
 import Main.Main;
+import Main.Sounds.Clips;
 
 public class Collectibles extends Entities{
 
@@ -19,6 +20,7 @@ public class Collectibles extends Entities{
 
     public boolean caught(Player player){
         if (this.x >= player.getX() && this.x+this.width <= player.getX()+32 && this.y >= player.getY() && this.y+this.height <= player.getY()+32){
+            Clips.taking_item.play();
             return true;
         }
 

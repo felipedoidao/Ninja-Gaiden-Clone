@@ -28,6 +28,8 @@ public class Player extends Entities{
     private double x;
     private double y;
 
+    int loop;
+
     //Inventário
     public static Collectibles[] bag;
 
@@ -70,6 +72,7 @@ public class Player extends Entities{
     public boolean isJumping = false;
     public boolean inGround = false;
     public boolean inGrip = false;
+    public boolean climbing = false;
     public boolean grabbed;
 
     //Hurtbox
@@ -110,6 +113,7 @@ public class Player extends Entities{
     private BufferedImage[] grab_right, grab_left;
     private BufferedImage[] knockingBack_right, knockingBack_left;
     private BufferedImage[] using_right, using_left;
+    private BufferedImage[] climbing_right, climbing_left;
 
     Ball ball;
 
@@ -129,6 +133,9 @@ public class Player extends Entities{
 
         walk_right = new BufferedImage[4];
         walk_left = new BufferedImage[4];
+
+        climbing_right = new BufferedImage[4];
+        climbing_left = new BufferedImage[4];
 
         attacking_right = new BufferedImage[4];
         attacking_left = new BufferedImage[4];
@@ -172,6 +179,8 @@ public class Player extends Entities{
             spin_right[i] = Main.ninja.getSprite(128+(64*i), 64*2, 64, 64);
             spin_left[i] = Main.ninja.getSprite(128+(64*i), 64*3, 64, 64);
 
+            climbing_right[i] = Main.ninja.getSprite(64+32*i, 96, 32, 32);
+            climbing_left[i] = Main.ninja.getSprite(192+32*i, 96, 32, 32);
         }
     }
 
@@ -187,8 +196,10 @@ public class Player extends Entities{
                     g.drawImage(spin_right[index], getX() - Camera.x - 16, getY() - Camera.y - 16, null);
                 } else if (launching) {
                     g.drawImage(using_right[0], getX() - Camera.x, getY() - Camera.y, null);
-                } else if (inGrip) {
-                    g.drawImage(grab_right[0], getX() - Camera.x , getY() - Camera.y, null);
+                }else if (climbing){
+                    g.drawImage(climbing_right[index], getX() - Camera.x + 1, getY() - Camera.y, null);
+                }else if (inGrip) {
+                    g.drawImage(grab_right[0], getX() - Camera.x + 1, getY() - Camera.y, null);
                 } else if (isAttacking) {
                     g.drawImage(attacking_right[index], (int)this.x - Camera.x, (int)this.y - Camera.y, null);
                 } else if (!inGround) {
@@ -207,8 +218,10 @@ public class Player extends Entities{
                     g.drawImage(spin_left[index], getX() - Camera.x - 16, getY() - Camera.y - 16, null);
                 } else if (launching) {
                     g.drawImage(using_left[0], getX() - Camera.x - 6, getY() - Camera.y, null);
+                }else if (climbing){
+                    g.drawImage(climbing_left[index], getX() - Camera.x + 1, getY() - Camera.y, null);
                 } else if (inGrip) {
-                    g.drawImage(grab_left[0], getX() - Camera.x - 2, getY() - Camera.y, null);
+                    g.drawImage(grab_left[0], getX() - Camera.x, getY() - Camera.y, null);
                 } else if (isAttacking) {
                     g.drawImage(attacking_left[index], (int)this.x - Camera.x - 38, (int)this.y - Camera.y, null);
                 } else if (!inGround) {
@@ -370,6 +383,7 @@ public class Player extends Entities{
                         Main.entities.add(sh);
                         isUsing = false;
                         launching = true;
+                        Clips.shuriken.play();
                         break;
 
                     case Collectible_fireball f:
@@ -378,6 +392,7 @@ public class Player extends Entities{
                         Main.entities.add(b);
                         isUsing = false;
                         launching = true;
+                        Clips.fire_ball.play();
                         break; 
                         
                     case Collectible_spin s:
@@ -469,6 +484,7 @@ public class Player extends Entities{
                             if (!this.inGround && !this.grabbed){
                                 this.grabbed = true;
                                 this.inGrip = true;
+                                Clips.hold.play();
                             }
                         }
                         break;
@@ -478,6 +494,7 @@ public class Player extends Entities{
                             if (!this.inGround && !this.grabbed){
                                 this.grabbed = true;
                                 this.inGrip = true;
+                                Clips.hold.play();
                             }
                         }
                         break;
@@ -519,42 +536,7 @@ public class Player extends Entities{
             //Verifica se o que está se segurando é uma Escada sendo uma escada podemos subir e descer livremente
             Tile ladder = World.isFree((int)x + last_hori_dir, (int)(y), width, height);
 
-            //Verificar colisão enquanto se move para cima ou para baixo copiando as outras colisões
-            if (!(ladder instanceof Ladder)){
-                for (int i = 0; i < climbSpeed; i++){
-
-                    Tile hit = World.isFree((int)x, (int)(y+vert_dir), width, height);
-
-                    switch (hit){
-                        case null -> {
-
-                            this.y += this.vert_dir;
-
-                            //Verificações para os blocos na base e o topo do personagem
-                            Tile Topo = World.isFree((int)x + last_hori_dir, (int)(y + 8), width, 1);
-                            Tile Base = World.isFree((int)x + last_hori_dir, (int)(y + 30), width, 1);
-
-                            //Se abaixo ou acima do personagem não for uma escada ele para de se mover
-                            if (this.vert_dir < 0){
-                                if (!(Topo instanceof Ladder)){
-                                    this.y -= this.vert_dir;
-                                }
-
-                            }else if (this.vert_dir > 0){
-                                if (!(Base instanceof Ladder)){
-                                    this.y -= this.vert_dir;
-                                }
-                            }
-                        }
-                        case Floor_tile f -> {
-                            break;
-                        }
-                        default -> { 
-                            break;
-                        }
-                    }
-                }
-            }
+            
             for (int i = 0; i < this.climbSpeed; i++){
 
                 Tile hit = World.isFree((int)this.x, (int)(this.y+this.vert_dir), width, height);
@@ -564,22 +546,32 @@ public class Player extends Entities{
 
                         this.y += this.vert_dir;
 
+                        if (vert_dir != 0 && ladder instanceof Ladder){
+                            climbing = true;
+                            loop++;
+                            if (loop >= 20){
+                                Clips.hold.play();
+                                loop = 0;
+                            }
+                        }else{
+                            climbing = false;
+                        }
+
                         Tile Topo = World.isFree((int)x + last_hori_dir, (int)(y + 8), width, 1);
                         Tile Base = World.isFree((int)x + last_hori_dir, (int)(y + 30), width, 1);
 
                         if (this.vert_dir < 0){
                             if (!(Topo instanceof Ladder)){
                                this.y -= this.vert_dir;
+                               Clips.hold.stopLoop();
                             }
 
                         }else if (this.vert_dir > 0){
                             if (!(Base instanceof Ladder)){
                                 this.y -= this.vert_dir;
+                                Clips.hold.stopLoop();
                             }
                         }
-                    }
-                    case Floor_tile f -> {
-                        break;
                     }
                     default -> { 
                         break;
@@ -588,8 +580,11 @@ public class Player extends Entities{
             }
         }else {
             this.speed = 3.3;
-            
         }    
+
+        if (climbing){
+            maxFrames = 5;
+        }
 
         //Mesmo sistema de colisão, mas para o eixo y
         for (int i = 0; i < Math.abs(this.fallSpeed); i++){
