@@ -25,6 +25,11 @@ public class Main extends Canvas implements Runnable, KeyListener{
 
     int count = 0;
 
+    private boolean showingConsole = false;
+
+    public static List<Clips> sounds;
+    public static float globalVolume = 1.0f;
+
     //Variáveis para renderização da janela
     private boolean rodando = false;
     private static JFrame frame;
@@ -89,6 +94,7 @@ public class Main extends Canvas implements Runnable, KeyListener{
         this.setPreferredSize(new Dimension(WIDTH*SCALE, HEIGHT*SCALE));
 
         entities = new ArrayList<Entities>();
+        sounds = new ArrayList<Clips>();
 
         //Inicia o jogador
         player = new Player(0, 0, 25, 32);
@@ -147,6 +153,10 @@ public class Main extends Canvas implements Runnable, KeyListener{
         Graphics g2 = bs.getDrawGraphics();
         g2.drawImage(image, 0, 0, WIDTH * SCALE, HEIGHT * SCALE, null);
 
+        if (showingConsole){
+            Console.render(g2);
+        }
+
         g2.dispose();
 
         //sincroniza o driver de vídeo com a tela
@@ -156,7 +166,7 @@ public class Main extends Canvas implements Runnable, KeyListener{
         bs.show();
     }
 
-    private void audio_design(){
+    public static void audio_design(){
         Clips.invincible.setVolume(0.2f);
         Clips.attack.setVolume(0.3f);
         Clips.jump.setVolume(0.3f);
@@ -267,68 +277,94 @@ public class Main extends Canvas implements Runnable, KeyListener{
     //Funções obrigatórias para os eventos do teclado
     @Override
     public void keyTyped(KeyEvent e) {
+        if (showingConsole){
+            char c = e.getKeyChar();
+            if (Character.isDefined(c) && c != '\n' && c != '\b' ){
+                Console.consoleInput += c;
+            }
+        }
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-       switch (e.getKeyCode()) {
-        case KeyEvent.VK_SPACE:
-            if (player.inGround && player.isJumping == false && !player.isAttacking || player.inGrip && player.isJumping == false){
-                player.jumped = true;
-                player.isJumping = true;
-                player.inGrip = false;
-                player.grabbed = true;
-                player.climbing = false;
-                Clips.jump.play();
+
+        if (e.getKeyCode() == KeyEvent.VK_ENTER){
+            if (showingConsole){
+                Console.executeCommand(Console.consoleInput);
+
+                Console.consoleInput = "";
+                showingConsole = false;
+            
+            }else {
+                showingConsole = true;
+                Console.consoleInput = "";
             }
-            break;
+        }
 
-        case KeyEvent.VK_W:
-            player.up = 1;
-            break;
+        if (showingConsole){
+            if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE && Console.consoleInput.length() > 0){
+                Console.consoleInput = Console.consoleInput.substring(0, Console.consoleInput.length() - 1);
+            }
+        }else {
+            switch (e.getKeyCode()) {
+                case KeyEvent.VK_SPACE:
+                    if (player.inGround && player.isJumping == false && !player.isAttacking || player.inGrip && player.isJumping == false){
+                        player.jumped = true;
+                        player.isJumping = true;
+                        player.inGrip = false;
+                        player.grabbed = true;
+                        player.climbing = false;
+                        Clips.jump.play();
+                    }
+                break;
 
-        case KeyEvent.VK_S:
-            player.down = 1;
-            break;
+                case KeyEvent.VK_W:
+                    player.up = 1;
+                break;
 
-        case KeyEvent.VK_D:
-            player.rig = 1;
+                case KeyEvent.VK_S:
+                    player.down = 1;
+                break;
+
+                case KeyEvent.VK_D:
+                    player.rig = 1;
+                        
+                    if(!player.inGrip && !player.knockBack && !player.isAttacking && !player.launching){
+                        player.last_hori_dir = 1;
+                    }
+                    
+                break;
+
+                case KeyEvent.VK_A:
+                    player.lef = 1;
+                    
+                    if(!player.inGrip && !player.knockBack && !player.isAttacking && !player.launching){
+                        player.last_hori_dir = -1;
+                    }
+                    
+                break;
                 
-            if(!player.inGrip && !player.knockBack && !player.isAttacking && !player.launching){
-                player.last_hori_dir = 1;
-            }
-            
-            break;
+                case KeyEvent.VK_F:
+                    if (!player.attacked && !player.isAttacking &&!player.inGrip && !player.knockBack && !player.usingIten){
+                        player.isAttacking = true;
+                        player.cd = 0;
+                        player.attacked = true;
+                        Main.player.index = 0;
+                        Main.player.frames = 0;
+                        Clips.attack.play();
+                    }
+                break;
 
-        case KeyEvent.VK_A:
-            player.lef = 1;
-             
-            if(!player.inGrip && !player.knockBack && !player.isAttacking && !player.launching){
-                player.last_hori_dir = -1;
+                case KeyEvent.VK_E:
+                    if (Player.bag[0] != null && Player.energy >= 5 && !player.inGrip && !player.isAttacking && !player.usingIten){
+                        if (!player.used && !player.isUsing){
+                            player.isUsing = true;
+                            player.used = true;
+                        }   
+                    }
+                break;
             }
-            
-            break;
-        
-        case KeyEvent.VK_F:
-            if (!player.attacked && !player.isAttacking &&!player.inGrip && !player.knockBack && !player.usingIten){
-                player.isAttacking = true;
-                player.cd = 0;
-                player.attacked = true;
-                Main.player.index = 0;
-                Main.player.frames = 0;
-                Clips.attack.play();
-            }
-            break;
-
-        case KeyEvent.VK_E:
-            if (Player.bag[0] != null && Player.energy >= 5 && !player.inGrip && !player.isAttacking && !player.usingIten){
-                if (!player.used && !player.isUsing){
-                    player.isUsing = true;
-                    player.used = true;
-                }   
-            }
-            break;
-       }
+        } 
     }
 
     @Override

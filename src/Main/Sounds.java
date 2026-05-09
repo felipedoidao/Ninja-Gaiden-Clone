@@ -3,8 +3,6 @@ package Main;
 import java.io.*;
 import javax.sound.sampled.*;
 
-import Main.Sounds.Clips;
-
 public class Sounds {
     public static class Clips {
         public Clip[] clips;
@@ -22,6 +20,8 @@ public class Sounds {
 
                 clips[i].open(AudioSystem.getAudioInputStream(new ByteArrayInputStream(buffer)));
             }
+
+            Main.sounds.add(this);
         }
 
         public void play(){
@@ -53,7 +53,9 @@ public class Sounds {
             if (volume < 0.0f) volume = 0.0f;
             if (volume > 1.0f) volume = 1.0f;
 
-            float db = (float) (Math.log(volume) / Math.log(10.0) * 20.0);
+            float finalVolume = volume * Main.globalVolume;
+
+            float db = (float) (Math.log(finalVolume) / Math.log(10.0) * 20.0);
 
             for (Clip clip : clips){
                 if (clip.isControlSupported(FloatControl.Type.MASTER_GAIN)){
@@ -97,7 +99,6 @@ public class Sounds {
                 dis.close();
                 byte[] data = baos.toByteArray();
                 return new Clips(data, count);  
-            
             }catch(Exception e){
                 try{
                     return new Clips(null, 0);

@@ -14,7 +14,7 @@ import World.Camera;
 public class Candle extends Enemies{
 
     private Random random;
-    private int itemSelector = 0;
+    public static int itemSelector = 0;
 
     public Candle (int x, int y, int width, int height){
         super(x, y, width, height);
@@ -35,7 +35,6 @@ public class Candle extends Enemies{
             if (this.hurt(Main.player, this.getX(), this.getY())){
                 /*random.nextInt(115)*/
                 //Seletor de número aleatório que vai de 0 a 115
-                itemSelector = random.nextInt(115);
                 //Dependendo do valor selecionado decide qual item será instanciado
                 if (itemSelector < 5){
                     Main.entities.add(new Collectible_hourglass(getX(), getY(), 16, 16));
@@ -68,6 +67,7 @@ public class Candle extends Enemies{
             if (e instanceof Weapons){
 
                 if (this.getMask().intersects(e.getMask())){
+                    ((Weapons) e).destroy = true;
                     return true;
                 }
             }
