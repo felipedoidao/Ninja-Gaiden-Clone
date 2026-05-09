@@ -68,7 +68,7 @@ public class Main extends Canvas implements Runnable, KeyListener{
     }
     
     public Main(){
-        String path = new java.io.File("Main/src").getAbsolutePath();
+        String path = new java.io.File(".").getAbsolutePath();
         System.setProperty("net.java.games.input.librarypath", path);
         System.setProperty("java.library.path", path);
         
