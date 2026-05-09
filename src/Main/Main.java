@@ -279,7 +279,7 @@ public class Main extends Canvas implements Runnable, KeyListener{
     public void keyTyped(KeyEvent e) {
         if (showingConsole){
             char c = e.getKeyChar();
-            if (Character.isDefined(c) && c != '\n' && c != '\b' ){
+            if (Character.isDefined(c) && c != '\n' && c != '\b' && c != '\''){
                 Console.consoleInput += c;
             }
         }
@@ -288,24 +288,25 @@ public class Main extends Canvas implements Runnable, KeyListener{
     @Override
     public void keyPressed(KeyEvent e) {
 
-        if (e.getKeyCode() == KeyEvent.VK_ENTER){
+        if (e.getKeyChar() == '\''){
+            showingConsole = !showingConsole;
             if (showingConsole){
-                Console.executeCommand(Console.consoleInput);
-
-                Console.consoleInput = "";
-                showingConsole = false;
-            
-            }else {
-                showingConsole = true;
                 Console.consoleInput = "";
             }
+            return;
         }
 
         if (showingConsole){
-            if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE && Console.consoleInput.length() > 0){
+            if (e.getKeyCode() == KeyEvent.VK_ENTER){
+                Console.executeCommand(Console.consoleInput);
+                Console.consoleInput = "";
+
+            }else if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE && Console.consoleInput.length() > 0){
                 Console.consoleInput = Console.consoleInput.substring(0, Console.consoleInput.length() - 1);
+
             }
         }else {
+
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_SPACE:
                     if (player.inGround && player.isJumping == false && !player.isAttacking || player.inGrip && player.isJumping == false){
