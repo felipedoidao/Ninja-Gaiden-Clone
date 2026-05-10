@@ -28,7 +28,7 @@ public class Main extends Canvas implements Runnable, KeyListener{
     private boolean showingConsole = false;
 
     public static List<Clips> sounds;
-    public static float globalVolume = 1.0f;
+    public static float globalVolume = 0.5f;
 
     //Variáveis para renderização da janela
     private boolean rodando = false;
@@ -181,6 +181,9 @@ public class Main extends Canvas implements Runnable, KeyListener{
         Clips.tic.setVolume(0.2f);
         Clips.tac.setVolume(0.2f);
         Clips.bip.setVolume(0.2f);
+
+        Clips.honking.setVolume(0.2f);
+        Clips.motorCycle.setVolume(0.1f);
         
         Clips.stoping_time.setVolume(0.2f);
         Clips.returning_time.setVolume(0.2f);

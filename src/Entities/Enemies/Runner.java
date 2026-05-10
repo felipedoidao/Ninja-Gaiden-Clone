@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 
 import Entities.Player;
 import Main.Main;
+import Main.Sounds.Clips;
 import World.Camera;
 import World.Tile;
 import World.World;
@@ -69,6 +70,7 @@ public class Runner extends Enemies{
 
     public void update(){
         if(!isDead){
+            Clips.motorCycle.loop();
             this.maxFrames = 5;
             this.maxIndex = 2;
             if(Main.time){
@@ -80,11 +82,27 @@ public class Runner extends Enemies{
             this.hurt();
         
         }else {
+            Clips.motorCycle.stopLoop();
             this.animFrames();
             this.respawn();
             this.deathAnimation();
         }
 
+    }
+
+    public void respawn(){
+
+        if (this.xStart + 32 < Camera.x || this.xStart > Camera.x + Main.WIDTH){
+            this.canRespawn = true;
+        }
+         if (this.canRespawn && this.xStart+32 > Camera.x && this.xStart < Camera.x + Main.WIDTH){
+            this.x = this.xStart;
+            this.y = this.yStart;
+            this.isDead = false;
+            this.canRespawn = false;
+            Clips.honking.play();
+            this.locatePlayer(Main.player);
+        }
     }
 
     public void move(){
@@ -97,7 +115,7 @@ public class Runner extends Enemies{
 
             Tile hit = World.isFree(this.getX() + hori_dir, this.getY(), 48, 48);
 
-            Tile right = World.isFree(this.getX()+ 24 + hori_dir, this.getY()+48, width, 1);
+            Tile right = World.isFree(this.getX()+ this.width + hori_dir, this.getY()+48, width, 1);
             Tile left = World.isFree(this.getX() - this.width + hori_dir, this.getY()+48, width, 1);
 
             switch (hit) {

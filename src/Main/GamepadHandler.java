@@ -33,10 +33,12 @@ public class GamepadHandler {
                     return;
                 }
             }
+
         }catch (Exception e){
             System.err.println();
         }
         this.joystick = null;
+
     }
 
     public void readCommands(Player player){

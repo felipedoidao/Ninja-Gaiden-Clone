@@ -26,7 +26,7 @@ public class Ui {
     public void render(Graphics g){
 
         g.setColor(Color.black);
-        g.fillRect(0, 0, Main.WIDTH, Main.HEIGHT/4);
+        g.fillRect(0, 0, Main.WIDTH, 52);
         g.setColor(Color.white);
         
         g.setFont(new Font("Arial", Font.PLAIN, 24));

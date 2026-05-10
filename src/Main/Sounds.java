@@ -3,6 +3,8 @@ package Main;
 import java.io.*;
 import javax.sound.sampled.*;
 
+import Main.Sounds.Clips;
+
 public class Sounds {
     public static class Clips {
         public Clip[] clips;
@@ -82,6 +84,9 @@ public class Sounds {
         
         public static Clips returning_time = Clips.load("/rsc/Sounds/ReturningTime.wav", 1);
         public static Clips stoping_time = Clips.load("/rsc/Sounds/StopingTime.wav", 1);
+
+        public static Clips motorCycle = Clips.load("/rsc/Sounds/Motorcycle.wav", 1);
+        public static Clips honking = Clips.load("/rsc/Sounds/Horn.wav", 1);
         
         public static Clips load(String name, int count){
             try{

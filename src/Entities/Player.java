@@ -1,5 +1,6 @@
 package Entities;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -185,9 +186,8 @@ public class Player extends Entities{
     }
 
     public void render(Graphics g){
-       //decide qual animação vai ser usada
-
-
+        
+        //decide qual animação vai ser usada
         switch (last_hori_dir) {
             case 1:
                 if (knockBack) {
@@ -304,13 +304,20 @@ public class Player extends Entities{
         if(this.isAttacking){
 
             spin_soundCD = 0;
-            this.ySword = getY() +3;
-            this.widthSword = 34;
-            this.heightSword = 16;
-            if(last_hori_dir > 0){
-                this.xSword = this.getX() +29;
+            if (cd >= 1 && cd <= 5){
+                this.ySword = getY() +3;
+                this.widthSword = 34;
+                this.heightSword = 16;
+                if(last_hori_dir > 0){
+                    this.xSword = this.getX() +29;
+                }else {
+                    this.xSword = this.getX() - 36;
+                }
             }else {
-                this.xSword = this.getX() - 36;
+                this.xSword = -10;
+                this.ySword = -10;
+                this.widthSword = 1;
+                this.heightSword = 1;
             }
             //Controla quanto tempo dura o ataque
             this.cd++;
@@ -327,8 +334,8 @@ public class Player extends Entities{
         
         }else {
             spin_soundCD = 0;
-            this.xSword = 10;
-            this.ySword = 0;
+            this.xSword = -10;
+            this.ySword = -10;
             this.widthSword = 1;
             this.heightSword = 1;
         }
