@@ -113,21 +113,15 @@ public class Tracker extends Enemies{
 
             Tile hit = World.isFree(this.getX() + (int)moveStep, this.getY(), this.width, this.height);
 
-            Tile right = World.isFree(this.getX() + this.width + (int)moveStep, this.getY()+40, this.width, 5);
-            Tile left = World.isFree(this.getX() - this.width + (int)moveStep, this.getY()+40, this.width, 5);
+            int edge = (hori_dir > 0) ? (getX() + width + 1) : (getX() - 1);
+            Tile hole = World.isFree(edge, getY() + width + 10, 1, 1);
+
+            if (hole == null && !jumped){
+                jumped = true;
+            }
 
             if (hit == null){
                 this.x += moveStep;
-            }
-
-            if (this.hori_dir > 0){
-                if (right == null){
-                    jumped = true;
-                }
-            }else {
-                if (left == null){
-                    jumped = true;
-                }
             }
         }
 

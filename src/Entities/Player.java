@@ -1,9 +1,10 @@
 package Entities;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+
+import javax.swing.Timer;
 
 import Entities.Collectibles.Collectible_fireball;
 import Entities.Collectibles.Collectible_shuriken;
@@ -108,6 +109,7 @@ public class Player extends Entities{
     public BufferedImage sprite_standing, sprite_attacking, sprite_jummping;
 
     //Listas dos frames para animações
+    private boolean showImage = true;
     private BufferedImage[] right, left, walk_right, walk_left;
     private BufferedImage[] attacking_right, attacking_left;
     private BufferedImage[] jumping_right, jumping_left, spin_right, spin_left;
@@ -190,46 +192,50 @@ public class Player extends Entities{
         //decide qual animação vai ser usada
         switch (last_hori_dir) {
             case 1:
-                if (knockBack) {
-                    g.drawImage(knockingBack_right[0], getX() - Camera.x, getY() - Camera.y, null);
-                } else if (usingIten) {
-                    g.drawImage(spin_right[index], getX() - Camera.x - 16, getY() - Camera.y - 16, null);
-                } else if (launching) {
-                    g.drawImage(using_right[0], getX() - Camera.x, getY() - Camera.y, null);
-                }else if (climbing){
-                    g.drawImage(climbing_right[index], getX() - Camera.x + 1, getY() - Camera.y, null);
-                }else if (inGrip) {
-                    g.drawImage(grab_right[0], getX() - Camera.x + 1, getY() - Camera.y, null);
-                } else if (isAttacking) {
-                    g.drawImage(attacking_right[index], (int)this.x - Camera.x, (int)this.y - Camera.y, null);
-                } else if (!inGround) {
-                    g.drawImage(jumping_right[index], (int)this.x - Camera.x, (int)this.y - Camera.y, null);
-                } else if (hori_dir == last_hori_dir) {
-                    g.drawImage(walk_right[index], getX() - Camera.x, getY() - Camera.y, null);
-                } else {
-                    g.drawImage(right[0], getX() - Camera.x, getY() - Camera.y, null);
+                if (showImage){
+                    if (climbing){
+                        g.drawImage(climbing_right[index], getX() - Camera.x + 1, getY() - Camera.y, null);
+                    } else if (inGrip) {
+                        g.drawImage(grab_right[0], getX() - Camera.x + 1, getY() - Camera.y, null);
+                    } else if (knockBack) {
+                        g.drawImage(knockingBack_right[0], getX() - Camera.x, getY() - Camera.y, null);
+                    } else if (usingIten) {
+                        g.drawImage(spin_right[index], getX() - Camera.x - 16, getY() - Camera.y - 16, null);
+                    } else if (launching) {
+                        g.drawImage(using_right[0], getX() - Camera.x, getY() - Camera.y, null);
+                    } else if (isAttacking) {
+                        g.drawImage(attacking_right[index], (int)this.x - Camera.x, (int)this.y - Camera.y, null);
+                    } else if (!inGround) {
+                        g.drawImage(jumping_right[index], (int)this.x - Camera.x, (int)this.y - Camera.y, null);
+                    } else if (hori_dir == last_hori_dir) {
+                        g.drawImage(walk_right[index], getX() - Camera.x, getY() - Camera.y, null);
+                    } else {
+                        g.drawImage(right[0], getX() - Camera.x, getY() - Camera.y, null);
+                    }
                 }
                 break;
 
             case -1:
-                if (knockBack) {
-                    g.drawImage(knockingBack_left[0], getX() - Camera.x, getY() - Camera.y, null);
-                } else if (usingIten) {
-                    g.drawImage(spin_left[index], getX() - Camera.x - 16, getY() - Camera.y - 16, null);
-                } else if (launching) {
-                    g.drawImage(using_left[0], getX() - Camera.x - 6, getY() - Camera.y, null);
-                }else if (climbing){
-                    g.drawImage(climbing_left[index], getX() - Camera.x + 1, getY() - Camera.y, null);
-                } else if (inGrip) {
-                    g.drawImage(grab_left[0], getX() - Camera.x, getY() - Camera.y, null);
-                } else if (isAttacking) {
-                    g.drawImage(attacking_left[index], (int)this.x - Camera.x - 38, (int)this.y - Camera.y, null);
-                } else if (!inGround) {
-                    g.drawImage(jumping_left[index], (int)this.x - Camera.x, (int)this.y - Camera.y, null);
-                } else if (hori_dir == last_hori_dir) {
-                    g.drawImage(walk_left[index], getX() - Camera.x - 1, getY() - Camera.y, null);
-                } else {
-                    g.drawImage(left[0], (int)this.x - Camera.x - 1, (int)this.y - Camera.y, null);
+                if (showImage){
+                    if (climbing){
+                        g.drawImage(climbing_left[index], getX() - Camera.x + 1, getY() - Camera.y, null);
+                    } else if (inGrip) {
+                        g.drawImage(grab_left[0], getX() - Camera.x, getY() - Camera.y, null);
+                    } else if (knockBack) {
+                        g.drawImage(knockingBack_left[0], getX() - Camera.x, getY() - Camera.y, null);
+                    } else if (usingIten) {
+                        g.drawImage(spin_left[index], getX() - Camera.x - 16, getY() - Camera.y - 16, null);
+                    } else if (launching) {
+                        g.drawImage(using_left[0], getX() - Camera.x - 6, getY() - Camera.y, null);
+                    } else if (isAttacking) {
+                        g.drawImage(attacking_left[index], (int)this.x - Camera.x - 38, (int)this.y - Camera.y, null);
+                    } else if (!inGround) {
+                        g.drawImage(jumping_left[index], (int)this.x - Camera.x, (int)this.y - Camera.y, null);
+                    } else if (hori_dir == last_hori_dir) {
+                        g.drawImage(walk_left[index], getX() - Camera.x - 1, getY() - Camera.y, null);
+                    } else {
+                        g.drawImage(left[0], (int)this.x - Camera.x - 1, (int)this.y - Camera.y, null);
+                    }
                 }
                 break;
         }
@@ -344,9 +350,8 @@ public class Player extends Entities{
 
     private void spin_sound(){
         spin_soundCD++;
-        if (spin_soundCD >= 10){
+        if (spin_soundCD % 10 == 0){
             Clips.attack.play();
-            spin_soundCD = 0;
         }
     }
 
@@ -415,6 +420,9 @@ public class Player extends Entities{
 
         if (gotHit){
             hitCd ++;
+            if (hitCd % 5 == 0){
+                showImage = !showImage;
+            }
             if (hitCd >= 60){
                 hitCd = 0;
                 hitted = false;
@@ -510,10 +518,10 @@ public class Player extends Entities{
             
         }
 
-
         //Se o personagem estiver se segurando na parede, velocidade é zero, previne que o personagem se movimente na horizontal
         if (this.inGrip){
             this.usingIten = false;
+            knockBack = false;
             inKnockBack = false;
             this.fallSpeed = 0;
             this.speed = 0;

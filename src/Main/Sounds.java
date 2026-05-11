@@ -57,11 +57,20 @@ public class Sounds {
 
             float finalVolume = volume * Main.globalVolume;
 
-            float db = (float) (Math.log(finalVolume) / Math.log(10.0) * 20.0);
+            float db; //= (float) (Math.log(finalVolume) / Math.log(10.0) * 20.0);
+            if (finalVolume > 0){
+                db = (float) (Math.log(finalVolume) / Math.log(10.0) * 20.0);
+            }else {
+                db = -80.0f;
+            }
 
             for (Clip clip : clips){
                 if (clip.isControlSupported(FloatControl.Type.MASTER_GAIN)){
                     FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+
+                    if (db < gainControl.getMinimum()) db = gainControl.getMinimum();
+                    if (db > gainControl.getMaximum()) db = gainControl.getMaximum();
+
                     gainControl.setValue(db);
                 }
             }
@@ -85,8 +94,9 @@ public class Sounds {
         public static Clips returning_time = Clips.load("/rsc/Sounds/ReturningTime.wav", 1);
         public static Clips stoping_time = Clips.load("/rsc/Sounds/StopingTime.wav", 1);
 
-        public static Clips motorCycle = Clips.load("/rsc/Sounds/Motorcycle.wav", 1);
-        public static Clips honking = Clips.load("/rsc/Sounds/Horn.wav", 1);
+        public static Clips motorCycle = Clips.load("/rsc/Sounds/Motorcycle.wav", 2);
+        public static Clips honking = Clips.load("/rsc/Sounds/Horn.wav", 2);
+        public static Clips motorCycle_leaving = Clips.load("/rsc/Sounds/MotorCycleLeaving.wav", 2);
         
         public static Clips load(String name, int count){
             try{

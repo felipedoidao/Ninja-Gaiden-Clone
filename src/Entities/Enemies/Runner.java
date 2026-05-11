@@ -70,14 +70,20 @@ public class Runner extends Enemies{
 
     public void update(){
         if(!isDead){
-            Clips.motorCycle.loop();
             this.maxFrames = 5;
             this.maxIndex = 2;
             if(Main.time){
+                Clips.motorCycle.loop();
                 this.animFrames();
                 this.move();
-                if(!this.inScreen()) this.isDead = true;
+                if(!this.inScreen()){
+                    this.isDead = true;
+                    Clips.motorCycle.stopLoop();
+                    Clips.motorCycle_leaving.play();
+                } 
                 this.hit();
+            }else {
+                Clips.motorCycle.stopLoop();
             }
             this.hurt();
         
@@ -115,8 +121,12 @@ public class Runner extends Enemies{
 
             Tile hit = World.isFree(this.getX() + hori_dir, this.getY(), 48, 48);
 
-            Tile right = World.isFree(this.getX()+ this.width + hori_dir, this.getY()+48, width, 1);
-            Tile left = World.isFree(this.getX() - this.width + hori_dir, this.getY()+48, width, 1);
+            int edge = (hori_dir > 0) ? (getX() + width + 1) : (getX() - 1);
+            Tile hole = World.isFree(edge, getY() + height + 10, 1, 1);
+
+            if (hole == null && inGround){
+                jumped = true;
+            }
 
             switch (hit) {
                 case null ->{
@@ -129,21 +139,6 @@ public class Runner extends Enemies{
                 }
 
             }
-
-            if (this.inGround){
-                if (this.hori_dir < 0){
-                    if (left == null){
-                        jumped = true;
-                    }
-            
-                }else if (this.hori_dir > 0) {
-                    if (right == null){
-                        jumped = true;
-                    }
-
-                }
-            }
-            
         }
 
          for (int i = 0; i < Math.abs(fallSpeed); i++){

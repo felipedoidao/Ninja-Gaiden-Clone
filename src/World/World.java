@@ -161,18 +161,20 @@ public class World {
     //Método de colisão que compara a posição da entidade com o tile e especificado
     public static Tile isFree(int xNext, int yNext, int width, int height){
 
+        int offset = 8;
+
         //Pega os quatros cantos da entidade
         int x1 = (xNext) / TILE_SIZE;
         int y1 = (yNext) / TILE_SIZE;
 
-        int x2 = (xNext+width-1) / TILE_SIZE;
+        int x2 = (xNext + width -1) / TILE_SIZE;
         int y2 = (yNext) / TILE_SIZE;
 
         int x3 = (xNext) / TILE_SIZE;
-        int y3 = (yNext+height-1) / TILE_SIZE;
+        int y3 = (yNext + height - offset) / TILE_SIZE;
 
-        int x4 = (xNext+width-1) / TILE_SIZE;
-        int y4 = (yNext+height-1) / TILE_SIZE;
+        int x4 = (xNext + width -1) / TILE_SIZE;
+        int y4 = (yNext + height - offset) / TILE_SIZE;
         
         //Impede que o jogo dê erro ao sair da tela pela parte de cima 
         if (y1 < 0 || y2 < 0 || y3 < 0 || y4 < 0 ||

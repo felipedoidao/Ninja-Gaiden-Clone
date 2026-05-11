@@ -31,7 +31,6 @@ public class Tile {
         g.drawImage(sprite, x - Camera.x, y - Camera.y, 32, 32, null);
     }
 
-
     //Métodos para outras classes acessarem as coordenadas
     public int getX(){
         return this.x;
