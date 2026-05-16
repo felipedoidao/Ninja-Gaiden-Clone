@@ -106,7 +106,7 @@ public class Runner extends Enemies{
             this.y = this.yStart;
             this.isDead = false;
             this.canRespawn = false;
-            Clips.honking.play();
+            if (Main.time)  Clips.honking.play();
             this.locatePlayer(Main.player);
         }
     }

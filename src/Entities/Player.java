@@ -4,8 +4,6 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
-import javax.swing.Timer;
-
 import Entities.Collectibles.Collectible_fireball;
 import Entities.Collectibles.Collectible_shuriken;
 import Entities.Collectibles.Collectible_spin;
@@ -43,10 +41,11 @@ public class Player extends Entities{
     private int spin_soundCD = 0;
     
     //Controladors dos movimentos do personagem
-    private double speed = 3;
+    public double speed = 3;
     private double climbSpeed = 2;
     private double fallSpeed = 0;
-    private double aceleration = 0.4;
+    private double airAceleration = 0.3;
+    private double gravity = 0.4;
 
     //Ui e mecânicas
     public static int lives = 16;
@@ -95,6 +94,7 @@ public class Player extends Entities{
 
     //Definir movimento,direção atual e salvar direção anterior 
     public int hori_dir = 1;
+    private int current_hori_dir = 0;
     public int vert_dir = 0;
     public int up = 0;
     public int down = 0;
@@ -448,7 +448,7 @@ public class Player extends Entities{
     }
 
     private void move(){
-        this.fallSpeed += aceleration;
+        this.fallSpeed += gravity;
         this.hori_dir = this.rig - this.lef;
         this.vert_dir = this.down - this.up;
         if (this.fallSpeed >= 7) this.fallSpeed= 6.5;
@@ -457,26 +457,71 @@ public class Player extends Entities{
             
             this.fallSpeed = -7;
             
-            if (this.hori_dir != 0) this.last_hori_dir = this.hori_dir;
+            if (this.hori_dir != 0){
+                this.last_hori_dir = this.hori_dir;
+            }
+        }
+
+        if (inGround || inGrip){
+            if (hori_dir != 0){
+                speed = 3;
+                current_hori_dir = hori_dir;
+
+            }else {
+                speed = 0;
+
+            }
+
+        }else {
+            if (hori_dir != 0){
+                if (current_hori_dir == 0){
+                    current_hori_dir = hori_dir;
+                    speed += airAceleration;
+                
+                }else if (hori_dir == current_hori_dir){
+                    speed += airAceleration;
+                
+                }else {
+                    speed -= airAceleration;
+
+                    if (speed <= 0){
+                        current_hori_dir = hori_dir;
+                        speed = 0;
+                    }
+                }
+
+            }else {
+                speed -= airAceleration;
+            }
+
+            if (speed < 0){
+                speed = 0;
+
+            }else if (speed > 3){
+                speed = 3;
+
+            }
         }
 
         //Para cada valor da velocidade do jogar roda um codigo para detectar colisão pixel por pixel
         for (int i = 0; i < this.speed; i++){
 
-            Tile hit = World.isFree((this.getX() + hori_dir), getY(), width, height);
+            Tile hit = World.isFree((this.getX() + current_hori_dir), getY(), width, height);
             Tile hitted = World.isFree(this.getX() - last_hori_dir, getY(), width, height);
-            Tile grab = World.isFree((int)(x + hori_dir), (int)y+16, width, 1);
+            Tile grab = World.isFree((int)(x + current_hori_dir), (int)y+16, width, 1);
 
             if(!knockBack && !isAttacking && !launching){
                 switch (hit){
                     case null -> {
                         
-                       this.x += this.hori_dir;
+                        if (!inGrip){
+                            this.x += this.current_hori_dir;
+                        }  
                             
                     }
                     case Grip_Wall g -> {
                         if(hori_dir == last_hori_dir && grab != null){
-                            if (!this.inGround && !this.grabbed){
+                            if (!this.inGround && !this.grabbed && current_hori_dir == hori_dir){
                                 this.grabbed = true;
                                 this.inGrip = true;
                                 Clips.hold.play();
@@ -486,7 +531,7 @@ public class Player extends Entities{
                     }
                     case Ladder l -> {
                         if(hori_dir == last_hori_dir && grab != null){
-                            if (!this.inGround && !this.grabbed){
+                            if (!this.inGround && !this.grabbed && current_hori_dir == hori_dir){
                                 this.grabbed = true;
                                 this.inGrip = true;
                                 Clips.hold.play();
@@ -524,7 +569,6 @@ public class Player extends Entities{
             knockBack = false;
             inKnockBack = false;
             this.fallSpeed = 0;
-            this.speed = 0;
             this.isAttacking = false;
             cd = 0;
 
@@ -573,9 +617,7 @@ public class Player extends Entities{
                     }
                 }
             }
-        }else {
-            this.speed = 3.3;
-        }    
+        }   
 
         if (climbing){
             maxFrames = 5;

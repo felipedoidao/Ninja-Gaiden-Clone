@@ -333,7 +333,7 @@ public class Main extends Canvas implements Runnable, KeyListener{
 
                 case KeyEvent.VK_D:
                     player.rig = 1;
-                        
+ 
                     if(!player.inGrip && !player.knockBack && !player.isAttacking && !player.launching){
                         player.last_hori_dir = 1;
                     }
